@@ -1,3 +1,7 @@
+output "id" {
+  value = azurerm_virtual_machine.vm.id
+}
+
 output "admin_private_key" {
   value = (
     var.output_admin_private_key ?
