@@ -1,29 +1,38 @@
-resource "azurerm_linux_virtual_machine" "vm" {
+resource "azurerm_virtual_machine" "vm" {
   name                  = var.name
   resource_group_name   = var.resource_group_name
   location              = var.location
-  size                  = var.size
+  vm_size               = var.vm_size
   network_interface_ids = var.network_interface_ids
 
-  admin_username                  = var.admin_username
-  admin_password                  = var.admin_password
-  disable_password_authentication = false
-
-  admin_ssh_key {
-    public_key = tls_private_key.vm_private_key.public_key_pem
-    username   = var.admin_username
-  }
-
-  os_disk {
-    caching              = var.os_disk_caching
-    storage_account_type = var.os_disk_storage_account_type
-  }
-
-  source_image_reference {
+  storage_image_reference {
     publisher = "Redhat"
     offer     = "RHEL"
     sku       = var.source_image_reference_sku
     version   = "latest"
+  }
+
+  storage_os_disk {
+    name              = var.storage_os_disk_name
+    caching           = var.storage_os_disk_caching
+    managed_disk_type = var.storage_os_disk_managed_disk_type
+    create_option     = "FromImage"
+    os_type           = "Linux"
+  }
+
+  os_profile {
+    computer_name  = var.name
+    admin_username = var.os_profile_admin_username
+    admin_password = var.os_profile_admin_password
+  }
+
+  os_profile_linux_config {
+    disable_password_authentication = false
+
+    ssh_keys {
+      key_data = tls_private_key.vm_private_key.public_key_pem
+      path     = "/home/${var.os_profile_admin_username}/.ssh/authorized_keys"
+    }
   }
 }
 

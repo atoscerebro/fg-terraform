@@ -22,12 +22,12 @@ variable "location" {
   }
 }
 
-variable "size" {
+variable "vm_size" {
   type        = string
   description = "The SKU which should be used for this VM."
 
   validation {
-    condition     = can(regex("^(Basic|Standard)_([A-Z]){1,2}(\\d){1,2}[\\d|_|-|a-zA-Z]*$", var.size))
+    condition     = can(regex("^(Basic|Standard)_([A-Z]){1,2}(\\d){1,2}[\\d|_|-|a-zA-Z]*$", var.vm_size))
     error_message = "Size must match the Azure SKU format."
   }
 }
@@ -37,28 +37,14 @@ variable "network_interface_ids" {
   description = "The list of network interface ids this VM belongs to."
 }
 
-# Authentication
+# Storage OS Disk
 
-variable "admin_username" {
+variable "storage_os_disk_name" {
   type        = string
-  description = "The username of the admin on the VM."
+  description = "The name of the internal OS disk."
 }
 
-variable "admin_password" {
-  type        = string
-  description = "The password of the admin user of the VM."
-  sensitive   = true
-}
-
-variable "output_admin_private_key" {
-  type        = bool
-  description = "Indicate whether the private ssh key for the VM should be outputted by Terraform."
-  default     = false
-}
-
-# OS Disk
-
-variable "os_disk_caching" {
+variable "storage_os_disk_caching" {
   type        = string
   description = "The type of caching which should be used for the internal OS disk."
 
@@ -67,12 +53,12 @@ variable "os_disk_caching" {
       "None",
       "ReadOnly",
       "ReadWrite"
-    ], var.os_disk_caching)
+    ], var.storage_os_disk_caching)
     error_message = "OS disk caching type must match option from provided list."
   }
 }
 
-variable "os_disk_storage_account_type" {
+variable "storage_os_disk_managed_disk_type" {
   type        = string
   description = "The type of storage account which should be used for the internal OS disk."
 
@@ -83,9 +69,28 @@ variable "os_disk_storage_account_type" {
       "Premium_LRS",
       "StandardSSD_ZRS",
       "Premium_ZRS"
-    ], var.os_disk_storage_account_type)
+    ], var.storage_os_disk_managed_disk_type)
     error_message = "OS disk storage account type must match option from provided list."
   }
+}
+
+# OS Profile
+
+variable "os_profile_admin_username" {
+  type        = string
+  description = "The username of the admin on the VM."
+}
+
+variable "os_profile_admin_password" {
+  type        = string
+  description = "The password of the admin user of the VM."
+  sensitive   = true
+}
+
+variable "output_admin_private_key" {
+  type        = bool
+  description = "Indicate whether the private ssh key for the VM should be outputted by Terraform."
+  default     = false
 }
 
 # Source Image Reference
