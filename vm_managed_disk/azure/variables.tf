@@ -97,3 +97,17 @@ variable "caching" {
     error_message = "Managed disk caching type must match option from provided list."
   }
 }
+
+# Tags and Dependencies
+
+variable "tags" {
+  type        = map(string)
+  description = "A mapping of tags to apply to this managed disk."
+  default     = null
+}
+
+variable "dependencies" {
+  type        = list(any)
+  description = "A list of depends_on resources to apply to this managed disk."
+  default     = []
+}

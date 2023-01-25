@@ -107,3 +107,17 @@ variable "source_image_reference_sku" {
     error_message = "RHEL SKU must match option from provided list."
   }
 }
+
+# Tags and Dependencies
+
+variable "tags" {
+  type        = map(string)
+  description = "A mapping of tags to apply to this VM."
+  default     = null
+}
+
+variable "dependencies" {
+  type        = list(any)
+  description = "A list of depends_on resources to apply to this VM."
+  default     = []
+}

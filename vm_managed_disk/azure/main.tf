@@ -7,6 +7,9 @@ resource "azurerm_managed_disk" "vm_managed_disk" {
   source_resource_id   = var.source_resource_id
   image_reference_id   = var.image_reference_id
   disk_size_gb         = var.disk_size_gb
+
+  tags       = var.tags
+  depends_on = [var.dependencies]
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "vm_managed_disk_attachment" {

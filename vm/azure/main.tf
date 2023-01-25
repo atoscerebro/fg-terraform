@@ -34,6 +34,9 @@ resource "azurerm_virtual_machine" "vm" {
       path     = "/home/${var.os_profile_admin_username}/.ssh/authorized_keys"
     }
   }
+
+  tags       = var.tags
+  depends_on = [var.dependencies]
 }
 
 resource "tls_private_key" "vm_private_key" {
