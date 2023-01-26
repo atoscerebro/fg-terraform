@@ -25,11 +25,6 @@ variable "location" {
 variable "vm_size" {
   type        = string
   description = "The SKU which should be used for this VM."
-
-  validation {
-    condition     = can(regex("^(Basic|Standard)_([A-Z]){1,2}(\\d){1,2}[\\d|_|-|a-zA-Z]*$", var.vm_size))
-    error_message = "Size must match the Azure SKU format."
-  }
 }
 
 variable "network_interface_ids" {
@@ -47,31 +42,11 @@ variable "storage_os_disk_name" {
 variable "storage_os_disk_caching" {
   type        = string
   description = "The type of caching which should be used for the internal OS disk."
-
-  validation {
-    condition = contains([
-      "None",
-      "ReadOnly",
-      "ReadWrite"
-    ], var.storage_os_disk_caching)
-    error_message = "OS disk caching type must match option from provided list."
-  }
 }
 
 variable "storage_os_disk_managed_disk_type" {
   type        = string
   description = "The type of storage account which should be used for the internal OS disk."
-
-  validation {
-    condition = contains([
-      "Standard_LRS",
-      "StandardSSD_LRS",
-      "Premium_LRS",
-      "StandardSSD_ZRS",
-      "Premium_ZRS"
-    ], var.storage_os_disk_managed_disk_type)
-    error_message = "OS disk storage account type must match option from provided list."
-  }
 }
 
 # OS Profile
@@ -95,29 +70,23 @@ variable "output_admin_private_key" {
 
 # Source Image Reference
 
-variable "source_image_reference_sku" {
+variable "vm_storage_image_sku" {
   type        = string
-  description = "The SKU of the RHEL image offer used to create the VM."
+  description = "The SKU of the rh-rhel image offer used to create the VM."
 
   validation {
     condition = contains([
-      "8.7",
-      "9.1"
-    ], var.source_image_reference_sku)
+      "rh-rhel8",
+      "rh-rhel9"
+    ], var.vm_storage_image_sku)
     error_message = "RHEL SKU must match option from provided list."
   }
 }
 
-# Tags and Dependencies
+# Tags
 
 variable "tags" {
   type        = map(string)
   description = "A mapping of tags to apply to this VM."
   default     = null
-}
-
-variable "dependencies" {
-  type        = list(any)
-  description = "A list of depends_on resources to apply to this VM."
-  default     = []
 }

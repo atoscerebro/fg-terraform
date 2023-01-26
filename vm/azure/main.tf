@@ -6,10 +6,7 @@ resource "azurerm_virtual_machine" "vm" {
   network_interface_ids = var.network_interface_ids
 
   storage_image_reference {
-    publisher = "Redhat"
-    offer     = "RHEL"
-    sku       = var.source_image_reference_sku
-    version   = "latest"
+    id = data.azurerm_platform_image.vm_storage_image.id
   }
 
   storage_os_disk {
@@ -35,8 +32,7 @@ resource "azurerm_virtual_machine" "vm" {
     }
   }
 
-  tags       = var.tags
-  depends_on = [var.dependencies]
+  tags = var.tags
 }
 
 resource "tls_private_key" "vm_private_key" {

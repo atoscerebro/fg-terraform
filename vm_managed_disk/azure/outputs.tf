@@ -1,3 +1,3 @@
-output "vm_managed_disk_id" {
+output "id" {
   value = azurerm_managed_disk.vm_managed_disk.id
 }

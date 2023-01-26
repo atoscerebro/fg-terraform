@@ -25,40 +25,11 @@ variable "location" {
 variable "storage_account_type" {
   type        = string
   description = "The type of storage account which should be used for the managed disk."
-
-  validation {
-    condition = contains([
-      "Standard_LRS",
-      "StandardSSD_ZRS",
-      "Premium_LRS",
-      "PremiumV2_LRS",
-      "Premium_ZRS",
-      "StandardSSD_LRS",
-      "UltraSSD_LRS"
-    ], var.storage_account_type)
-    error_message = "Managed disk storage account type must match option from provided list."
-  }
 }
 
 variable "create_option" {
   type        = string
-  description = "The method to use when creating the managed disk."
-
-  validation {
-    condition = contains([
-      "Empty",
-      "Copy",
-      "FromImage",
-      "Restore"
-    ], var.create_option)
-    error_message = "Create option must match option from the provided list."
-  }
-}
-
-variable "source_resource_id" {
-  type        = string
-  description = "The id of an existing managed disk to either copy or restore. Requires create_option to be either Copy or Restore."
-  default     = null
+  description = "The method to use when creating the managed disk. Empty and FromImage currently supported."
 }
 
 variable "image_reference_id" {
@@ -87,27 +58,12 @@ variable "lun" {
 variable "caching" {
   type        = string
   description = "The type of caching which should be used for the managed disk."
-
-  validation {
-    condition = contains([
-      "None",
-      "ReadOnly",
-      "ReadWrite"
-    ], var.caching)
-    error_message = "Managed disk caching type must match option from provided list."
-  }
 }
 
-# Tags and Dependencies
+# Tags
 
 variable "tags" {
   type        = map(string)
   description = "A mapping of tags to apply to this managed disk."
   default     = null
-}
-
-variable "dependencies" {
-  type        = list(any)
-  description = "A list of depends_on resources to apply to this managed disk."
-  default     = []
 }
