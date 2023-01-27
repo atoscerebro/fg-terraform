@@ -191,3 +191,11 @@ variable "request_routing_rules" {
     error_message = "Request routing rule cannot contain both a backend address pool and url path mapping."
   }
 }
+
+# Tags
+
+variable "tags" {
+  type        = map(string)
+  description = "A mapping of tags to apply to this applicationg gateway."
+  default     = null
+}

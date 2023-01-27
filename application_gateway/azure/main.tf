@@ -129,4 +129,6 @@ resource "azurerm_application_gateway" "application_gateway" {
       url_path_map_name          = request_routing_rule.url_path_map_name
     }
   }
+
+  tags = var.tags
 }
