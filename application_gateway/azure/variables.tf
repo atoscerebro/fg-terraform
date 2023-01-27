@@ -7,7 +7,7 @@ variable "name" {
 
 variable "resource_group_name" {
   type        = string
-  description = "The name of the resource group this application gateway belongs to."
+  description = "The name of the resource group the application gateway belongs to."
 }
 
 variable "location" {
@@ -24,37 +24,21 @@ variable "location" {
 
 # SKU
 
-variable "sku_name" {
-  type        = string
-  description = "The name of the SKU to use for the application gateway."
-
-  validation {
-    condition     = can(regex("^WAF.+$", var.sku_name))
-    error_message = "SKU name must match the WAF prefix pattern."
-  }
-}
-
-variable "sku_tier" {
-  type        = string
-  description = "The tier of the SKU to use for the application gateway."
-
-  validation {
-    condition     = can(regex("^WAF.+$", var.sku_tier))
-    error_message = "SKU tier must match the WAF prefix pattern."
-  }
-}
-
-# Firewall
-
-variable "firewall" {
+variable "sku" {
   type = object({
-    firewall_policy_id                = string
-    force_firewall_policy_association = optional(bool)
+    name = string
+    tier = string
   })
-  description = "An optional firewall policy to be attached and associated with the application gateway."
-  default     = null
-}
+  description = "SKU configuration for the application gateway."
 
+  validation {
+    condition = alltrue([
+      can(regex("^WAF.+$", var.sku.name)),
+      can(regex("^WAF.*$", var.sku.tier))
+    ])
+    error_message = "SKU name and tier must match the WAF prefix pattern."
+  }
+}
 
 # Scale
 
@@ -72,6 +56,19 @@ variable "scale" {
   }
 }
 
+# Firewall
+
+variable "firewall" {
+  type = object({
+    firewall_mode                     = string
+    rule_set_version                  = optional(string)
+    firewall_policy_id                = optional(string)
+    force_firewall_policy_association = optional(bool)
+  })
+  description = "The web application firewall configuration for the application gateway."
+}
+
+
 # Gateway Ip Configuration
 
 variable "gateway_ip_configurations" {
@@ -79,22 +76,12 @@ variable "gateway_ip_configurations" {
     name      = string
     subnet_id = string
   }))
-  description = "A list of gateway ip configurations for the applicationg gateway."
+  description = "A list of gateway ip configurations for the application gateway."
 
   validation {
-    condition     = length(var.gateway_ip_configuration) > 0
+    condition     = length(var.gateway_ip_configurations) > 0
     error_message = "At least one gateway ip configuration must be provided."
   }
-}
-
-# Web Application Firewall
-
-variable "waf_configuration" {
-  type = object({
-    firewall_mode    = string
-    rule_set_version = string
-  })
-  description = "The web application firewall configuration for the application gateway."
 }
 
 # Frontend
@@ -107,6 +94,11 @@ variable "frontend_ip_configurations" {
     public_ip_address_id = optional(string)
   }))
   description = "A list of ip configurations used by http listeners to listen for frontend traffic."
+
+  validation {
+    condition     = length(var.frontend_ip_configurations) > 0
+    error_message = "At least one frontend ip configuration must be provided."
+  }
 }
 
 variable "frontend_ports" {
@@ -115,6 +107,11 @@ variable "frontend_ports" {
     port = number
   }))
   description = "A list of ports used by http listeners to listen for frontend traffic."
+
+  validation {
+    condition     = length(var.frontend_ports) > 0
+    error_message = "At least one frontend port must be provided."
+  }
 }
 
 variable "http_listeners" {
@@ -122,9 +119,15 @@ variable "http_listeners" {
     name                           = string
     frontend_ip_configuration_name = string
     frontend_port_name             = string
+    protocol                       = string
     firewall_policy_id             = optional(string)
   }))
   description = "A list of http listeners used on the frontend of the application gateway."
+
+  validation {
+    condition     = length(var.http_listeners) > 0
+    error_message = "At least one http listener must be provided."
+  }
 }
 
 # Backend
@@ -136,6 +139,11 @@ variable "backend_address_pools" {
     ip_addresses = optional(list(string))
   }))
   description = "A list of backend address pools used by the application gateway."
+
+  validation {
+    condition     = length(var.backend_address_pools) > 0
+    error_message = "At least one backend address pool must be provided."
+  }
 }
 
 variable "backend_http_settings" {
@@ -143,15 +151,19 @@ variable "backend_http_settings" {
     name                  = string
     cookie_based_affinity = string
     affinity_cookie_name  = optional(string)
+    protocol              = string
     port                  = number
   }))
   description = "A list of backend http settings used by the application gateway."
 
   validation {
-    condition = ([for settings in var.backend_http_settings : (
-      settings.cookie_based_affinity == "Enabled" ? settings.affinity_cookie_name != "" : true
-    )])
-    error_message = "An affinity cookie name must be provided when cookie based affinity is enabled."
+    condition = alltrue([
+      length(var.backend_http_settings) > 0,
+      alltrue([for settings in var.backend_http_settings : (
+        settings.cookie_based_affinity == "Enabled" ? settings.affinity_cookie_name != "" : true
+      )])
+    ])
+    error_message = "At least one backend http settings must be provided. An affinity cookie name must be provided when cookie based affinity is enabled."
   }
 }
 
@@ -168,6 +180,7 @@ variable "url_path_maps" {
       firewall_policy_id         = optional(string)
     }))
   }))
+  default     = []
   description = "A list of mappings between backend address pools, http settings, and path rules."
 }
 
@@ -185,10 +198,13 @@ variable "request_routing_rules" {
   description = "A list of request routing rules that match http listeners to backend address pools and settings, optionally via path rules."
 
   validation {
-    condition = ([for rule in var.request_routing_rules : (
-      rule.backend_address_pool_name == null || rule.url_path_map_name == null
-    )])
-    error_message = "Request routing rule cannot contain both a backend address pool and url path mapping."
+    condition = alltrue([
+      length(var.request_routing_rules) > 0,
+      alltrue(([for rule in var.request_routing_rules : (
+        rule.backend_address_pool_name == null || rule.url_path_map_name == null
+      )]))
+    ])
+    error_message = "At least one request routing rule must be provided. Request routing rule cannot contain both a backend address pool and url path mapping."
   }
 }
 
