@@ -61,13 +61,13 @@ variable "scale" {
 variable "firewall" {
   type = object({
     firewall_mode                     = string
-    rule_set_version                  = optional(string)
+    rule_set_type                     = optional(string)
+    rule_set_version                  = string
     firewall_policy_id                = optional(string)
     force_firewall_policy_association = optional(bool)
   })
   description = "The web application firewall configuration for the application gateway."
 }
-
 
 # Gateway Ip Configuration
 

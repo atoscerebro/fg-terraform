@@ -10,7 +10,7 @@ resource "azurerm_application_gateway" "application_gateway" {
   }
 
   dynamic "autoscale_configuration" {
-    for_each = var.scale.min_capacity ? [1] : []
+    for_each = var.scale.min_capacity == null ? [] : [1]
 
     content {
       min_capacity = var.scale.min_capacity
