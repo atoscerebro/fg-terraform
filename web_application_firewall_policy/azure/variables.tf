@@ -12,7 +12,14 @@ variable "resource_group_name" {
 
 variable "location" {
   type        = string
-  description = "The location of the web application firewall policy."
+  description = "The location of the application gateway."
+
+  validation {
+    condition = contains([
+      "westeurope"
+    ], var.location)
+    error_message = "Application gateway location must match option from provided list."
+  }
 }
 
 # Rules

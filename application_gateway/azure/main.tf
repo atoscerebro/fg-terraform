@@ -38,7 +38,7 @@ resource "azurerm_application_gateway" "application_gateway" {
     rule_set_version = var.firewall.rule_set_version
 
     dynamic "disabled_rule_group" {
-      for_each = var.firewall.disabled_rule_groups
+      for_each = coalesce(var.firewall.disabled_rule_groups, [])
 
       content {
         rule_group_name = disabled_rule_group.value.rule_group_name
@@ -47,7 +47,7 @@ resource "azurerm_application_gateway" "application_gateway" {
     }
 
     dynamic "exclusion" {
-      for_each = var.firewall.exclusions
+      for_each = coalesce(var.firewall.exclusions, [])
 
       content {
         match_variable          = exclusion.value.match_variable

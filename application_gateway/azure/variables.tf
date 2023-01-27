@@ -51,8 +51,8 @@ variable "scale" {
   description = "Indicate whether the application gateway should have a static capacity or auto-scale."
 
   validation {
-    condition     = var.scale.capacity != null || var.scale.min_capacity != null
-    error_message = "Either scale capacity or min_capacity must be set."
+    condition     = can(coalesce(var.scale.capacity, var.scale.min_capacity))
+    error_message = "Either capacity or min_capacity must be set."
   }
 }
 
@@ -139,13 +139,6 @@ variable "backend_http_settings" {
     port                  = number
   }))
   description = "A list of (at least one) backend http settings used by the application gateway."
-
-  validation {
-    condition = alltrue([for settings in var.backend_http_settings : (
-      settings.cookie_based_affinity == "Enabled" ? settings.affinity_cookie_name != "" : true
-    )])
-    error_message = "An affinity cookie name must be provided when cookie based affinity is enabled."
-  }
 }
 
 variable "url_path_maps" {
@@ -180,9 +173,10 @@ variable "request_routing_rules" {
 
   validation {
     condition = alltrue(([for rule in var.request_routing_rules : (
-      rule.backend_address_pool_name == null || rule.url_path_map_name == null
+      (rule.backend_address_pool_name != null && rule.backend_http_settings_name != null && rule.url_path_map_name == null) ||
+      (rule.backend_address_pool_name == null && rule.backend_http_settings_name == null && rule.url_path_map_name != null)
     )]))
-    error_message = "Request routing rule cannot contain both a backend address pool and url path mapping."
+    error_message = "Request routing rule must contain either a backend address pool and http settings, or an url path mapping."
   }
 }
 
