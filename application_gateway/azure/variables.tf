@@ -60,11 +60,20 @@ variable "scale" {
 
 variable "firewall" {
   type = object({
+    firewall_policy_id                = optional(string)
+    force_firewall_policy_association = optional(bool)
     firewall_mode                     = string
     rule_set_type                     = optional(string)
     rule_set_version                  = string
-    firewall_policy_id                = optional(string)
-    force_firewall_policy_association = optional(bool)
+    disabled_rule_groups = optional(list(object({
+      rule_group_name = string
+      rules           = optional(list(string))
+    })))
+    exclusions = optional(list(object({
+      match_variable          = string
+      selector                = optional(string)
+      selector_match_operator = optional(string)
+    })))
   })
   description = "The web application firewall configuration for the application gateway."
 }
@@ -76,12 +85,7 @@ variable "gateway_ip_configurations" {
     name      = string
     subnet_id = string
   }))
-  description = "A list of gateway ip configurations for the application gateway."
-
-  validation {
-    condition     = length(var.gateway_ip_configurations) > 0
-    error_message = "At least one gateway ip configuration must be provided."
-  }
+  description = "A list of (at least one) gateway ip configurations for the application gateway."
 }
 
 # Frontend
@@ -93,12 +97,7 @@ variable "frontend_ip_configurations" {
     private_ip_address   = optional(string)
     public_ip_address_id = optional(string)
   }))
-  description = "A list of ip configurations used by http listeners to listen for frontend traffic."
-
-  validation {
-    condition     = length(var.frontend_ip_configurations) > 0
-    error_message = "At least one frontend ip configuration must be provided."
-  }
+  description = "A list of (at least one) ip configurations used by http listeners to listen for frontend traffic."
 }
 
 variable "frontend_ports" {
@@ -106,12 +105,7 @@ variable "frontend_ports" {
     name = string
     port = number
   }))
-  description = "A list of ports used by http listeners to listen for frontend traffic."
-
-  validation {
-    condition     = length(var.frontend_ports) > 0
-    error_message = "At least one frontend port must be provided."
-  }
+  description = "A list of (at least one) ports used by http listeners to listen for frontend traffic."
 }
 
 variable "http_listeners" {
@@ -122,12 +116,7 @@ variable "http_listeners" {
     protocol                       = string
     firewall_policy_id             = optional(string)
   }))
-  description = "A list of http listeners used on the frontend of the application gateway."
-
-  validation {
-    condition     = length(var.http_listeners) > 0
-    error_message = "At least one http listener must be provided."
-  }
+  description = "A list of (at least one) http listeners used on the frontend of the application gateway."
 }
 
 # Backend
@@ -138,12 +127,7 @@ variable "backend_address_pools" {
     fqdns        = optional(list(string))
     ip_addresses = optional(list(string))
   }))
-  description = "A list of backend address pools used by the application gateway."
-
-  validation {
-    condition     = length(var.backend_address_pools) > 0
-    error_message = "At least one backend address pool must be provided."
-  }
+  description = "A list of (at least one) backend address pools used by the application gateway."
 }
 
 variable "backend_http_settings" {
@@ -154,16 +138,13 @@ variable "backend_http_settings" {
     protocol              = string
     port                  = number
   }))
-  description = "A list of backend http settings used by the application gateway."
+  description = "A list of (at least one) backend http settings used by the application gateway."
 
   validation {
-    condition = alltrue([
-      length(var.backend_http_settings) > 0,
-      alltrue([for settings in var.backend_http_settings : (
-        settings.cookie_based_affinity == "Enabled" ? settings.affinity_cookie_name != "" : true
-      )])
-    ])
-    error_message = "At least one backend http settings must be provided. An affinity cookie name must be provided when cookie based affinity is enabled."
+    condition = alltrue([for settings in var.backend_http_settings : (
+      settings.cookie_based_affinity == "Enabled" ? settings.affinity_cookie_name != "" : true
+    )])
+    error_message = "An affinity cookie name must be provided when cookie based affinity is enabled."
   }
 }
 
@@ -195,16 +176,13 @@ variable "request_routing_rules" {
     backend_http_settings_name = optional(string)
     url_path_map_name          = optional(string)
   }))
-  description = "A list of request routing rules that match http listeners to backend address pools and settings, optionally via path rules."
+  description = "A list of (at least one) request routing rules that match http listeners to backend address pools and settings, optionally via path rules."
 
   validation {
-    condition = alltrue([
-      length(var.request_routing_rules) > 0,
-      alltrue(([for rule in var.request_routing_rules : (
-        rule.backend_address_pool_name == null || rule.url_path_map_name == null
-      )]))
-    ])
-    error_message = "At least one request routing rule must be provided. Request routing rule cannot contain both a backend address pool and url path mapping."
+    condition = alltrue(([for rule in var.request_routing_rules : (
+      rule.backend_address_pool_name == null || rule.url_path_map_name == null
+    )]))
+    error_message = "Request routing rule cannot contain both a backend address pool and url path mapping."
   }
 }
 

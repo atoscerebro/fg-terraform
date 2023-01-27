@@ -36,6 +36,25 @@ resource "azurerm_application_gateway" "application_gateway" {
     enabled          = true
     firewall_mode    = var.firewall.firewall_mode
     rule_set_version = var.firewall.rule_set_version
+
+    dynamic "disabled_rule_group" {
+      for_each = var.firewall.disabled_rule_groups
+
+      content {
+        rule_group_name = disabled_rule_group.value.rule_group_name
+        rules           = disabled_rule_group.value.rules
+      }
+    }
+
+    dynamic "exclusion" {
+      for_each = var.firewall.exclusions
+
+      content {
+        match_variable          = exclusion.value.match_variable
+        selector                = exclusion.value.selector
+        selector_match_operator = exclusion.value.selector_match_operator
+      }
+    }
   }
 
   # Frontend
