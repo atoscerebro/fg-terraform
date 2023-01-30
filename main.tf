@@ -16,7 +16,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   tags                = {
     Environment = "Development"
   }
-
+  
   default_node_pool {
     name       = "agentpool"
     vm_size    = "Standard_D2_v2"
@@ -26,7 +26,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     admin_username = "ubuntu"
 
     ssh_key {
-      key_data = file(var.ssh_public_key)
+      key_data = trimspace(tls_private_key.github_ssh_key.public_key_openssh)
     }
   }
   network_profile {
@@ -37,4 +37,9 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     client_id     = var.aks_service_principal_app_id
     client_secret = var.aks_service_principal_client_secret
   }
+}
+
+resource "tls_private_key" "github_ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = "4096"
 }
