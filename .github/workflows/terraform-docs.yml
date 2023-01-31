@@ -41,6 +41,8 @@ jobs:
         with:
           title: Update terraform documentation
           commit-message: Update terraform documentation
+          author: GitHub <noreply@github.com>
+          branch: fix/terraform-docs
 
       - name: Approve PR
         if: ${{ steps.build-docs.outcome == 'success' }}
