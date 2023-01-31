@@ -1,0 +1,7 @@
+SHA256(./modules/vm_managed_disk/azure/outputs.tf)= c0723d4ff91001a2a8d51381322885200ac047ef28a8da17f1a6541ef491c154
+SHA256(./modules/vm_managed_disk/azure/main.tf)= ea980ac9ec4e6453f5e14757e1b290728cbc7451084d8c99b7c0d9f3d68e3249
+SHA256(./modules/vm_managed_disk/azure/variables.tf)= ea80c479043359d53dd7cd50a09599f9baea22bfc4115804cace311c6e4f4a55
+SHA256(./modules/vm/azure/data.tf)= bf0d5ee7cd7d68138dbf147139b551aa62423681e4b5393f940c1c712aad8c1f
+SHA256(./modules/vm/azure/outputs.tf)= 49bc77f251572e16f8fc46a2c3a0da7fed8a297a04332c3efa6283b3132bca3f
+SHA256(./modules/vm/azure/main.tf)= ecf392fcb867a2e52899783183dbe8aa524f917ae71353344099409df939eaff
+SHA256(./modules/vm/azure/variables.tf)= 418e796bccdc0732605e1d1e92a60d6c85f8e3bf68ad3530f0b4ec70c1cd3885

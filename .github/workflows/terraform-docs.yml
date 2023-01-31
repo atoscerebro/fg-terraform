@@ -1,0 +1,26 @@
+name: Terraform Documentation
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - .github/workflows/terraform-docs.yml
+      - 'modules/**'
+      - docs
+
+jobs:
+  generate:
+    name: Generate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build docs
+        uses: terraform-docs/gh-actions@v1.0.0
+        with:
+          find-dir: ./modules
+          output-file: README.md
+          fail-on-diff: true
