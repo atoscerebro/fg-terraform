@@ -1,5 +1,5 @@
 MODULE_ROOTS := main|site
-TERRAFORM_SOURCES := $(shell find ./modules -name "*.tf")
+TERRAFORM_SOURCES := $(shell find ./modules -name "*.tf" -o -name "*.tfvars" -o -name "*.conf")
 
 find-modules:
 	find -E modules -type f -regex '.*($(MODULE_ROOTS))\.tf$$' -exec dirname "{}" \; | uniq
