@@ -26,13 +26,7 @@ jobs:
       - name: Build docs
         id: build-docs
         run: |
-          code=$(make -q -s build-docs; echo $?)
-          echo $code
-          echo "EXIT_CODE=$code" >> $GITHUB_OUTPUT
-
-      - name: Echo output
-        run: |
-          echo ${{ steps.build-docs.outputs.EXIT_CODE }}
+          echo "EXIT_CODE=$(make -q -s build-docs; echo $?)" >> $GITHUB_OUTPUT
 
       - name: Run if updated
         if: ${{ steps.build-docs.outputs.EXIT_CODE == 1 }}
