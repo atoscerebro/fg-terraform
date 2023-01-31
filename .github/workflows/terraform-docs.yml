@@ -35,6 +35,6 @@ jobs:
           echo ${{ steps.build-docs.outputs.EXIT_CODE }}
 
       - name: Run if updated
-        if: ${{ steps.build-docs.outputs.EXIT_CODE }} == "1"
+        if: ${{ steps.build-docs.outputs.EXIT_CODE }} == 1
         run: |
           echo "Commit new docs"
