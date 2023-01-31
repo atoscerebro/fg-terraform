@@ -44,6 +44,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_admin_private_key"></a> [admin\_private\_key](#output\_admin\_private\_key) | n/a |
-| <a name="output_id"></a> [id](#output\_id) | n/a |
+| <a name="output_admin_private_key"></a> [admin\_private\_key](#output\_admin\_private\_key) | The private SSH key assigned to the VM (optional). |
+| <a name="output_id"></a> [id](#output\_id) | The resource id of the VM. |
 <!-- END_TF_DOCS -->
