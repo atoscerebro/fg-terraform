@@ -8,7 +8,7 @@ build-docs:
 	$(MAKE) -s find-modules | xargs -I %s terraform-docs markdown table --output-file README.md %s
 
 docs: $(TERRAFORM_SOURCES)
-	$(MAKE) -s build-docs
+	$(MAKE -s build-docs)
 	openssl sha256 $(TERRAFORM_SOURCES) > docs
 
 .PHONY: find-modules build-docs
