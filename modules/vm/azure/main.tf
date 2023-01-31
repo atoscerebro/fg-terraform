@@ -17,7 +17,7 @@ resource "azurerm_virtual_machine" "vm" {
     os_type           = "Linux"
   }
 
-  # hi
+  # new comment
 
   os_profile {
     computer_name  = var.name

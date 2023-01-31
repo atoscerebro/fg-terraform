@@ -6,6 +6,6 @@ find-modules:
 
 build-docs: $(TERRAFORM_SOURCES)
 	$(MAKE) -s find-modules | xargs -I %s terraform-docs markdown table --output-file README.md %s; \
-	touch build-docs
+	openssl sha256 $(TERRAFORM_SOURCES) > build-docs
 
 .PHONY: find-modules
