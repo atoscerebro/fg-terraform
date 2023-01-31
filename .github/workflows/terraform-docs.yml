@@ -39,7 +39,7 @@ jobs:
         if: ${{ steps.build-docs.outcome == 'success' }}
         uses: peter-evans/create-pull-request@v4
         with:
-          title: Update terraform documentation
+          title: "[TEST] Update terraform documentation"
           commit-message: Update terraform documentation
           author: GitHub <noreply@github.com>
           branch: fix/terraform-docs
