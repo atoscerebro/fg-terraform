@@ -30,7 +30,7 @@ jobs:
       - name: Build docs
         id: build-docs
         run: |
-          code=$(make -s -q build-docs; echo $?)
+          code=$(make -q -s build-docs; echo $?)
           echo $code
           echo "EXIT_CODE=$code" >> $GITHUB_OUTPUT
 
