@@ -8,7 +8,7 @@ on:
     paths:
       - .github/workflows/terraform-docs.yml
       - 'modules/**'
-      - build-docs
+      - docs
 
 permissions:
   contents: 'read'
@@ -24,12 +24,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Build docs
-        id: build-docs
+      - name: Question docs
+        id: question-docs
         run: |
-          echo "EXIT_CODE=$(make -q -s build-docs; echo $?)" >> $GITHUB_OUTPUT
+          echo "EXIT_CODE=$(make -q -s docs; echo $?)" >> $GITHUB_OUTPUT
 
       - name: Run if updated
-        if: ${{ steps.build-docs.outputs.EXIT_CODE == 1 }}
+        if: ${{ steps.question-docs.outputs.EXIT_CODE != 0 }}
         run: |
           echo "Commit new docs"
