@@ -23,10 +23,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Make build
-        run : |
-          make -q build-docs
-
       - name: Build docs
         id: build-docs
         run: |
