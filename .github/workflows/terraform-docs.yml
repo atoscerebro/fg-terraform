@@ -44,12 +44,14 @@ jobs:
           commit-message: Update terraform documentation
 
       - name: Approve PR
+        if: ${{ steps.build-docs.outcome == 'success' }}
         env:
           PR_URL: ${{ steps.create-pull-request.outputs.pull-request-url }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: gh pr review --approve "$PR_URL"
 
       - name: Merge PR
+        if: ${{ steps.build-docs.outcome == 'success' }}
         env:
           PR_URL: ${{ steps.create-pull-request.outputs.pull-request-url }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
