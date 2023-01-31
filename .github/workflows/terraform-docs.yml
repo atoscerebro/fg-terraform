@@ -1,0 +1,37 @@
+name: Terraform Documentation
+
+on:
+  push:
+    branches:
+      - master
+      - generate-documentation
+    paths:
+      - 'modules/**'
+
+permissions:
+  contents: 'read'
+  pull-requests: 'write'
+  id-token: 'write'
+
+jobs:
+  generate:
+    name: Generate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build docs
+        id: build-docs
+        run: |
+          echo "EXIT_CODE=$(make -q build-docs; echo $?)" >> $GITHUB_OUTPUT
+
+      - name: Echo output
+        run: |
+          echo ${{ steps.build-docs.outputs.EXIT_CODE }}
+
+      - name: Run if updated
+        if: ${{ steps.build-docs.outputs.EXIT_CODE }} == "1"
+        run: |
+          echo "Commit new docs"
