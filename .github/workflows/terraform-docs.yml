@@ -11,14 +11,14 @@ on:
 
 jobs:
   generate:
-    name: Generate
+    name: Test
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Build docs
+      - name: Test docs
         uses: terraform-docs/gh-actions@v1.0.0
         with:
           find-dir: ./modules
