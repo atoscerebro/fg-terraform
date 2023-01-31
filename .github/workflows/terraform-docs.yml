@@ -6,6 +6,7 @@ on:
       - master
       - generate-documentation
     paths:
+      - .github/workflows/terraform-docs.yml
       - 'modules/**'
 
 permissions:
