@@ -8,6 +8,7 @@ on:
     paths:
       - .github/workflows/terraform-docs.yml
       - 'modules/**'
+      - build-docs
 
 permissions:
   contents: 'read'
