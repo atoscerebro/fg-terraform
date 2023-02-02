@@ -1,10 +1,12 @@
+data "azurerm"
+
 resource "tls_private_key" "github_ssh_key" {
   algorithm = "RSA"
   rsa_bits  = "4096"
 }
 
 resource "azurerm_kubernetes_cluster" "k8s" {
-  # location            = azurerm_resource_group.rg.location
+  location            = azurerm_resource_group.rg.location
   # name                = var.cluster_name
   # resource_group_name = azurerm_resource_group.rg.name
   # dns_prefix          = var.dns_prefix
