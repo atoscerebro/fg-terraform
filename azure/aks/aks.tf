@@ -10,7 +10,7 @@ resource "tls_private_key" "github_ssh_key" {
 resource "azurerm_kubernetes_cluster" "k8s" {
   location            = data.azurerm_resource_group.resource_group.location
   name                = var.cluster_name
-  resource_group_name = data.azurerm_resource_group.name
+  resource_group_name = data.azurerm_resource_group.resource_group.name
   dns_prefix          = var.dns_prefix
 
   azure_active_directory_role_based_access_control {
