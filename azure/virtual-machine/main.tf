@@ -52,9 +52,3 @@ resource "tls_private_key" "vm_private_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
-
-provider "azurerm" {
-  features {
-
-  }
-}
