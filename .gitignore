@@ -9,6 +9,9 @@ testing
 *.tfstate
 *.tfstate.*
 
+# tf lockfiles
+*.lock.hcl
+
 # Crash log files
 crash.log
 
