@@ -17,6 +17,7 @@ module "vm" {
   storage_os_disk_name              = "osdisk"
   storage_os_disk_managed_disk_type = "Standard_LRS"
   admin_username                    = "atos"
+  os_profile_admin_password         = "Drowssap123"
   subnet_name                       = "private"
   virtual_network_name              = local.vnet_name
   tags = {
@@ -26,4 +27,10 @@ module "vm" {
   depends_on = [
     module.vnet
   ]
+}
+
+module "aks" {
+  source              = "../azure/aks"
+  cluster_name        = "demo-aks"
+  resource_group_name = "demo-rg"
 }
