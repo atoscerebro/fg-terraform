@@ -2,6 +2,8 @@ testing
 
 # Local .terraform directories
 **/.terraform/*
+# Ignore all tfvars as these are examples
+**/*.tfvars
 
 # .tfstate files
 *.tfstate

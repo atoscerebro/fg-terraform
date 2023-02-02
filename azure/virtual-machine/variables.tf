@@ -24,12 +24,18 @@ variable "location" {
 
 variable "vm_size" {
   type        = string
+  default     = "Standard_DS1_v2"
   description = "The SKU which should be used for this VM."
 }
 
-variable "network_interface_ids" {
-  type        = list(string)
-  description = "The list of network interface ids this VM belongs to."
+variable "virtual_network_name" {
+  type        = string
+  description = "The vnet to place the VM into."
+}
+
+variable "subnet_name" {
+  type        = string
+  description = "The subnet to place the VM into."
 }
 
 # Storage OS Disk
@@ -39,19 +45,15 @@ variable "storage_os_disk_name" {
   description = "The name of the internal OS disk."
 }
 
-variable "storage_os_disk_caching" {
-  type        = string
-  description = "The type of caching which should be used for the internal OS disk."
-}
-
 variable "storage_os_disk_managed_disk_type" {
   type        = string
   description = "The type of storage account which should be used for the internal OS disk."
+  default     = "Standard_LRS"
 }
 
 # OS Profile
 
-variable "os_profile_admin_username" {
+variable "admin_username" {
   type        = string
   description = "The username of the admin on the VM."
 }
@@ -60,12 +62,13 @@ variable "os_profile_admin_password" {
   type        = string
   description = "The password of the admin user of the VM."
   sensitive   = true
+  default     = null
 }
 
 variable "output_admin_private_key" {
   type        = bool
   description = "Indicate whether the private ssh key for the VM should be outputted by Terraform."
-  default     = false
+  default     = true
 }
 
 # Source Image Reference
@@ -73,12 +76,10 @@ variable "output_admin_private_key" {
 variable "vm_storage_image_sku" {
   type        = string
   description = "The SKU of the rh-rhel image offer used to create the VM."
+  default     = "9-lvm"
 
   validation {
-    condition = contains([
-      "rh-rhel8",
-      "rh-rhel9"
-    ], var.vm_storage_image_sku)
+    condition     = startswith(var.vm_storage_image_sku, "9") || startswith(var.vm_storage_image_sku, "8")
     error_message = "RHEL SKU must match option from provided list."
   }
 }
