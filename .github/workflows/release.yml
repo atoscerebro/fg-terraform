@@ -17,11 +17,12 @@ jobs:
         uses: ietf-tools/semver-action@v1
         with:
           majorList: major
-          minorList: feat,feature
+          minorList: minor,feat,feature
+          patchList: patch,fix,chore
           patchAll: true
           skipInvalidTags: true
           token: ${{ github.token }}
-          branch: publicise-repo
+          branch: master
 
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
@@ -30,5 +31,5 @@ jobs:
           draft: false
           makeLatest: true
           tag: ${{ steps.semver.outputs.next }}
-          commmit: publicise-repo
           token: ${{ github.token }}
+          commit: master
