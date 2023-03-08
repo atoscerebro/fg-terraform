@@ -11,6 +11,6 @@ docs: $(TERRAFORM_SOURCES)
 	$(MAKE) -s build-docs; openssl sha256 $(TERRAFORM_SOURCES) > docs
 	
 release:
-	gh workflow run release.yml -r publicise-repo
+	gh workflow run release.yml
 
 .PHONY: find-modules build-docs release
