@@ -1,6 +1,9 @@
 name: Release
 
 on:
+  push:
+    branches:
+      - publicise-repo
   workflow_dispatch:
 
 jobs:
@@ -12,22 +15,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Get Next Version
-        id: semver
-        uses: ietf-tools/semver-action@v1
-        with:
-          majorList: major
-          minorList: feat,feature
-          patchAll: true
-          skipInvalidTags: true
-          token: ${{ github.token }}
-          branch: main
+      # - name: Get Next Version
+      #   id: semver
+      #   uses: ietf-tools/semver-action@v1
+      #   with:
+      #     majorList: major
+      #     minorList: feat,feature
+      #     patchAll: true
+      #     skipInvalidTags: true
+      #     token: ${{ github.token }}
+      #     branch: main
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1.12.0
-        with:
-          allowUpdates: true
-          draft: false
-          makeLatest: true
-          name: ${{ steps.semver.outputs.next }}
-          token: ${{ github.token }}
+      # - name: Create Release
+      #   uses: ncipollo/release-action@v1.12.0
+      #   with:
+      #     allowUpdates: true
+      #     draft: false
+      #     makeLatest: true
+      #     name: ${{ steps.semver.outputs.next }}
+      #     token: ${{ github.token }}
