@@ -21,7 +21,7 @@ jobs:
           patchAll: true
           skipInvalidTags: true
           token: ${{ github.token }}
-          branch: master
+          branch: publicise-repo
 
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
