@@ -8,7 +8,7 @@ on:
       - synchronize
 
 jobs:
-  lint:
+  check-title:
     runs-on: ubuntu-latest
     permissions:
       statuses: write

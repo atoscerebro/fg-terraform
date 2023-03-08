@@ -18,7 +18,8 @@ jobs:
         with:
           majorList: major
           minorList: minor,feat,feature
-          patchList: patch,fix,chore
+          patchList: patch,fix,chore,docs
+          # all unrecognised commit titles treated as patch
           patchAll: true
           skipInvalidTags: true
           token: ${{ github.token }}

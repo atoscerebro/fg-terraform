@@ -29,15 +29,7 @@ module "virtual-machine" {
 
 ## Releases
 
-All commits to this repository should be made in the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) format.
-
-```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
+All pull requests to this repository must be titled using the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) format.
 
 Minimal examples:
 
@@ -50,6 +42,16 @@ minor: add aks module
 
 // Triggers a patch version on next release
 patch: remove comment
+```
+
+Commits can optionally be formatted similarly to assist in generating release notes:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
 ```
 
 Refer to the [release.yml](https://github.com/atoscerebro/fg-terraform/blob/master/.github/workflows/release.yml) workflow for a list of commit prefixes.
