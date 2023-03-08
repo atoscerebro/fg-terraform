@@ -7,6 +7,8 @@ resource "tls_private_key" "github_ssh_key" {
   rsa_bits  = "4096"
 }
 
+# test comment
+
 resource "azurerm_kubernetes_cluster" "k8s" {
   location            = data.azurerm_resource_group.resource_group.location
   name                = var.cluster_name
