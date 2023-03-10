@@ -1,13 +1,18 @@
-MODULE_ROOTS := main|site
-TERRAFORM_SOURCES := $(shell find ./azure -name "*.tf")
+TERRAFORM_SOURCES := $(shell find modules -name "*.tf")
+MODULE_SOURCES := $(shell find modules -type d)
+MODULE_DIRECTORIES := $(shell find modules -mindepth 2 -type d)
 
-find-modules:
-	find -E azure -type f -regex '.*($(MODULE_ROOTS))\.tf$$' -exec dirname "{}" \; | uniq
+module-docs: $(TERRAFORM_SOURCES)
+	echo $(MODULE_DIRECTORIES) | xargs -n 1 terraform-docs markdown table --output-file README.md
+	openssl sha256 $(TERRAFORM_SOURCES) > module-docs
 
-build-docs:
-	$(MAKE) -s find-modules | xargs -n 1 terraform-docs markdown table --output-file README.md
+root-docs: $(MODULE_SOURCES)
+	bash ./scripts/build-root-docs.sh README.md
+	openssl sha256 README.md > root-docs
 
-docs: $(TERRAFORM_SOURCES)
-	$(MAKE) -s build-docs; openssl sha256 $(TERRAFORM_SOURCES) > docs
+build-docs: module-docs root-docs
 
-.PHONY: find-modules build-docs
+test-docs:
+	bash ./scripts/test-root-docs.sh test_README.md README.md
+
+.PHONY: build-docs test-docs
