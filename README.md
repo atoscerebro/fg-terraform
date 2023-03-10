@@ -2,7 +2,20 @@
 
 Reusable terraform modules for use by Flemish Government entities, to provision resources using sensible, policy driven defaults.
 
-Modules are organised by cloud provider. Select a cloud provider directory and resource to read resource-specific documentation.
+Modules are organised by cloud provider. Resource-specific documentation can be found in each module directory.
+
+## Modules
+
+<!-- BEGIN_MODULE_LINKS -->
+### azure
+
+- [aks](https://github.com/atoscerebro/fg-terraform/tree/master/modules/azure/aks)
+- [application-gateway](https://github.com/atoscerebro/fg-terraform/tree/master/modules/azure/application-gateway)
+- [managed-disk](https://github.com/atoscerebro/fg-terraform/tree/master/modules/azure/managed-disk)
+- [virtual-machine](https://github.com/atoscerebro/fg-terraform/tree/master/modules/azure/virtual-machine)
+- [vnet](https://github.com/atoscerebro/fg-terraform/tree/master/modules/azure/vnet)
+- [waf-policy](https://github.com/atoscerebro/fg-terraform/tree/master/modules/azure/waf-policy)
+<!-- END_MODULE_LINKS -->
 
 ## Example Usage
 
@@ -22,7 +35,7 @@ provider "azurerm" {
 }
 
 module "virtual-machine" {
-  source = "git@github.com:atoscerebro/fg-terraform.git//azure/virtual-machine?ref=v0.1.0"
+  source = "git@github.com:atoscerebro/fg-terraform.git//modules/azure/virtual-machine?ref=v0.1.0"
   ...
 }
 ```
