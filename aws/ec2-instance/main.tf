@@ -1,0 +1,97 @@
+# Key Pair
+
+resource "aws_key_pair" "deployer" {
+  key_name   = "deployer-key"
+  public_key = var.public_key
+}
+
+# Security Group
+
+// TODO - Add outbound egress rules?
+resource "aws_security_group" "test_group" {
+  name        = var.security_group_name
+  description = var.security_group_description
+  vpc_id      = var.vpc_id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "https" {
+  security_group_id = aws_security_group.test_group.id
+
+  description = "HTTPS ingress"
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "tcp"
+  cidr_ipv4   = "10.0.0.0/16"
+  // is this the correct IP?
+}
+
+resource "aws_vpc_security_group_ingress_rule" "http" {
+  security_group_id = aws_security_group.test_group.id
+
+  description = "HTTP ingress"
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  cidr_ipv4   = "10.0.0.0/16"
+  // is this the correct IP?
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ssh" {
+  security_group_id = aws_security_group.test_group.id
+
+  description = "SSH ingress"
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.ssh_ip_address
+}
+
+# EC2 Instance
+
+## Get AMI details
+data "aws_ami" "amazon-linux-2" {
+  most_recent = true
+
+  filter {
+    name   = "owner-alias"
+    values = ["amazon"]
+  }
+
+  filter {
+    name   = "image-id"
+    values = [var.instance_ami_image_id]
+  }
+
+  filter {
+    name   = "name"
+    values = [var.instance_ami_name]
+  }
+}
+
+## Get Private subnets from VPC
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
+
+  tags = {
+    Tier = "Private"
+  }
+}
+
+resource "aws_instance" "test_instance" {
+  // Currently loops through all subnet ids with a custom tag of Tier set to "Private", putting instances across all availability zones. Outputs ids.
+  for_each                    = toset(data.aws_subnets.private.ids)
+  subnet_id                   = each.value
+  ami                         = data.aws_ami.amazon-linux-2.id
+  instance_type               = var.instance_type
+  associate_public_ip_address = false
+  availability_zone           = "eu-west-1"
+  disable_api_termination     = false
+  monitoring                  = true
+  user_data                   = var.user_data
+  vpc_security_group_ids      = [aws_security_group.test_group.id]
+  // TODO - Configure EBS fields, following discussion with Michiel.
+  // TODO - Create Network Interface here or create separately and assign here?
+}
