@@ -108,6 +108,11 @@ resource "aws_instance" "test_instance" {
   monitoring              = true
   user_data               = var.user_data
   vpc_security_group_ids  = [aws_security_group.test_group.id]
-  // TODO - Configure EBS fields, following discussion with Michiel.
+
+  ebs_block_device {
+    delete_on_termination = true
+    device_name           = "/dev/sda"
+  }
+
   // TODO - Create Network Interface here or create separately and assign here?
 }
