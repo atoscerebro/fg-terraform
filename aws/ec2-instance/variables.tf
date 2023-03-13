@@ -52,6 +52,12 @@ variable "egress_ip_address" {
 
 # EC2 Instance
 
+variable "ec2_count" {
+  type        = number
+  description = "The number of requested EC2 instances."
+  default     = 1
+}
+
 // Hard-coded arbitrary ami image details for now - could provide user with a map of defaults?
 variable "instance_ami_name" {
   type        = string
@@ -76,4 +82,18 @@ variable "user_data" {
   type        = string
   description = "User data to provide as a bash script when launching the instance. Default value null."
   default     = null
+}
+
+# Availability Zones
+
+variable "aws_region" {
+  type        = string
+  description = "The AWS Geographical Region in which to create the VPC"
+  default     = "eu-west-1"
+}
+
+variable "az_count" {
+  type        = number
+  description = "The number of requested Availability Zones"
+  default     = 1
 }

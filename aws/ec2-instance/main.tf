@@ -1,3 +1,7 @@
+locals {
+  az = ["a", "b", "c", "d"]
+}
+
 # Key Pair
 
 resource "aws_key_pair" "deployer" {
@@ -92,17 +96,18 @@ data "aws_subnets" "private" {
 }
 
 resource "aws_instance" "test_instance" {
-  // Currently loops through all subnet ids with a custom tag of Tier set to "Private", putting instances across all availability zones. Outputs ids.
-  for_each                    = toset(data.aws_subnets.private.ids)
-  subnet_id                   = each.value
+  count = var.ec2_count
+  // Uses modulo operator to spread ec2 instances through configured number of subnets.
+  subnet_id                   = data.aws_subnets.private.ids[count.index % var.az_count]
   ami                         = data.aws_ami.amazon-linux-2.id
   instance_type               = var.instance_type
   associate_public_ip_address = false
-  availability_zone           = "eu-west-1"
-  disable_api_termination     = false
-  monitoring                  = true
-  user_data                   = var.user_data
-  vpc_security_group_ids      = [aws_security_group.test_group.id]
+  // Uses modulo operator to spread ec2 instances through configured number of AZs.
+  availability_zone       = format("${var.aws_region}%s", local.az[count.index % var.az_count])
+  disable_api_termination = false
+  monitoring              = true
+  user_data               = var.user_data
+  vpc_security_group_ids  = [aws_security_group.test_group.id]
   // TODO - Configure EBS fields, following discussion with Michiel.
   // TODO - Create Network Interface here or create separately and assign here?
 }
