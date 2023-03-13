@@ -7,12 +7,13 @@ resource "aws_key_pair" "deployer" {
 
 # Security Group
 
-// TODO - Add outbound egress rules?
 resource "aws_security_group" "test_group" {
   name        = var.security_group_name
   description = var.security_group_description
   vpc_id      = var.vpc_id
 }
+
+## Ingress Rules
 
 resource "aws_vpc_security_group_ingress_rule" "https" {
   security_group_id = aws_security_group.test_group.id
@@ -21,8 +22,7 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   from_port   = 443
   to_port     = 443
   ip_protocol = "tcp"
-  cidr_ipv4   = "10.0.0.0/16"
-  // is this the correct IP?
+  cidr_ipv4   = var.https_ingress_ip_address
 }
 
 resource "aws_vpc_security_group_ingress_rule" "http" {
@@ -32,8 +32,7 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
   from_port   = 80
   to_port     = 80
   ip_protocol = "tcp"
-  cidr_ipv4   = "10.0.0.0/16"
-  // is this the correct IP?
+  cidr_ipv4   = var.http_ingress_ip_address
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ssh" {
@@ -43,7 +42,19 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
   from_port   = 22
   to_port     = 22
   ip_protocol = "tcp"
-  cidr_ipv4   = var.ssh_ip_address
+  cidr_ipv4   = var.ssh_ingress_ip_address
+}
+
+## Egress Rule:
+
+resource "aws_vpc_security_group_egress_rule" "out" {
+  security_group_id = aws_security_group.test_group.id
+
+  description = "Security group egress"
+  from_port   = 0
+  to_port     = 0
+  ip_protocol = "-1"
+  cidr_ipv4   = var.egress_ip_address
 }
 
 # EC2 Instance

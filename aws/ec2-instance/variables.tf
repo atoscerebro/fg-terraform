@@ -22,10 +22,32 @@ variable "vpc_id" {
   description = "VPC id for use in security group."
 }
 
-variable "ssh_ip_address" {
+## Ingress rules
+
+variable "https_ingress_ip_address" {
+  type        = string
+  description = "IP address to allow HTTPS access from"
+  default     = "10.0.0.0/16"
+}
+
+variable "http_ingress_ip_address" {
+  type        = string
+  description = "IP address to allow HTTP access from"
+  default     = "10.0.0.0/16"
+}
+
+variable "ssh_ingress_ip_address" {
   type        = string
   description = "IP address to allow SSH access from"
   default     = "0.0.0.0/0"
+}
+
+## Egress rules
+
+variable "egress_ip_address" {
+  type        = string
+  description = "IP address to allow HTTPS access to"
+  default     = "10.0.0.0/16"
 }
 
 # EC2 Instance
