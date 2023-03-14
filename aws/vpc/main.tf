@@ -55,7 +55,7 @@ resource "aws_route" "public" {
 resource "aws_route_table_association" "public" {
   count = var.availability_zones
 
-  subnet_id      = cidrsubnet(var.vpc_cidr, 8, count.index)
+  subnet_id      = element(aws_subnet.public.*.id, count.index)
   route_table_id = aws_route_table.public.id
 }
 
