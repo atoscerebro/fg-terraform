@@ -40,7 +40,7 @@ variable "dhcp_domain_name" {
 }
 variable "dhcp_dns_servers" {
   description = "DNS servers for the instances within the VPC"
-  default     = "AmazonProvidedDNS"
+  default     = ["AmazonProvidedDNS"]
 }
 variable "dhcp_ntp_servers" {
   description = "NTP servers for the instances within the VPC"
