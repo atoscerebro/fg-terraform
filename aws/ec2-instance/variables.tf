@@ -97,3 +97,13 @@ variable "az_count" {
   description = "The number of requested Availability Zones"
   default     = 1
 }
+
+variable "vpc_name" {
+  description = "Name of the VPC"
+  default     = "test"
+}
+
+variable "tags" {
+  description = ""
+  default     = {}
+}
