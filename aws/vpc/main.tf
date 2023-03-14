@@ -20,11 +20,14 @@ resource "aws_subnet" "public" {
   count = var.availability_zones
 
   vpc_id                  = aws_vpc.fg_vpc.id
-  cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index)
+  cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index+1)
   availability_zone       = format("${var.aws_region}%s", element(local.az, count.index))
   map_public_ip_on_launch = false
 
-  tags = var.tags
+  tags = merge(
+    { "Name" = "${var.vpc_name}-public-${count.index+1}" },
+    var.tags
+  )
 }
 
 /* Internet gateway for the public subnet */
@@ -32,14 +35,20 @@ resource "aws_internet_gateway" "default" {
   count  = var.internet_gateway_enable == "true" ? 1 : 0
   vpc_id = aws_vpc.fg_vpc.id
 
-  tags = var.tags
+  tags = merge(
+    { "Name" = "${var.vpc_name}-igw" },
+    var.tags
+  )
 }
 
 /* Routing table for public subnets */
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.fg_vpc.id
 
-  tags = var.tags
+  tags = merge(
+    { "Name" = "${var.vpc_name}-public" },
+    var.tags
+  )
 }
 
 /* Add a route to the internet via the IG, if requested */
@@ -64,11 +73,14 @@ resource "aws_subnet" "private" {
   count = var.availability_zones
 
   vpc_id                  = aws_vpc.fg_vpc.id
-  cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index + 10)
+  cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index+1 + 10)
   availability_zone       = format("${var.aws_region}%s", element(local.az, count.index))
   map_public_ip_on_launch = false
 
-  tags = var.tags
+  tags = merge(
+    { "Name" = "${var.vpc_name}-private-${count.index+1}" },
+    var.tags
+  )
 }
 
 /* Routing table for private subnet */
@@ -77,7 +89,10 @@ resource "aws_route_table" "private" {
 
   vpc_id = aws_vpc.fg_vpc.id
 
-  tags = var.tags
+  tags = merge(
+    { "Name" = "${var.vpc_name}-private-${count.index+1}" },
+    var.tags
+  )
 }
 
 /* Associate the routing table to private subnets */
