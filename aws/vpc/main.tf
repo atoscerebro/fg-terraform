@@ -44,11 +44,11 @@ resource "aws_route_table" "public" {
 
 /* Add a route to the internet via the IG, if requested */
 resource "aws_route" "public" {
-  count = var.fg_internet_gateway_enable
+  count = var.internet_gateway_enable
 
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.default.id
+  gateway_id             = aws_internet_gateway.default.*.id
 }
 
 /* Associate the routing table to public subnets */
@@ -91,7 +91,7 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_vpc_dhcp_options" "default" {
-  domain_name          = var.dhcp_internal_domain
+  domain_name          = var.dhcp_domain_name
   domain_name_servers  = var.dhcp_dns_servers
   ntp_servers          = var.dhcp_ntp_servers
   netbios_name_servers = var.dhcp_netbios_name_servers
@@ -138,7 +138,7 @@ resource "aws_security_group_rule" "egress_local" {
 resource "aws_security_group" "public" {
   name        = "${var.vpc_name}-${var.env}-public"
   description = "Security group for the public instances in the VPC"
-  vpc_id      = aws_vpc.default.id
+  vpc_id      = aws_vpc.fg_vpc.id
 
   tags = var.tags
 }
