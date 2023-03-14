@@ -11,7 +11,7 @@ resource "aws_key_pair" "deployer" {
 
 # Security Group
 
-resource "aws_security_group" "test_group" {
+resource "aws_security_group" "fg" {
   name        = var.security_group_name
   description = var.security_group_description
   vpc_id      = var.vpc_id
@@ -20,7 +20,7 @@ resource "aws_security_group" "test_group" {
 ## Ingress Rules
 
 resource "aws_vpc_security_group_ingress_rule" "https" {
-  security_group_id = aws_security_group.test_group.id
+  security_group_id = aws_security_group.fg.id
 
   description = "HTTPS ingress"
   from_port   = 443
@@ -30,7 +30,7 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "http" {
-  security_group_id = aws_security_group.test_group.id
+  security_group_id = aws_security_group.fg.id
 
   description = "HTTP ingress"
   from_port   = 80
@@ -40,7 +40,7 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ssh" {
-  security_group_id = aws_security_group.test_group.id
+  security_group_id = aws_security_group.fg.id
 
   description = "SSH ingress"
   from_port   = 22
@@ -52,7 +52,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
 ## Egress Rule:
 
 resource "aws_vpc_security_group_egress_rule" "out" {
-  security_group_id = aws_security_group.test_group.id
+  security_group_id = aws_security_group.fg.id
 
   description = "Security group egress"
   from_port   = 0
@@ -95,7 +95,7 @@ data "aws_subnets" "private" {
   }
 }
 
-resource "aws_instance" "test_instance" {
+resource "aws_instance" "fg" {
   count = var.ec2_count
   // Uses modulo operator to spread ec2 instances through configured number of subnets.
   subnet_id = data.aws_subnets.private.ids[count.index % var.az_count]
@@ -108,7 +108,7 @@ resource "aws_instance" "test_instance" {
   disable_api_termination = false
   monitoring              = true
   user_data               = var.user_data
-  vpc_security_group_ids  = [aws_security_group.test_group.id]
+  vpc_security_group_ids  = [aws_security_group.fg.id]
 
   ebs_block_device {
     delete_on_termination = true
