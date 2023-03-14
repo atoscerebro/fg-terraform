@@ -17,7 +17,7 @@ resource "aws_lb" "application" {
   internal           = true
   load_balancer_type = "application"
   security_groups    = var.alb_security_group_ids
-  subnets            = [for subnet in data.aws_subnets.private : subnet.id]
+  subnets            = data.aws_subnets.private.ids
 
   access_logs {
     bucket  = var.s3_bucket.lb_logs.id
