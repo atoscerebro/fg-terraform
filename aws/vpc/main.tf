@@ -21,7 +21,7 @@ resource "aws_subnet" "public" {
 
   vpc_id                  = aws_vpc.fg_vpc.id
   cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index)
-  availability_zone       = formatlist("${var.aws_region}%s", element(local.az, count.index))
+  availability_zone       = format("${var.aws_region}%s", element(local.az, count.index))
   map_public_ip_on_launch = false
 
   tags = var.tags
@@ -44,7 +44,7 @@ resource "aws_route_table" "public" {
 
 /* Add a route to the internet via the IG, if requested */
 resource "aws_route" "public" {
-  count = var.internet_gateway_enable
+  count = var.internet_gateway_enable == "true" ? 1 : 0
 
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
@@ -65,7 +65,7 @@ resource "aws_subnet" "private" {
 
   vpc_id                  = aws_vpc.fg_vpc.id
   cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index + 10)
-  availability_zone       = formatlist("${var.aws_region}%s", element(local.az, count.index))
+  availability_zone       = format("${var.aws_region}%s", element(local.az, count.index))
   map_public_ip_on_launch = false
 
   tags = var.tags
