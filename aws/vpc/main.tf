@@ -12,7 +12,7 @@ resource "aws_vpc" "fg_vpc" {
   tags = merge(
     { "Name" = var.vpc_name },
     var.tags
-    )
+  )
 }
 
 /* Public subnets */
@@ -20,12 +20,12 @@ resource "aws_subnet" "public" {
   count = var.availability_zones
 
   vpc_id                  = aws_vpc.fg_vpc.id
-  cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index+1)
+  cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index + 1)
   availability_zone       = format("${var.aws_region}%s", element(local.az, count.index))
   map_public_ip_on_launch = false
 
   tags = merge(
-    { "Name" = "${var.vpc_name}-public-${count.index+1}" },
+    { "Name" = "${var.vpc_name}-public-${count.index + 1}" },
     var.tags
   )
 }
@@ -73,12 +73,12 @@ resource "aws_subnet" "private" {
   count = var.availability_zones
 
   vpc_id                  = aws_vpc.fg_vpc.id
-  cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index+1 + 10)
+  cidr_block              = cidrsubnet(var.vpc_cidr, 8, count.index + 1 + 10)
   availability_zone       = format("${var.aws_region}%s", element(local.az, count.index))
   map_public_ip_on_launch = false
 
   tags = merge(
-    { "Name" = "${var.vpc_name}-private-${count.index+1}" },
+    { "Name" = "${var.vpc_name}-private-${count.index + 1}" },
     var.tags
   )
 }
@@ -90,7 +90,7 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.fg_vpc.id
 
   tags = merge(
-    { "Name" = "${var.vpc_name}-private-${count.index+1}" },
+    { "Name" = "${var.vpc_name}-private-${count.index + 1}" },
     var.tags
   )
 }
