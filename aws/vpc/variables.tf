@@ -44,15 +44,15 @@ variable "dhcp_dns_servers" {
 }
 variable "dhcp_ntp_servers" {
   description = "NTP servers for the instances within the VPC"
-  default     = ""
+  default     = []
 }
 variable "dhcp_netbios_name_servers" {
   description = "For Windows Instances: The friendly name assigned to an instance"
-  default     = ""
+  default     = []
 }
 variable "dhcp_netbios_node_type" {
   description = "For Windows Instances: how the instance will resolve netbios names to IP addresses"
-  default     = ""
+  default     = 2
 }
 variable "tags" {
   description = ""
