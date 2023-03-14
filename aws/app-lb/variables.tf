@@ -19,8 +19,10 @@ variable "ssl_cert_internal_domain" {
 
 }
 
-variable "s3_bucket" {
-  // Is this needed? Used for access logs. If so, what type? ID?
+variable "s3_bucket_id" {
+  // Is this needed? Used for access logs.
+  type        = string
+  description = "ID of the S3 bucket used to store the logs in."
 }
 
 variable "vpc_id" {

@@ -20,7 +20,7 @@ resource "aws_lb" "application" {
   subnets            = data.aws_subnets.private.ids
 
   access_logs {
-    bucket  = var.s3_bucket.lb_logs.id
+    bucket  = var.s3_bucket_id
     prefix  = "fg-lb"
     enabled = true
   }
