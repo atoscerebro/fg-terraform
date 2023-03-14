@@ -98,7 +98,8 @@ data "aws_subnets" "private" {
 resource "aws_instance" "test_instance" {
   count = var.ec2_count
   // Uses modulo operator to spread ec2 instances through configured number of subnets.
-  subnet_id                   = data.aws_subnets.private.ids[count.index % var.az_count]
+  subnet_id = data.aws_subnets.private.ids[count.index % var.az_count]
+  // Do we need to account for the case where the above array is empty? Or will it always be populated in production?
   ami                         = data.aws_ami.amazon-linux-2.id
   instance_type               = var.instance_type
   associate_public_ip_address = false
