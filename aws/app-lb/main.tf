@@ -25,10 +25,7 @@ resource "aws_lb" "application" {
     enabled = true
   }
 
-  tags = merge(
-    { "Name" = var.alb_name },
-    var.tags
-  )
+  tags = var.tags
 }
 
 resource "aws_lb_listener" "internal_80" {
@@ -40,6 +37,11 @@ resource "aws_lb_listener" "internal_80" {
     target_group_arn = aws_lb_target_group.internal.arn
     type             = "forward"
   }
+
+  tags = merge(
+    { "Name" = "${var.alb_name}-listener-internal-80" },
+    var.tags
+  )
 }
 
 resource "aws_lb_listener" "internal_443" {
@@ -53,6 +55,11 @@ resource "aws_lb_listener" "internal_443" {
     target_group_arn = aws_lb_target_group.internal.arn
     type             = "forward"
   }
+
+  tags = merge(
+    { "Name" = "${var.alb_name}-listener-internal-443" },
+    var.tags
+  )
 }
 
 resource "aws_lb_target_group" "internal" {
@@ -71,10 +78,7 @@ resource "aws_lb_target_group" "internal" {
     matcher             = "200"
   }
 
-  tags = merge(
-    { "Name" = "${var.alb_name}-target-group" },
-    var.tags
-  )
+  tags = var.tags
 }
 
 // Do we need to create security group here as well, or will we pass in an existing one e.g. as defined in EC2 module?
