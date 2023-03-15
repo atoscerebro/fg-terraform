@@ -32,7 +32,7 @@ resource "aws_subnet" "public" {
 
 /* Internet gateway for the public subnet */
 resource "aws_internet_gateway" "default" {
-  count  = var.internet_gateway_enable == "true" ? 1 : 0
+  count  = var.enable_internet_gateway ? 1 : 0
   vpc_id = aws_vpc.fg_vpc.id
 
   tags = merge(
@@ -53,7 +53,7 @@ resource "aws_route_table" "public" {
 
 /* Add a route to the internet via the IG, if requested */
 resource "aws_route" "public" {
-  count = var.internet_gateway_enable == "true" ? 1 : 0
+  count = var.enable_internet_gateway ? 1 : 0
 
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
