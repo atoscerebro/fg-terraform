@@ -107,3 +107,9 @@ variable "tags" {
   description = ""
   default     = {}
 }
+
+variable "env" {
+  description = "Environment: dev, test, stg, prod"
+  type        = string
+  default     = "dev"
+}

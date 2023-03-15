@@ -8,7 +8,10 @@ resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
   public_key = var.public_key
 
-  tags = var.tags
+  tags = merge(
+    { "Environment" = "${var.env}" },
+    var.tags
+  )
 }
 
 # Security Group
@@ -18,7 +21,10 @@ resource "aws_security_group" "fg" {
   description = var.security_group_description
   vpc_id      = var.vpc_id
 
-  tags = var.tags
+  tags = merge(
+    { "Environment" = "${var.env}" },
+    var.tags
+  )
 }
 
 ## Ingress Rules
@@ -33,7 +39,7 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   cidr_ipv4   = var.https_ingress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-https" },
+    { "Name" = "${var.security_group_name}-ingress-https", "Environment" = "${var.env}" },
     var.tags
   )
 }
@@ -48,7 +54,7 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
   cidr_ipv4   = var.http_ingress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-http" },
+    { "Name" = "${var.security_group_name}-ingress-http", "Environment" = "${var.env}" },
     var.tags
   )
 }
@@ -63,7 +69,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
   cidr_ipv4   = var.ssh_ingress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-ssh" },
+    { "Name" = "${var.security_group_name}-ingress-ssh", "Environment" = "${var.env}" },
     var.tags
   )
 }
@@ -80,7 +86,7 @@ resource "aws_vpc_security_group_egress_rule" "out" {
   cidr_ipv4   = var.egress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-egress" },
+    { "Name" = "${var.security_group_name}-egress", "Environment" = "${var.env}" },
     var.tags
   )
 }
@@ -141,7 +147,7 @@ resource "aws_instance" "fg" {
 
 
   tags = merge(
-    { "Name" = "${var.vpc_name}-ec2-instance-${count.index + 1}" },
+    { "Name" = "${var.vpc_name}-ec2-instance-${count.index + 1}", "Environment" = "${var.env}" },
     var.tags
   )
 
