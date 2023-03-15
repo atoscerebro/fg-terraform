@@ -1,64 +1,3 @@
-
-# Security Group
-
-resource "aws_security_group" "fg_alb" {
-  name        = var.security_group_name
-  description = var.security_group_description
-  vpc_id      = var.vpc_id
-
-  tags = var.tags
-}
-
-## Ingress Rules
-
-resource "aws_vpc_security_group_ingress_rule" "https" {
-  security_group_id = aws_security_group.fg_alb.id
-
-  description = "HTTPS ingress"
-  from_port   = 443
-  to_port     = 443
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.https_ingress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-https" },
-    var.tags
-  )
-}
-
-resource "aws_vpc_security_group_ingress_rule" "http" {
-  security_group_id = aws_security_group.fg_alb.id
-
-  description = "HTTP ingress"
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.http_ingress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-http" },
-    var.tags
-  )
-}
-
-## Egress Rule:
-
-// allow HTTP access to target-group port 80
-resource "aws_vpc_security_group_egress_rule" "out" {
-  security_group_id = aws_security_group.fg_alb.id
-
-  description = "Security group egress"
-  from_port   = 0
-  to_port     = 80
-  ip_protocol = "HTTP"
-  cidr_ipv4   = var.egress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-egress" },
-    var.tags
-  )
-}
-
 ## Get Private subnets from VPC
 data "aws_subnets" "private" {
   filter {
@@ -77,7 +16,7 @@ resource "aws_lb" "application" {
   name               = var.alb_name
   internal           = true
   load_balancer_type = "application"
-  security_groups    = concat([aws_security_group.fg_alb.id], var.alb_security_group_ids)
+  security_groups    = concat([aws_security_group.default_fg_alb.id], var.alb_security_group_ids)
   subnets            = data.aws_subnets.private.ids
 
   access_logs {
@@ -95,7 +34,7 @@ resource "aws_lb_listener" "internal_80" {
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_lb_target_group.internal.arn
+    target_group_arn = aws_lb_target_group.default_internal.arn
     type             = "forward"
   }
 
@@ -113,7 +52,7 @@ resource "aws_lb_listener" "internal_443" {
   certificate_arn   = var.ssl_cert_internal_domain
 
   default_action {
-    target_group_arn = aws_lb_target_group.internal.arn
+    target_group_arn = aws_lb_target_group.default_internal.arn
     type             = "forward"
   }
 
@@ -123,7 +62,7 @@ resource "aws_lb_listener" "internal_443" {
   )
 }
 
-resource "aws_lb_target_group" "internal" {
+resource "aws_lb_target_group" "default_internal" {
   name     = "${var.alb_name}-target-group"
   port     = 80
   protocol = "HTTP"
@@ -142,5 +81,62 @@ resource "aws_lb_target_group" "internal" {
   tags = var.tags
 }
 
+# Security Group
 
+resource "aws_security_group" "default_fg_alb" {
+  name        = var.security_group_name
+  description = var.security_group_description
+  vpc_id      = var.vpc_id
 
+  tags = var.tags
+}
+
+## Ingress Rules
+
+resource "aws_vpc_security_group_ingress_rule" "https" {
+  security_group_id = aws_security_group.default_fg_alb.id
+
+  description = "HTTPS ingress"
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.https_ingress_ip_address
+
+  tags = merge(
+    { "Name" = "${var.security_group_name}-ingress-https" },
+    var.tags
+  )
+}
+
+resource "aws_vpc_security_group_ingress_rule" "http" {
+  security_group_id = aws_security_group.default_fg_alb.id
+
+  description = "HTTP ingress"
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.http_ingress_ip_address
+
+  tags = merge(
+    { "Name" = "${var.security_group_name}-ingress-http" },
+    var.tags
+  )
+}
+
+## Egress Rule:
+
+// allow HTTP access to target-group port 80
+resource "aws_vpc_security_group_egress_rule" "out" {
+  security_group_id = aws_security_group.default_fg_alb.id
+
+  description = "Security group egress"
+  from_port   = 0
+  to_port     = 80
+  ip_protocol = "HTTP"
+  cidr_ipv4   = var.egress_ip_address
+
+  tags = merge(
+    { "Name" = "${var.security_group_name}-egress" },
+    var.tags
+  )
+}
