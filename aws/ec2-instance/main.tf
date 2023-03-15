@@ -115,7 +115,7 @@ data "aws_subnets" "private" {
   }
 
   tags = {
-    Tier = "Private"
+    Name = "*private*"
   }
 }
 
