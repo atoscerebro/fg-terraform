@@ -27,7 +27,7 @@ variable "s3_bucket_id" {
 
 variable "vpc_id" {
   type        = string
-  description = "VPC id for us in target group and to retrieve subnets."
+  description = "VPC id for use in target group, security group and to retrieve subnets."
 }
 
 variable "tags" {
@@ -35,3 +35,43 @@ variable "tags" {
   default     = {}
 }
 
+
+# Security Group
+
+variable "security_group_name" {
+  type        = string
+  description = "Name of aws security group."
+}
+
+variable "security_group_description" {
+  type        = string
+  description = "Description of aws security group."
+}
+
+## Ingress rules
+
+variable "https_ingress_ip_address" {
+  type        = string
+  description = "IP address to allow HTTPS access from"
+  default     = "10.0.0.0/16"
+}
+
+variable "http_ingress_ip_address" {
+  type        = string
+  description = "IP address to allow HTTP access from"
+  default     = "10.0.0.0/16"
+}
+
+variable "ssh_ingress_ip_address" {
+  type        = string
+  description = "IP address to allow SSH access from"
+  default     = "0.0.0.0/0"
+}
+
+## Egress rules
+
+variable "egress_ip_address" {
+  type        = string
+  description = "IP address to allow HTTPS access to"
+  default     = "10.0.0.0/16"
+}
