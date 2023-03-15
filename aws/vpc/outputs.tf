@@ -13,6 +13,11 @@ output "vpc_cidr_block" {
   value       = try(aws_vpc.fg_vpc.cidr_block, "")
 }
 
+output "vpc_tags" {
+  description = "Map with all the tags for the VPC"
+  value       = try(aws_vpc.fg_vpc.id, "")
+}
+
 output "default_security_group_id" {
   description = "The ID of the security group created by default on VPC creation"
   value       = try(aws_vpc.fg_vpc.default_security_group_id, "")
