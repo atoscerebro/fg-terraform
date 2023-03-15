@@ -93,6 +93,8 @@ resource "aws_security_group" "default_fg_alb" {
 
 ## Ingress Rules
 
+// Am assuming we don't need an ssh ingress rule for the alb.
+
 resource "aws_vpc_security_group_ingress_rule" "https" {
   security_group_id = aws_security_group.default_fg_alb.id
 

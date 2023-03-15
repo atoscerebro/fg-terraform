@@ -62,12 +62,6 @@ variable "http_ingress_ip_address" {
   default     = "10.0.0.0/16"
 }
 
-variable "ssh_ingress_ip_address" {
-  type        = string
-  description = "IP address to allow SSH access from"
-  default     = "0.0.0.0/0"
-}
-
 ## Egress rules
 
 variable "egress_ip_address" {
