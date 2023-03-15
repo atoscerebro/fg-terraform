@@ -12,11 +12,13 @@ variable "alb_security_group_ids" {
 }
 
 variable "ssl_internal_security_policy" {
-
+  type        = string
+  description = "Name of SSL Policy for internal HTTPS listener."
 }
 
 variable "ssl_cert_internal_domain" {
-
+  type        = string
+  description = "ARN of the default SSL server certificate."
 }
 
 variable "s3_bucket_id" {
