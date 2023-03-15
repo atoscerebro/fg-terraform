@@ -19,9 +19,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_instance.test_instance](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/instance) | resource |
+| [aws_instance.fg](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/instance) | resource |
 | [aws_key_pair.deployer](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/key_pair) | resource |
-| [aws_security_group.test_group](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group) | resource |
+| [aws_security_group.fg](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group) | resource |
 | [aws_vpc_security_group_egress_rule.out](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_egress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
@@ -37,6 +37,7 @@ No modules.
 | <a name="input_az_count"></a> [az\_count](#input\_az\_count) | The number of requested Availability Zones | `number` | `1` | no |
 | <a name="input_ec2_count"></a> [ec2\_count](#input\_ec2\_count) | The number of requested EC2 instances. | `number` | `1` | no |
 | <a name="input_egress_ip_address"></a> [egress\_ip\_address](#input\_egress\_ip\_address) | IP address to allow HTTPS access to | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_env"></a> [env](#input\_env) | Environment: dev, test, stg, prod | `string` | `"dev"` | no |
 | <a name="input_http_ingress_ip_address"></a> [http\_ingress\_ip\_address](#input\_http\_ingress\_ip\_address) | IP address to allow HTTP access from | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_https_ingress_ip_address"></a> [https\_ingress\_ip\_address](#input\_https\_ingress\_ip\_address) | IP address to allow HTTPS access from | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_instance_ami_image_id"></a> [instance\_ami\_image\_id](#input\_instance\_ami\_image\_id) | AMI image id to use for the instance. | `string` | `"ami-09e34b2574f465af6"` | no |
@@ -46,12 +47,27 @@ No modules.
 | <a name="input_security_group_description"></a> [security\_group\_description](#input\_security\_group\_description) | Description of aws security group. | `string` | n/a | yes |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of aws security group. | `string` | n/a | yes |
 | <a name="input_ssh_ingress_ip_address"></a> [ssh\_ingress\_ip\_address](#input\_ssh\_ingress\_ip\_address) | IP address to allow SSH access from | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map` | `{}` | no |
 | <a name="input_user_data"></a> [user\_data](#input\_user\_data) | User data to provide as a bash script when launching the instance. Default value null. | `string` | `null` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC id for use in security group. | `string` | n/a | yes |
+| <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | Name of the VPC | `string` | `"test"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_aws_instance_ids"></a> [aws\_instance\_ids](#output\_aws\_instance\_ids) | The ids of the aws ec2 instances. |
+| <a name="output_aws_instance_arns"></a> [aws\_instance\_arns](#output\_aws\_instance\_arns) | The ARNs of the aws ec2 instances. |
+| <a name="output_aws_instance_names"></a> [aws\_instance\_names](#output\_aws\_instance\_names) | A list of the aws ec2 instance names. |
+| <a name="output_key_pair_arn"></a> [key\_pair\_arn](#output\_key\_pair\_arn) | The deployer key pair ARN. |
+| <a name="output_key_pair_id"></a> [key\_pair\_id](#output\_key\_pair\_id) | The deployer key pair ID. |
+| <a name="output_key_pair_name"></a> [key\_pair\_name](#output\_key\_pair\_name) | The deployer key pair name. |
+| <a name="output_key_pair_tags"></a> [key\_pair\_tags](#output\_key\_pair\_tags) | A map of the key pair's tags, including those inherited from the provider. |
+| <a name="output_security_group_arn"></a> [security\_group\_arn](#output\_security\_group\_arn) | The security group ARN. |
+| <a name="output_security_group_egress_arn"></a> [security\_group\_egress\_arn](#output\_security\_group\_egress\_arn) | The security group egress rule ARN. |
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | The security group ID. |
+| <a name="output_security_group_ingress_http_arn"></a> [security\_group\_ingress\_http\_arn](#output\_security\_group\_ingress\_http\_arn) | The security group ingress http rule ARN. |
+| <a name="output_security_group_ingress_https_arn"></a> [security\_group\_ingress\_https\_arn](#output\_security\_group\_ingress\_https\_arn) | The security group ingress https rule ARN. |
+| <a name="output_security_group_ingress_https_ssh"></a> [security\_group\_ingress\_https\_ssh](#output\_security\_group\_ingress\_https\_ssh) | The security group ingress ssh rule ARN. |
+| <a name="output_security_group_owner_id"></a> [security\_group\_owner\_id](#output\_security\_group\_owner\_id) | The security group owner id. |
+| <a name="output_security_group_tags"></a> [security\_group\_tags](#output\_security\_group\_tags) | A map of the security group's tags, including those inherited from the provider. |
 <!-- END_TF_DOCS -->
