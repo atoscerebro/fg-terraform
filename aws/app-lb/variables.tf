@@ -2,13 +2,19 @@
 
 variable "alb_name" {
   type        = string
-  description = "Name of the Application Load Balancer"
+  description = "Name of the Application Load Balancer."
 }
 
 variable "alb_security_group_ids" {
   type        = list(string)
-  description = "List of Security Group IDs for ALB."
+  description = "List of additional Security Group IDs for ALB."
   default     = [""]
+}
+
+variable "s3_bucket_id" {
+  // Is this needed? Used for access logs.
+  type        = string
+  description = "ID of the S3 bucket used to store the logs in."
 }
 
 variable "ssl_internal_security_policy" {
@@ -21,12 +27,6 @@ variable "ssl_cert_internal_domain" {
   description = "ARN of the default SSL server certificate."
 }
 
-variable "s3_bucket_id" {
-  // Is this needed? Used for access logs.
-  type        = string
-  description = "ID of the S3 bucket used to store the logs in."
-}
-
 variable "vpc_id" {
   type        = string
   description = "VPC id for use in target group, security group and to retrieve subnets."
@@ -36,7 +36,6 @@ variable "tags" {
   description = ""
   default     = {}
 }
-
 
 # Security Group
 
@@ -54,13 +53,13 @@ variable "security_group_description" {
 
 variable "https_ingress_ip_address" {
   type        = string
-  description = "IP address to allow HTTPS access from"
+  description = "IP address to allow HTTPS access from."
   default     = "10.0.0.0/16"
 }
 
 variable "http_ingress_ip_address" {
   type        = string
-  description = "IP address to allow HTTP access from"
+  description = "IP address to allow HTTP access from."
   default     = "10.0.0.0/16"
 }
 
@@ -68,6 +67,6 @@ variable "http_ingress_ip_address" {
 
 variable "egress_ip_address" {
   type        = string
-  description = "IP address to allow HTTPS access to"
+  description = "IP address to allow HTTPS access to."
   default     = "10.0.0.0/16"
 }

@@ -127,7 +127,7 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
 
 ## Egress Rule:
 
-// allow HTTP access to target-group port 80
+// allows HTTP access to target-group port 80
 resource "aws_vpc_security_group_egress_rule" "out" {
   security_group_id = aws_security_group.default_fg_alb.id
 
