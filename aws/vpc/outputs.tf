@@ -15,7 +15,7 @@ output "vpc_cidr_block" {
 
 output "vpc_tags" {
   description = "Map with all the tags for the VPC"
-  value       = try(aws_vpc.fg_vpc.id, "")
+  value       = try(aws_vpc.fg_vpc.tags_all, "")
 }
 
 output "default_security_group_id" {
@@ -60,12 +60,12 @@ output "vpc_owner_id" {
 
 output "private_subnets" {
   description = "List of IDs of private subnets"
-  value       = aws_subnet.private[*].id
+  value       = compact(aws_subnet.private[*].id)
 }
 
 output "private_subnet_arns" {
   description = "List of ARNs of private subnets"
-  value       = aws_subnet.private[*].arn
+  value       = compact(aws_subnet.private[*].arn)
 }
 
 output "private_subnets_cidr_blocks" {
@@ -75,12 +75,12 @@ output "private_subnets_cidr_blocks" {
 
 output "public_subnets" {
   description = "List of IDs of public subnets"
-  value       = aws_subnet.public[*].id
+  value       = compact(aws_subnet.public[*].id)
 }
 
 output "public_subnet_arns" {
   description = "List of ARNs of public subnets"
-  value       = aws_subnet.public[*].arn
+  value       = compact(aws_subnet.public[*].arn)
 }
 
 output "public_subnets_cidr_blocks" {
@@ -90,10 +90,10 @@ output "public_subnets_cidr_blocks" {
 
 output "public_route_table_ids" {
   description = "List of IDs of public route tables"
-  value       = aws_route_table.public[*].id
+  value       = compact(aws_route_table.public[*].id)
 }
 
 output "private_route_table_ids" {
   description = "List of IDs of private route tables"
-  value       = aws_route_table.private[*].id
+  value       = compact(aws_route_table.private[*].id)
 }
