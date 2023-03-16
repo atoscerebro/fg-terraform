@@ -5,7 +5,7 @@ output "internal_alb_arn" {
 
 output "alb_default_target_group_arn" {
   description = "The Amazon Resource Name (ARN) of the Target Group for the Application Load Balancer."
-  value       = try(aws_lb_target_group.default_internal.arn, "")
+  value       = try(aws_lb_target_group.default.arn, "")
 }
 
 output "default_alb_security_group_id" {
@@ -17,40 +17,40 @@ output "default_alb_security_group_id" {
 
 output "cert_validation_id" {
   description = "The id of the certificate validation resource."
-  value       = try(aws_acm_certificate_validation.fg_alb.id, "")
+  value       = try(aws_acm_certificate_validation.fg_alb[0].id, "")
 }
 
 output "certificate_arn" {
   description = "The Amazon Resource Name (ARN) of the ACM certificate."
-  value       = try(aws_acm_certificate.fg_alb.arn, "")
+  value       = try(aws_acm_certificate.fg_alb[0].arn, "")
 }
 
 output "certificate_domain_name" {
   description = "The domain name for which the ACM certificate is issued."
-  value       = try(aws_acm_certificate.fg_alb.domain_name, "")
+  value       = try(aws_acm_certificate.fg_alb[0].domain_name, "")
 }
 
 output "certificate_start_date" {
   description = "Start of the validity period of the certificate."
-  value       = try(aws_acm_certificate.fg_alb.not_before, "")
+  value       = try(aws_acm_certificate.fg_alb[0].not_before, "")
 }
 
 output "certificate_expiry_date" {
   description = "Expiration date and time of the certificate."
-  value       = try(aws_acm_certificate.fg_alb.not_after, "")
+  value       = try(aws_acm_certificate.fg_alb[0].not_after, "")
 }
 
 output "certificate_status" {
   description = "Status of ACM certificate."
-  value       = try(aws_acm_certificate.fg_alb.status, "")
+  value       = try(aws_acm_certificate.fg_alb[0].status, "")
 }
 
 output "certificate_type" {
   description = "Source of ACM certificate."
-  value       = try(aws_acm_certificate.fg_alb.type, "")
+  value       = try(aws_acm_certificate.fg_alb[0].type, "")
 }
 
 output "certificate_tags" {
   description = "Map with all tags for ACM certificate."
-  value       = try(aws_acm_certificate.fg_alb.tags_all, {})
+  value       = try(aws_acm_certificate.fg_alb[0].tags_all, {})
 }

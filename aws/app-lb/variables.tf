@@ -1,4 +1,10 @@
-# Internal Application Load Balancer 
+# Application Load Balancer 
+
+variable "alb_type_internal" {
+  type        = bool
+  description = "Boolean to specify whether type of ALB is internal. True == internal; false == external."
+  default     = true
+}
 
 variable "alb_name" {
   type        = string
@@ -19,13 +25,14 @@ variable "s3_bucket_id" {
 
 ## Health Check
 
+// ternary for internal/external?
 variable "health_check" {
   type        = map(string)
-  description = "Map describing Health Check settings - including endpoint (default /healthcheck) and port (default 80)."
+  description = "Map describing Health Check settings - including endpoint (default /) and port (default 80)."
   default = {
     timeout             = "10"
     interval            = "20"
-    path                = "/healthcheck"
+    path                = "/"
     port                = "80"
     protocol            = "HTTP"
     matcher             = "200"
@@ -56,31 +63,31 @@ variable "security_group_description" {
   description = "Description of aws security group."
 }
 
-## Ingress rules
+## Ingress rule
 
-variable "https_ingress_ip_address" {
+variable "internal_ingress_ip_address" {
   type        = string
-  description = "IP address to allow HTTPS access from."
+  description = "IP address to allow internal ALB access from."
   default     = "10.0.0.0/16"
 }
 
-variable "http_ingress_ip_address" {
+variable "external_internet_ingress_ip_address" {
   type        = string
-  description = "IP address to allow HTTP access from."
-  default     = "10.0.0.0/16"
+  description = "IP address to allow external ALB HTTPS access from."
+  default     = "0.0.0.0/0"
 }
 
 ## Egress rules
 
 variable "egress_ip_address" {
   type        = string
-  description = "IP address to allow HTTPS access to."
+  description = "IP address to allow HTTP access to."
   default     = "10.0.0.0/16"
 }
 
 # TLS enabled:
 
-variable "enable_internal_lb_tls" {
+variable "enable_internal_alb_tls" {
   type        = bool
   description = "Boolean to specify whether to enable TLS for the internal Application Load Balancer. (External ALB has TLS enabled by default.)"
   default     = false
@@ -88,8 +95,7 @@ variable "enable_internal_lb_tls" {
 
 ## SSL parameters
 
-// ternary for internal/external?
-variable "ssl_internal_security_policy" {
+variable "ssl_security_policy" {
   type        = string
   description = "Name of SSL Policy for internal HTTPS listener."
   default     = "ELBSecurityPolicy-2016-08"

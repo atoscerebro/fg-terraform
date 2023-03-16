@@ -10,11 +10,11 @@ data "aws_subnets" "private" {
   }
 }
 
-# Internal Application Load Balancer 
+# Application Load Balancer 
 
 resource "aws_lb" "application" {
   name               = var.alb_name
-  internal           = true
+  internal           = var.alb_type_internal
   load_balancer_type = "application"
   security_groups    = concat([aws_security_group.default_fg_alb.id], var.alb_security_group_ids)
   subnets            = data.aws_subnets.private.ids
@@ -28,8 +28,7 @@ resource "aws_lb" "application" {
   tags = var.tags
 }
 
-# Security Group
-
+## Default Security Group
 resource "aws_security_group" "default_fg_alb" {
   name        = var.security_group_name
   description = var.security_group_description
@@ -38,28 +37,24 @@ resource "aws_security_group" "default_fg_alb" {
   tags = var.tags
 }
 
+## Egress Rule:
+resource "aws_vpc_security_group_egress_rule" "http" {
+  security_group_id = aws_security_group.default_fg_alb.id
 
-# ALB is internal:
-
-## Listener
-resource "aws_lb_listener" "internal_80" {
-  load_balancer_arn = aws_lb.application.arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    target_group_arn = aws_lb_target_group.default_internal.arn
-    type             = "forward"
-  }
+  description = "Security group http egress"
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "HTTP"
+  cidr_ipv4   = var.egress_ip_address
 
   tags = merge(
-    { "Name" = "${var.alb_name}-listener-internal-80" },
+    { "Name" = "${var.security_group_name}-http-egress" },
     var.tags
   )
 }
 
-## Target Group
-resource "aws_lb_target_group" "default_internal" {
+## Default Target Group
+resource "aws_lb_target_group" "default" {
   name     = "${var.alb_name}-target-group"
   port     = 80
   protocol = "HTTP"
@@ -79,15 +74,74 @@ resource "aws_lb_target_group" "default_internal" {
   tags = var.tags
 }
 
+## Listeners
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.application.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = aws_lb_target_group.default.arn
+    type             = "forward"
+  }
+
+  tags = merge(
+    { "Name" = "${var.alb_name}-listener-http" },
+    var.tags
+  )
+}
+
+# ALB is external:
+
+## Ingress Rule
+resource "aws_vpc_security_group_ingress_rule" "internet" {
+  count = !var.alb_type_internal ? 1 : 0
+
+  security_group_id = aws_security_group.default_fg_alb.id
+
+  description = "Internet ingress"
+  from_port   = 0
+  to_port     = 0
+  ip_protocol = "-1"
+  cidr_ipv4   = var.external_internet_ingress_ip_address
+
+  tags = merge(
+    { "Name" = "${var.security_group_name}-ingress-internet" },
+    var.tags
+  )
+}
+
+## Egress Rule:
+resource "aws_vpc_security_group_egress_rule" "https" {
+  count = !var.alb_type_internal ? 1 : 0
+
+  security_group_id = aws_security_group.default_fg_alb.id
+
+  description = "Security group https egress"
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "HTTPS"
+  cidr_ipv4   = var.egress_ip_address
+
+  tags = merge(
+    { "Name" = "${var.security_group_name}-https-egress" },
+    var.tags
+  )
+}
+
+# ALB is internal:
+
 ## Ingress Rule
 resource "aws_vpc_security_group_ingress_rule" "http" {
+  count = var.alb_type_internal ? 1 : 0
+
   security_group_id = aws_security_group.default_fg_alb.id
 
   description = "HTTP ingress"
   from_port   = 80
   to_port     = 80
   ip_protocol = "tcp"
-  cidr_ipv4   = var.http_ingress_ip_address
+  cidr_ipv4   = var.internal_ingress_ip_address
 
   tags = merge(
     { "Name" = "${var.security_group_name}-ingress-http" },
@@ -95,54 +149,34 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
   )
 }
 
+# ALB is internal, and TLS enabled, OR ALB is external:
 
-## Egress Rule:
+## Additional Listeners
+resource "aws_lb_listener" "https" {
+  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal)) ? 1 : 0
 
-// allows HTTP access to target-group port 80
-resource "aws_vpc_security_group_egress_rule" "out" {
-  security_group_id = aws_security_group.default_fg_alb.id
+  load_balancer_arn = aws_lb.application.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = var.ssl_security_policy
+  certificate_arn   = var.ssl_cert != null ? var.ssl_cert : aws_acm_certificate.fg_alb[count.index].arn
 
-  description = "Security group egress"
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "HTTP"
-  cidr_ipv4   = var.egress_ip_address
+  default_action {
+    target_group_arn = aws_lb_target_group.default.arn
+    type             = "forward"
+  }
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-egress" },
+    { "Name" = "${var.alb_name}-listener-https" },
     var.tags
   )
 }
 
 # ALB is internal, and TLS enabled:
 
-## Additional Listeners
-
-resource "aws_lb_listener" "internal_443" {
-  count = var.enable_internal_alb_tls ? 1 : 0
-
-  load_balancer_arn = aws_lb.application.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = var.ssl_internal_security_policy
-  certificate_arn   = var.ssl_cert != null ? var.ssl_cert : aws_acm_certificate.fg_alb.arn
-
-  default_action {
-    target_group_arn = aws_lb_target_group.default_internal.arn
-    type             = "forward"
-  }
-
-  tags = merge(
-    { "Name" = "${var.alb_name}-listener-internal-443" },
-    var.tags
-  )
-}
-
-
 ## Additional Ingress Rules
-
 resource "aws_vpc_security_group_ingress_rule" "https" {
-  count = var.enable_internal_alb_tls ? 1 : 0
+  count = (var.alb_type_internal && var.enable_internal_alb_tls) ? 1 : 0
 
   security_group_id = aws_security_group.default_fg_alb.id
 
@@ -150,7 +184,7 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   from_port   = 443
   to_port     = 443
   ip_protocol = "tcp"
-  cidr_ipv4   = var.https_ingress_ip_address
+  cidr_ipv4   = var.internal_ingress_ip_address
 
   tags = merge(
     { "Name" = "${var.security_group_name}-ingress-https" },
@@ -158,10 +192,11 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   )
 }
 
-## ACM Certificate
+# ALB is internal, and TLS enabled:
 
+## ACM Certificate
 resource "aws_acm_certificate" "fg_alb" {
-  count = var.enable_internal_alb_tls ? 1 : 0
+  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
 
   domain_name       = var.cert_domain_name
   validation_method = var.cert_validation_method
@@ -169,7 +204,7 @@ resource "aws_acm_certificate" "fg_alb" {
 }
 
 resource "aws_acm_certificate_validation" "fg_alb" {
-  count = var.enable_internal_alb_tls ? 1 : 0
+  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
 
-  certificate_arn = aws_acm_certificate.fg_alb.arn
+  certificate_arn = aws_acm_certificate.fg_alb[count.index].arn
 }
