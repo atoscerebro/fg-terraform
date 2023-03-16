@@ -49,6 +49,16 @@ variable "tags" {
   default     = {}
 }
 
+variable "custom_responses" {
+  description = "The custom response behaviour for the default web ACL action"
+  type = list(object({
+    key          = string
+    content      = string
+    content_type = string
+  }))
+  default = []
+}
+
 variable "managed_rules" {
   type = list(object({
     name            = string
