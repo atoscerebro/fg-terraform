@@ -69,13 +69,14 @@ resource "aws_lb_target_group" "default_internal" {
   vpc_id   = var.vpc_id
 
   health_check {
-    healthy_threshold   = 5
-    unhealthy_threshold = 10
-    path                = "/"
-    protocol            = "HTTP"
-    interval            = 30
-    timeout             = 5
-    matcher             = "200"
+    timeout             = var.health_check.timeout
+    interval            = var.health_check.interval
+    path                = var.health_check.path
+    port                = var.health_check.port
+    protocol            = var.health_check.protocol
+    matcher             = var.health_check.matcher
+    unhealthy_threshold = var.health_check.unhealthy_threshold
+    healthy_threshold   = var.health_check.healthy_threshold
   }
 
   tags = var.tags

@@ -17,6 +17,23 @@ variable "s3_bucket_id" {
   description = "ID of the S3 bucket used to store the logs in."
 }
 
+## Health Check
+
+variable "health_check" {
+  type        = map(string)
+  description = "Map describing Health Check settings - including endpoint (default /healthcheck) and port (default 80)."
+  default = {
+    timeout             = "10"
+    interval            = "20"
+    path                = "/healthcheck"
+    port                = "80"
+    protocol            = "HTTP"
+    matcher             = "200"
+    unhealthy_threshold = "2"
+    healthy_threshold   = "3"
+  }
+}
+
 variable "ssl_internal_security_policy" {
   type        = string
   description = "Name of SSL Policy for internal HTTPS listener."
