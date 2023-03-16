@@ -20,6 +20,7 @@ variable "s3_bucket_id" {
 variable "ssl_internal_security_policy" {
   type        = string
   description = "Name of SSL Policy for internal HTTPS listener."
+  default     = "ELBSecurityPolicy-2016-08"
 }
 
 variable "ssl_cert_internal_domain" {
