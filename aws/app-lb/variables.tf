@@ -34,17 +34,6 @@ variable "health_check" {
   }
 }
 
-variable "ssl_internal_security_policy" {
-  type        = string
-  description = "Name of SSL Policy for internal HTTPS listener."
-  default     = "ELBSecurityPolicy-2016-08"
-}
-
-variable "ssl_cert_internal_domain" {
-  type        = string
-  description = "ARN of the default SSL server certificate."
-}
-
 variable "vpc_id" {
   type        = string
   description = "VPC id for use in target group, security group and to retrieve subnets."
@@ -89,7 +78,30 @@ variable "egress_ip_address" {
   default     = "10.0.0.0/16"
 }
 
-# ACM Certificate
+# TLS enabled:
+
+variable "enable_internal_lb_tls" {
+  type        = bool
+  description = "Boolean to specify whether to enable TLS for the internal Application Load Balancer. (External ALB has TLS enabled by default.)"
+  default     = false
+}
+
+## SSL parameters
+
+// ternary for internal/external?
+variable "ssl_internal_security_policy" {
+  type        = string
+  description = "Name of SSL Policy for internal HTTPS listener."
+  default     = "ELBSecurityPolicy-2016-08"
+}
+
+variable "ssl_cert" {
+  type        = string
+  description = "Optional ARN of custom SSL server certificate. If this field is not specified module will create an Amazon-issued ACM certificate."
+  default     = null
+}
+
+## ACM Certificate
 
 variable "cert_validation_method" {
   type        = string

@@ -28,6 +28,20 @@ resource "aws_lb" "application" {
   tags = var.tags
 }
 
+# Security Group
+
+resource "aws_security_group" "default_fg_alb" {
+  name        = var.security_group_name
+  description = var.security_group_description
+  vpc_id      = var.vpc_id
+
+  tags = var.tags
+}
+
+
+# ALB is internal:
+
+## Listener
 resource "aws_lb_listener" "internal_80" {
   load_balancer_arn = aws_lb.application.arn
   port              = "80"
@@ -44,24 +58,7 @@ resource "aws_lb_listener" "internal_80" {
   )
 }
 
-resource "aws_lb_listener" "internal_443" {
-  load_balancer_arn = aws_lb.application.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = var.ssl_internal_security_policy
-  certificate_arn   = var.ssl_cert_internal_domain
-
-  default_action {
-    target_group_arn = aws_lb_target_group.default_internal.arn
-    type             = "forward"
-  }
-
-  tags = merge(
-    { "Name" = "${var.alb_name}-listener-internal-443" },
-    var.tags
-  )
-}
-
+## Target Group
 resource "aws_lb_target_group" "default_internal" {
   name     = "${var.alb_name}-target-group"
   port     = 80
@@ -82,35 +79,7 @@ resource "aws_lb_target_group" "default_internal" {
   tags = var.tags
 }
 
-# Security Group
-
-resource "aws_security_group" "default_fg_alb" {
-  name        = var.security_group_name
-  description = var.security_group_description
-  vpc_id      = var.vpc_id
-
-  tags = var.tags
-}
-
-## Ingress Rules
-
-// Am assuming we don't need an ssh ingress rule for the alb.
-
-resource "aws_vpc_security_group_ingress_rule" "https" {
-  security_group_id = aws_security_group.default_fg_alb.id
-
-  description = "HTTPS ingress"
-  from_port   = 443
-  to_port     = 443
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.https_ingress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-https" },
-    var.tags
-  )
-}
-
+## Ingress Rule
 resource "aws_vpc_security_group_ingress_rule" "http" {
   security_group_id = aws_security_group.default_fg_alb.id
 
@@ -125,6 +94,7 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
     var.tags
   )
 }
+
 
 ## Egress Rule:
 
@@ -144,14 +114,62 @@ resource "aws_vpc_security_group_egress_rule" "out" {
   )
 }
 
-# ACM Certificate
+# ALB is internal, and TLS enabled:
+
+## Additional Listeners
+
+resource "aws_lb_listener" "internal_443" {
+  count = var.enable_internal_alb_tls ? 1 : 0
+
+  load_balancer_arn = aws_lb.application.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = var.ssl_internal_security_policy
+  certificate_arn   = var.ssl_cert != null ? var.ssl_cert : aws_acm_certificate.fg_alb.arn
+
+  default_action {
+    target_group_arn = aws_lb_target_group.default_internal.arn
+    type             = "forward"
+  }
+
+  tags = merge(
+    { "Name" = "${var.alb_name}-listener-internal-443" },
+    var.tags
+  )
+}
+
+
+## Additional Ingress Rules
+
+resource "aws_vpc_security_group_ingress_rule" "https" {
+  count = var.enable_internal_alb_tls ? 1 : 0
+
+  security_group_id = aws_security_group.default_fg_alb.id
+
+  description = "HTTPS ingress"
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.https_ingress_ip_address
+
+  tags = merge(
+    { "Name" = "${var.security_group_name}-ingress-https" },
+    var.tags
+  )
+}
+
+## ACM Certificate
 
 resource "aws_acm_certificate" "fg_alb" {
+  count = var.enable_internal_alb_tls ? 1 : 0
+
   domain_name       = var.cert_domain_name
   validation_method = var.cert_validation_method
   key_algorithm     = var.cert_key_algorithm
 }
 
 resource "aws_acm_certificate_validation" "fg_alb" {
+  count = var.enable_internal_alb_tls ? 1 : 0
+
   certificate_arn = aws_acm_certificate.fg_alb.arn
 }
