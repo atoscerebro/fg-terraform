@@ -40,7 +40,7 @@ variable "enable_sampled_requests" {
 variable "metric_name" {
   description = "The name of the metric to create, if we are enabling CloudWatch"
   type        = string
-  default     = ""
+  default     = "FG_WEBACL_ALB_Entityx"
 }
 
 variable "tags" {
