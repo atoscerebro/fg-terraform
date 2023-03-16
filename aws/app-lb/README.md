@@ -28,8 +28,10 @@ No modules.
 | [aws_vpc_security_group_egress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
-| [aws_vpc_security_group_ingress_rule.internet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.internet_http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.internet_https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_subnets.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
+| [aws_subnets.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
 
 ## Inputs
 
@@ -85,8 +87,10 @@ No modules.
 | <a name="output_default_alb_security_group_ingress_http_tags"></a> [default\_alb\_security\_group\_ingress\_http\_tags](#output\_default\_alb\_security\_group\_ingress\_http\_tags) | Map of all tags for the HTTP ingress rule. |
 | <a name="output_default_alb_security_group_ingress_https_arn"></a> [default\_alb\_security\_group\_ingress\_https\_arn](#output\_default\_alb\_security\_group\_ingress\_https\_arn) | The default security group https ingress rule ARN. |
 | <a name="output_default_alb_security_group_ingress_https_tags"></a> [default\_alb\_security\_group\_ingress\_https\_tags](#output\_default\_alb\_security\_group\_ingress\_https\_tags) | Map of all tags for the HTTPS ingress rule. |
-| <a name="output_default_alb_security_group_ingress_internet_arn"></a> [default\_alb\_security\_group\_ingress\_internet\_arn](#output\_default\_alb\_security\_group\_ingress\_internet\_arn) | The default security group internet ingress rule ARN. |
-| <a name="output_default_alb_security_group_ingress_internet_tags"></a> [default\_alb\_security\_group\_ingress\_internet\_tags](#output\_default\_alb\_security\_group\_ingress\_internet\_tags) | Map of all tags for the internet ingress rule. |
+| <a name="output_default_alb_security_group_ingress_internet_http_arn"></a> [default\_alb\_security\_group\_ingress\_internet\_http\_arn](#output\_default\_alb\_security\_group\_ingress\_internet\_http\_arn) | The default security group internet http ingress rule ARN. |
+| <a name="output_default_alb_security_group_ingress_internet_http_tags"></a> [default\_alb\_security\_group\_ingress\_internet\_http\_tags](#output\_default\_alb\_security\_group\_ingress\_internet\_http\_tags) | Map of all tags for the internet http ingress rule. |
+| <a name="output_default_alb_security_group_ingress_internet_https_arn"></a> [default\_alb\_security\_group\_ingress\_internet\_https\_arn](#output\_default\_alb\_security\_group\_ingress\_internet\_https\_arn) | The default security group internet https ingress rule ARN. |
+| <a name="output_default_alb_security_group_ingress_internet_https_tags"></a> [default\_alb\_security\_group\_ingress\_internet\_https\_tags](#output\_default\_alb\_security\_group\_ingress\_internet\_https\_tags) | Map of all tags for the internet https ingress rule. |
 | <a name="output_default_alb_security_group_owner_id"></a> [default\_alb\_security\_group\_owner\_id](#output\_default\_alb\_security\_group\_owner\_id) | The owner ID of the security group created by default with the Application Load Balancer. |
 | <a name="output_default_alb_security_group_tags"></a> [default\_alb\_security\_group\_tags](#output\_default\_alb\_security\_group\_tags) | Map with all tags for the default security group. |
 | <a name="output_default_alb_target_group_arn"></a> [default\_alb\_target\_group\_arn](#output\_default\_alb\_target\_group\_arn) | The Amazon Resource Name (ARN) or ID of the default Target Group for the Application Load Balancer. |
