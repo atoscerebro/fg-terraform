@@ -88,3 +88,22 @@ variable "egress_ip_address" {
   description = "IP address to allow HTTPS access to."
   default     = "10.0.0.0/16"
 }
+
+# ACM Certificate
+
+variable "cert_validation_method" {
+  type        = string
+  description = "The validation method used to approve ACM certificate used in ALB - DNS, EMAIL, or NONE are valid values."
+  default     = "EMAIL"
+}
+
+variable "cert_domain_name" {
+  type        = string
+  description = "Domain name for which the certificate should be issued."
+}
+
+variable "cert_key_algorithm" {
+  type        = string
+  description = "The algorithm of the public and private key pair that the Amazon-issued certificate uses to encrypt data."
+  default     = "RSA_2048"
+}

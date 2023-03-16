@@ -143,3 +143,15 @@ resource "aws_vpc_security_group_egress_rule" "out" {
     var.tags
   )
 }
+
+# ACM Certificate
+
+resource "aws_acm_certificate" "fg_alb" {
+  domain_name       = var.cert_domain_name
+  validation_method = var.cert_validation_method
+  key_algorithm     = var.cert_key_algorithm
+}
+
+resource "aws_acm_certificate_validation" "fg_alb" {
+  certificate_arn = aws_acm_certificate.fg_alb.arn
+}
