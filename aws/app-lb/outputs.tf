@@ -74,14 +74,24 @@ output "default_alb_security_group_egress_https_tags" {
   description = "Map of all tags for the HTTPS egress rule."
 }
 
-output "default_alb_security_group_ingress_internet_arn" {
-  value       = try(aws_vpc_security_group_ingress_rule.internet[0].arn, "")
-  description = "The default security group internet ingress rule ARN."
+output "default_alb_security_group_ingress_internet_http_arn" {
+  value       = try(aws_vpc_security_group_ingress_rule.internet_http[0].arn, "")
+  description = "The default security group internet http ingress rule ARN."
 }
 
-output "default_alb_security_group_ingress_internet_tags" {
-  value       = try(aws_vpc_security_group_ingress_rule.internet[0].tags_all, "")
-  description = "Map of all tags for the internet ingress rule."
+output "default_alb_security_group_ingress_internet_http_tags" {
+  value       = try(aws_vpc_security_group_ingress_rule.internet_http[0].tags_all, "")
+  description = "Map of all tags for the internet http ingress rule."
+}
+
+output "default_alb_security_group_ingress_internet_https_arn" {
+  value       = try(aws_vpc_security_group_ingress_rule.internet_https[0].arn, "")
+  description = "The default security group internet https ingress rule ARN."
+}
+
+output "default_alb_security_group_ingress_internet_https_tags" {
+  value       = try(aws_vpc_security_group_ingress_rule.internet_https[0].tags_all, "")
+  description = "Map of all tags for the internet https ingress rule."
 }
 
 output "default_alb_security_group_ingress_http_arn" {

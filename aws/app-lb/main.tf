@@ -29,7 +29,7 @@ resource "aws_lb" "application" {
   internal           = var.alb_type_internal
   load_balancer_type = "application"
   security_groups    = concat([aws_security_group.default_fg_alb.id], var.alb_security_group_ids)
-  subnets            = var.alb_type_internal ? data.aws_subnets.private.ids : data.aws_subnets.public
+  subnets            = var.alb_type_internal ? data.aws_subnets.private.ids : data.aws_subnets.public.ids
 
   access_logs {
     bucket  = var.s3_bucket_id
@@ -124,7 +124,7 @@ resource "aws_vpc_security_group_ingress_rule" "internet_http" {
 }
 
 ## Ingress Rule - HTTPS
-resource "aws_vpc_security_group_ingress_rule" "internet_http" {
+resource "aws_vpc_security_group_ingress_rule" "internet_https" {
   count = !var.alb_type_internal ? 1 : 0
 
   security_group_id = aws_security_group.default_fg_alb.id
@@ -136,7 +136,7 @@ resource "aws_vpc_security_group_ingress_rule" "internet_http" {
   cidr_ipv4   = var.external_internet_ingress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-internet-http" },
+    { "Name" = "${var.security_group_name}-ingress-internet-https" },
     var.tags
   )
 }
