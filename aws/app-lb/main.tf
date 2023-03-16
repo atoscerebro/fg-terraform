@@ -93,20 +93,38 @@ resource "aws_lb_listener" "http" {
 
 # ALB is external:
 
-## Ingress Rule
-resource "aws_vpc_security_group_ingress_rule" "internet" {
+## Ingress Rule - HTTP
+resource "aws_vpc_security_group_ingress_rule" "internet_http" {
   count = !var.alb_type_internal ? 1 : 0
 
   security_group_id = aws_security_group.default_fg_alb.id
 
-  description = "Internet ingress"
-  from_port   = 0
-  to_port     = 0
-  ip_protocol = "-1"
+  description = "Internet ingress http"
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "HTTP"
   cidr_ipv4   = var.external_internet_ingress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-internet" },
+    { "Name" = "${var.security_group_name}-ingress-internet-http" },
+    var.tags
+  )
+}
+
+## Ingress Rule - HTTPS
+resource "aws_vpc_security_group_ingress_rule" "internet_http" {
+  count = !var.alb_type_internal ? 1 : 0
+
+  security_group_id = aws_security_group.default_fg_alb.id
+
+  description = "Internet ingress https"
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "HTTPS"
+  cidr_ipv4   = var.external_internet_ingress_ip_address
+
+  tags = merge(
+    { "Name" = "${var.security_group_name}-ingress-internet-http" },
     var.tags
   )
 }
