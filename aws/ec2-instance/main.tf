@@ -5,13 +5,10 @@ locals {
 # Key Pair
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "deployer-key"
+  key_name   = "deployer-key-${var.env}"
   public_key = var.public_key
 
-  tags = merge(
-    { "Environment" = "${var.env}" },
-    var.tags
-  )
+  tags = var.tags
 }
 
 # Security Group
@@ -21,10 +18,7 @@ resource "aws_security_group" "fg" {
   description = var.security_group_description
   vpc_id      = var.vpc_id
 
-  tags = merge(
-    { "Environment" = "${var.env}" },
-    var.tags
-  )
+  tags = var.tags
 }
 
 ## Ingress Rules
@@ -39,7 +33,7 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   cidr_ipv4   = var.https_ingress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-https", "Environment" = "${var.env}" },
+    { "Name" = "${var.security_group_name}-ingress-https-${env}" },
     var.tags
   )
 }
@@ -54,7 +48,7 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
   cidr_ipv4   = var.http_ingress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-http", "Environment" = "${var.env}" },
+    { "Name" = "${var.security_group_name}-ingress-http-${var.env}" },
     var.tags
   )
 }
@@ -69,7 +63,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
   cidr_ipv4   = var.ssh_ingress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-ssh", "Environment" = "${var.env}" },
+    { "Name" = "${var.security_group_name}-ingress-ssh-${var.env}" },
     var.tags
   )
 }
@@ -86,7 +80,7 @@ resource "aws_vpc_security_group_egress_rule" "out" {
   cidr_ipv4   = var.egress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-egress", "Environment" = "${var.env}" },
+    { "Name" = "${var.security_group_name}-egress-${var.env}" },
     var.tags
   )
 }
@@ -146,7 +140,7 @@ resource "aws_instance" "fg" {
 
 
   tags = merge(
-    { "Name" = "${var.vpc_name}-ec2-instance-${count.index + 1}", "Environment" = "${var.env}" },
+    { "Name" = "${var.vpc_name}-ec2-instance-${count.index + 1}-${var.env}", },
     var.tags
   )
 
