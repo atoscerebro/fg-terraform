@@ -213,10 +213,4 @@ resource "aws_acm_certificate_validation" "fg_alb" {
   count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
 
   certificate_arn = aws_acm_certificate.fg_alb[count.index].arn
-
-
-  tags = merge(
-    { "Name" = "${var.alb_name}-acm-certificate-validation" },
-    var.tags
-  )
 }
