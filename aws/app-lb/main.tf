@@ -133,7 +133,7 @@ resource "aws_vpc_security_group_egress_rule" "out" {
   security_group_id = aws_security_group.default_fg_alb.id
 
   description = "Security group egress"
-  from_port   = 0
+  from_port   = 80
   to_port     = 80
   ip_protocol = "HTTP"
   cidr_ipv4   = var.egress_ip_address
