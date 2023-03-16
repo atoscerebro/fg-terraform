@@ -48,7 +48,7 @@ resource "aws_vpc_security_group_egress_rule" "http" {
   cidr_ipv4   = var.egress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-http-egress" },
+    { "Name" = "${var.security_group_name}-egress-http" },
     var.tags
   )
 }
@@ -124,7 +124,7 @@ resource "aws_vpc_security_group_egress_rule" "https" {
   cidr_ipv4   = var.egress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-https-egress" },
+    { "Name" = "${var.security_group_name}-egress-https" },
     var.tags
   )
 }
@@ -201,10 +201,22 @@ resource "aws_acm_certificate" "fg_alb" {
   domain_name       = var.cert_domain_name
   validation_method = var.cert_validation_method
   key_algorithm     = var.cert_key_algorithm
+
+
+  tags = merge(
+    { "Name" = "${var.alb_name}-acm-certificate" },
+    var.tags
+  )
 }
 
 resource "aws_acm_certificate_validation" "fg_alb" {
   count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
 
   certificate_arn = aws_acm_certificate.fg_alb[count.index].arn
+
+
+  tags = merge(
+    { "Name" = "${var.alb_name}-acm-certificate-validation" },
+    var.tags
+  )
 }
