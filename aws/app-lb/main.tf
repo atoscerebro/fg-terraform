@@ -10,6 +10,18 @@ data "aws_subnets" "private" {
   }
 }
 
+## Get Public subnets from VPC
+data "aws_subnets" "public" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
+
+  tags = {
+    Tier = "Public"
+  }
+}
+
 # Application Load Balancer 
 
 resource "aws_lb" "application" {
@@ -17,7 +29,7 @@ resource "aws_lb" "application" {
   internal           = var.alb_type_internal
   load_balancer_type = "application"
   security_groups    = concat([aws_security_group.default_fg_alb.id], var.alb_security_group_ids)
-  subnets            = data.aws_subnets.private.ids
+  subnets            = var.alb_type_internal ? data.aws_subnets.private.ids : data.aws_subnets.public
 
   access_logs {
     bucket  = var.s3_bucket_id
