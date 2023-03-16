@@ -44,7 +44,7 @@ variable "metric_name" {
 }
 
 variable "tags" {
-  descriotion = "Useful to diferentiate resources per env, team, function ..."
+  description = "Useful to diferentiate resources per env, team, function ..."
   type        = map(any)
   default     = {}
 }
