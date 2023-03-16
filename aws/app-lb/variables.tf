@@ -25,7 +25,8 @@ variable "s3_bucket_id" {
 
 ## Health Check
 
-// ternary for internal/external?
+// ternary for internal/external? Always just 80/one port per target group?
+// Or one for https as well?
 variable "health_check" {
   type        = map(string)
   description = "Map describing Health Check settings - including endpoint (default /) and port (default 80)."
@@ -58,11 +59,6 @@ variable "security_group_name" {
   description = "Name of aws security group."
 }
 
-variable "security_group_description" {
-  type        = string
-  description = "Description of aws security group."
-}
-
 ## Ingress rule
 
 variable "internal_ingress_ip_address" {
@@ -85,11 +81,11 @@ variable "egress_ip_address" {
   default     = "10.0.0.0/16"
 }
 
-# TLS enabled:
+# Internal TLS enabled:
 
 variable "enable_internal_alb_tls" {
   type        = bool
-  description = "Boolean to specify whether to enable TLS for the internal Application Load Balancer. (External ALB has TLS enabled by default.)"
+  description = "Boolean to specify whether to enable TLS for the Internal Application Load Balancer. (External ALB has TLS enabled by default.)"
   default     = false
 }
 

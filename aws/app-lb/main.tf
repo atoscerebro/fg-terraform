@@ -31,7 +31,7 @@ resource "aws_lb" "application" {
 ## Default Security Group
 resource "aws_security_group" "default_fg_alb" {
   name        = var.security_group_name
-  description = var.security_group_description
+  description = "Default Application Load Balancer Security Group: ${var.security_group_name}"
   vpc_id      = var.vpc_id
 
   tags = var.tags
