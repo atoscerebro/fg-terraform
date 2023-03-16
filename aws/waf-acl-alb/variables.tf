@@ -43,6 +43,12 @@ variable "metric_name" {
   default     = ""
 }
 
+variable "tags" {
+  descriotion = "Useful to diferentiate resources per env, team, function ..."
+  type        = map(any)
+  default     = {}
+}
+
 variable "managed_rules" {
   type = list(object({
     name            = string
