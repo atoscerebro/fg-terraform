@@ -71,7 +71,7 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
       visibility_config {
         cloudwatch_metrics_enabled = false
         sampled_requests_enabled   = false
-        metric_name                = rule.value.metric_name
+        metric_name                = rule.value.visibility_config_metric_name
       }
     }
   }
