@@ -114,6 +114,7 @@ variable "cert_validation_method" {
 variable "cert_domain_name" {
   type        = string
   description = "Domain name for which the certificate should be issued."
+  default     = "test.com"
 }
 
 variable "cert_key_algorithm" {
