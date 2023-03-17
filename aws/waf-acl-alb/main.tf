@@ -65,7 +65,19 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
 
   dynamic "rule" {
     for_each = var.custom_rules
-    content {}
+    content {
+      name = rule.value.name
+      priority = rule.value.priority
+      action {
+        rule.value.action
+      }
+      statement {
+        rule.value.statement
+      }
+      visibility_config {
+        rule.value.visibility_config
+      }
+    }
   }
 
   visibility_config {

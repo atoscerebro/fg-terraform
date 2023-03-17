@@ -67,7 +67,7 @@ variable "custom_responses" {
 
 variable "custom_rules" {
   description = "Add here all the rules as a list of maps"
-  type        = list
+  type        = any
   default     = []
 }
 
