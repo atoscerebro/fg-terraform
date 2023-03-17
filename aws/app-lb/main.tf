@@ -31,11 +31,11 @@ resource "aws_lb" "application" {
   security_groups    = concat([aws_security_group.default_fg_alb.id], var.alb_security_group_ids)
   subnets            = var.alb_type_internal ? data.aws_subnets.private.ids : data.aws_subnets.public.ids
 
-  access_logs {
-    bucket  = var.s3_bucket.id
-    prefix  = "fg-lb"
-    enabled = true
-  }
+  # access_logs {
+  #   bucket  = var.s3_bucket.id
+  #   prefix  = "fg-lb"
+  #   enabled = true
+  # }
 
   tags = var.tags
 }
