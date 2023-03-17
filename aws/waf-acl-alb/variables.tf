@@ -25,6 +25,12 @@ variable "enable_logging" {
   default     = false
 }
 
+variable "storage_logs_arn" {
+  description = "ARN of the destination of the logs. It can be S3, CW or Kinesis"
+  type        = string
+  default     = ""
+}
+
 variable "enable_cloudwatch" {
   description = "Enable metrics for the ACL"
   type        = bool
