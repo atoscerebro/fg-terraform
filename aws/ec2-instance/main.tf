@@ -74,9 +74,9 @@ resource "aws_vpc_security_group_egress_rule" "out" {
   security_group_id = aws_security_group.fg.id
 
   description = "Security group egress"
-  from_port   = 0
-  to_port     = 0
-  ip_protocol = -1
+  from_port   = -1
+  to_port     = -1
+  ip_protocol = "-1"
   cidr_ipv4   = var.egress_ip_address
 
   tags = merge(
