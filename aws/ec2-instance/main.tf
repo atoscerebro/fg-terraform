@@ -138,12 +138,6 @@ resource "aws_instance" "fg" {
   user_data               = var.user_data
   vpc_security_group_ids  = [aws_security_group.fg.id]
 
-  ebs_block_device {
-    delete_on_termination = true
-    device_name           = "/dev/sda1"
-  }
-
-
   tags = merge(
     { "Name" = "${var.vpc_name}-ec2-instance-${count.index + 1}-${var.env}", },
     var.tags
