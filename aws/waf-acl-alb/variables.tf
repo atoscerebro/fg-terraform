@@ -28,13 +28,13 @@ variable "enable_logging" {
 variable "enable_cloudwatch" {
   description = "Enable metrics for the ACL"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "enable_sampled_requests" {
   description = "Enable sampled requests for the ACL"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "metric_name" {
@@ -57,6 +57,12 @@ variable "custom_responses" {
     content_type = string
   }))
   default = []
+}
+
+variable "custom_rules" {
+  description = "Add here all the rules as a list of maps"
+  type        = list(string)
+  default     = []
 }
 
 variable "managed_rules" {

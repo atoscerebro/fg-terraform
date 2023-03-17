@@ -57,10 +57,14 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
 
       visibility_config {
         cloudwatch_metrics_enabled = true
-        metric_name                = rule.value.name
         sampled_requests_enabled   = true
+        metric_name                = rule.value.name
       }
     }
+  }
+
+  dynamic "rule" {
+    for_each = var.custom_rules
   }
 
   visibility_config {
@@ -70,4 +74,16 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
   }
 
   tags = var.tags
+}
+
+resource "aws_wafv2_web_acl_association" "example" {
+  web_acl_arn  = aws_wafv2_web_acl.fg_web_acl_alb.arn
+  resource_arn = var.alb_arn
+}
+
+resource "aws_wafv2_web_acl_logging_configuration" "fg_logging_waf" {
+  count = enable_logging ? 1 : 0
+
+  log_destination_configs = var.storage_logs_arn
+  resource_arn            = aws_wafv2_web_acl.fg_web_acl_alb.arn
 }
