@@ -6,7 +6,7 @@ data "aws_subnets" "private" {
   }
 
   tags = {
-    Tier = "Private"
+    Name = "*private*"
   }
 }
 
@@ -18,7 +18,7 @@ data "aws_subnets" "public" {
   }
 
   tags = {
-    Tier = "Public"
+    Name = "*public*"
   }
 }
 
