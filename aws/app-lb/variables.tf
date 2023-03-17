@@ -17,10 +17,10 @@ variable "alb_security_group_ids" {
   default     = [""]
 }
 
-variable "s3_bucket_folder_uri" {
+variable "s3_bucket" {
   // Is this needed? Used for access logs.
   type        = string
-  description = "URI of the S3 bucket folder used to store the logs in."
+  description = "S3 bucket to store the logs in."
 }
 
 ## Health Check
