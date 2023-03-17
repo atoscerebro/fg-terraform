@@ -76,7 +76,7 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
   tags = var.tags
 }
 
-resource "aws_wafv2_web_acl_association" "example" {
+resource "aws_wafv2_web_acl_association" "fg_waf_to_alb" {
   web_acl_arn  = aws_wafv2_web_acl.fg_web_acl_alb.arn
   resource_arn = var.alb_arn
 }
