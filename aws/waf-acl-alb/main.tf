@@ -63,15 +63,157 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
     }
   }
 
-  dynamic "rule" {
-    for_each = var.custom_rules
+dynamic "rule" {
+    for_each = var.ip_sets_rules
     content {
-      name = rule.value.name
+      name     = rule.value.name
       priority = rule.value.priority
+
+      action {
+        dynamic "allow" {
+          for_each = rule.value.action == "allow" ? [1] : []
+          content {}
+        }
+
+        dynamic "count" {
+          for_each = rule.value.action == "count" ? [1] : []
+          content {}
+        }
+      }
+
+      statement {
+        ip_set_reference_statement {
+          arn = rule.value.ip_set_arn
+        }
+      }
+
       visibility_config {
-        cloudwatch_metrics_enabled = false
-        sampled_requests_enabled   = false
-        metric_name                = rule.value.visibility_config_metric_name
+        cloudwatch_metrics_enabled = true
+        sampled_requests_enabled   = true
+        metric_name                = rule.value.name
+      }
+    }
+  }
+
+  dynamic "rule" {
+    for_each = var.ip_rate_based_rules
+    content {
+      name     = rule.value.name
+      priority = rule.value.priority
+
+      action {
+        dynamic "count" {
+          for_each = rule.value.action == "count" ? [1] : []
+          content {}
+        }
+
+        dynamic "block" {
+          for_each = rule.value.action == "block" ? [1] : []
+          content {}
+        }
+      }
+
+      statement {
+        rate_based_statement {
+          limit              = rule.value.limit
+          aggregate_key_type = "IP"
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        sampled_requests_enabled   = true
+        metric_name                = rule.value.name
+      }
+    }
+  }
+
+  dynamic "rule" {
+    for_each = var.ip_rate_url_based_rules
+    content {
+      name     = rule.value.name
+      priority = rule.value.priority
+
+      action {
+        dynamic "allow" {
+          for_each = rule.value.action == "allow" ? [1] : []
+          content {}
+        }
+
+        dynamic "count" {
+          for_each = rule.value.action == "count" ? [1] : []
+          content {}
+        }
+
+        dynamic "block" {
+          for_each = rule.value.action == "block" ? [1] : []
+          content {}
+        }
+      }
+
+      statement {
+        rate_based_statement {
+          limit              = rule.value.limit
+          aggregate_key_type = "IP"
+          scope_down_statement {
+            byte_match_statement {
+              positional_constraint = rule.value.positional_constraint
+              search_string         = rule.value.search_string
+              field_to_match {
+                uri_path {}
+              }
+              text_transformation {
+                priority = 0
+                type     = "URL_DECODE"
+              }
+            }
+          }
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        sampled_requests_enabled   = true
+        metric_name                = rule.value.name
+      }
+    }
+  }
+
+  dynamic "rule" {
+    for_each = var.group_rules
+    content {
+      name     = rule.value.name
+      priority = rule.value.priority
+
+      override_action {
+        dynamic "none" {
+          for_each = rule.value.override_action == "none" ? [1] : []
+          content {}
+        }
+
+        dynamic "count" {
+          for_each = rule.value.override_action == "count" ? [1] : []
+          content {}
+        }
+      }
+
+      statement {
+        rule_group_reference_statement {
+          arn = rule.value.group_rule_arn
+
+          dynamic "excluded_rule" {
+            for_each = rule.value.excluded_rules
+            content {
+              name = excluded_rule.value
+            }
+          }
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        sampled_requests_enabled   = true
+        metric_name                = rule.value.name
       }
     }
   }

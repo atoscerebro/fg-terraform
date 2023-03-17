@@ -65,8 +65,26 @@ variable "custom_responses" {
   default = []
 }
 
-variable "custom_rules" {
-  description = "Add here all the rules as a list of maps"
+variable "ip_sets_rules" {
+  description = "Add here rules for ip_sets, if any"
+  type        = any
+  default     = []
+}
+
+variable "ip_rate_based_rules" {
+  description = "Add here rules for ip_sets, if any"
+  type        = any
+  default     = []
+}
+
+variable "ip_rate_url_based_rules" {
+  description = "Add here rules for ip_sets, if any"
+  type        = any
+  default     = []
+}
+
+variable "group_rules" {
+  description = "Add here rules for ip_sets, if any"
   type        = any
   default     = []
 }
