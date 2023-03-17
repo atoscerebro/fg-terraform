@@ -135,7 +135,7 @@ resource "aws_instance" "fg" {
 
   ebs_block_device {
     delete_on_termination = true
-    device_name           = "/dev/sda"
+    device_name           = "/dev/sda1"
   }
 
 
