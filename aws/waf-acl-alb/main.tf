@@ -65,6 +65,7 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
 
   dynamic "rule" {
     for_each = var.custom_rules
+    content {}
   }
 
   visibility_config {
