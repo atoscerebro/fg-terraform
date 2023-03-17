@@ -33,7 +33,7 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   cidr_ipv4   = var.https_ingress_ip_address
 
   tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-https-${env}" },
+    { "Name" = "${var.security_group_name}-ingress-https-${var.env}" },
     var.tags
   )
 }
