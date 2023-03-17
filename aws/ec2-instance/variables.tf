@@ -62,13 +62,13 @@ variable "ec2_count" {
 variable "instance_ami_name" {
   type        = string
   description = "AMI name to use for the instance."
-  default     = "amzn2-ami-minimal-hvm-2.0.20211001.1-arm64-ebs"
+  default     = "amzn2-ami-minimal-hvm-2.0.20210813.1-x86_64-ebs"
 }
 
 variable "instance_ami_image_id" {
   type        = string
   description = "AMI image id to use for the instance."
-  default     = "ami-09e34b2574f465af6"
+  default     = "ami-0ae3d9398717c94fb"
 }
 
 variable "instance_type" {
