@@ -56,7 +56,7 @@ resource "aws_vpc_security_group_egress_rule" "http" {
   description = "Security group http egress"
   from_port   = 80
   to_port     = 80
-  ip_protocol = "HTTP"
+  ip_protocol = "tcp"
   cidr_ipv4   = var.egress_ip_address
 
   tags = merge(
@@ -114,7 +114,7 @@ resource "aws_vpc_security_group_ingress_rule" "internet_http" {
   description = "Internet ingress http"
   from_port   = 80
   to_port     = 80
-  ip_protocol = "HTTP"
+  ip_protocol = "tcp"
   cidr_ipv4   = var.external_internet_ingress_ip_address
 
   tags = merge(
@@ -132,7 +132,7 @@ resource "aws_vpc_security_group_ingress_rule" "internet_https" {
   description = "Internet ingress https"
   from_port   = 443
   to_port     = 443
-  ip_protocol = "HTTPS"
+  ip_protocol = "tcp"
   cidr_ipv4   = var.external_internet_ingress_ip_address
 
   tags = merge(
@@ -173,7 +173,7 @@ resource "aws_vpc_security_group_egress_rule" "https" {
   description = "Security group https egress"
   from_port   = 443
   to_port     = 443
-  ip_protocol = "HTTPS"
+  ip_protocol = "tcp"
   cidr_ipv4   = var.egress_ip_address
 
   tags = merge(
