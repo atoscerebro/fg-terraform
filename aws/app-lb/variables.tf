@@ -17,11 +17,11 @@ variable "alb_security_group_ids" {
   default     = [""]
 }
 
-variable "s3_bucket" {
-  // Is this needed? Used for access logs.
-  type        = string
-  description = "S3 bucket to store the logs in."
-}
+# variable "s3_bucket" {
+#   // Is this needed? Used for access logs.
+#   type        = string
+#   description = "S3 bucket to store the logs in."
+# }
 
 ## Health Check
 
