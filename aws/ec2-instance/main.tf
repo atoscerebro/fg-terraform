@@ -107,12 +107,17 @@ data "aws_ami" "amazon-linux-2" {
   }
 }
 
+## Get available availability zones using region configured in provider
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 ## Get Private subnets from VPC
-data "aws_subnets" "private" {
-  filter {
-    name   = "vpc-id"
-    values = [var.vpc_id]
-  }
+data "aws_subnet" "private" {
+  count = var.ec2_count
+
+  vpc_id            = var.vpc_id
+  availability_zone = data.aws_availability_zones.available.names[count.index % var.az_count]
 
   tags = {
     Name = "*private*"
@@ -122,12 +127,12 @@ data "aws_subnets" "private" {
 resource "aws_instance" "fg" {
   count = var.ec2_count
   // Uses modulo operator to spread ec2 instances through configured number of subnets.
-  subnet_id                   = data.aws_subnets.private.ids[count.index % var.az_count]
+  subnet_id                   = data.aws_subnet.private[count.index % var.az_count].id
   ami                         = data.aws_ami.amazon-linux-2.id
   instance_type               = var.instance_type
   associate_public_ip_address = false
   // Uses modulo operator to spread ec2 instances through configured number of AZs.
-  availability_zone       = format("${var.aws_region}%s", local.az[count.index % var.az_count])
+  availability_zone       = data.aws_subnet.private[count.index % var.az_count].availability_zone
   disable_api_termination = false
   monitoring              = true
   user_data               = var.user_data

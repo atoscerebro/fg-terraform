@@ -86,12 +86,6 @@ variable "user_data" {
 
 # Availability Zones
 
-variable "aws_region" {
-  type        = string
-  description = "The AWS Geographical Region in which to create the VPC"
-  default     = "eu-west-1"
-}
-
 variable "az_count" {
   type        = number
   description = "The number of requested Availability Zones"
