@@ -83,7 +83,7 @@ resource "aws_wafv2_web_acl_association" "fg_waf_to_alb" {
 }
 
 resource "aws_wafv2_web_acl_logging_configuration" "fg_logging_waf" {
-  count = enable_logging ? 1 : 0
+  count = var.enable_logging ? 1 : 0
 
   log_destination_configs = var.storage_logs_arn
   resource_arn            = aws_wafv2_web_acl.fg_web_acl_alb.arn
