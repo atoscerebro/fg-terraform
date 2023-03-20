@@ -14,7 +14,7 @@ variable "nlb_name" {
 variable "nlb_security_group_ids" {
   type        = list(string)
   description = "List of additional Security Group IDs for NLB."
-  default     = [""]
+  default     = []
 }
 
 # variable "s3_bucket" {
