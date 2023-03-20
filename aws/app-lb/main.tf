@@ -163,7 +163,6 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
 
 # ALB is internal, and TLS enabled, OR ALB is external:
 
-
 ## Egress Rule:
 resource "aws_vpc_security_group_egress_rule" "https" {
   count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal)) ? 1 : 0

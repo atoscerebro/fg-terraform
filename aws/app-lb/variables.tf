@@ -25,8 +25,6 @@ variable "alb_security_group_ids" {
 
 ## Health Check
 
-// ternary for internal/external? Always just 80/one port per target group?
-// Or one for https as well?
 variable "health_check" {
   type        = map(string)
   description = "Map describing Health Check settings - including endpoint (default /) and port (default 80)."
