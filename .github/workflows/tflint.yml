@@ -40,5 +40,6 @@ jobs:
           # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Run TFLint
+      - name: Lint AWS
         run: tflint -f compact
+        working-directory: ./aws
