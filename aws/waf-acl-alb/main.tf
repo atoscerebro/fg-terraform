@@ -221,7 +221,7 @@ dynamic "rule" {
   visibility_config {
     cloudwatch_metrics_enabled = var.enable_cloudwatch
     sampled_requests_enabled   = var.enable_sampled_requests
-    metric_name                = var.metric_name
+    metric_name                = "${var.metric_name}_${var.name}"
   }
 
   tags = var.tags
