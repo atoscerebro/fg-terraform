@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        dir: ["aws", "azure"]
 
     steps:
       - uses: actions/checkout@v3
@@ -40,6 +40,6 @@ jobs:
           # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Lint AWS
+      - name: Run TFLint
         run: tflint -f compact --recursive
-        working-directory: ./aws
+        working-directory: ${{matrix.dir}}
