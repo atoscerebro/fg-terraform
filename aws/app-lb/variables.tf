@@ -17,11 +17,16 @@ variable "alb_security_group_ids" {
   default     = []
 }
 
-# variable "s3_bucket" {
-#   // Is this needed? Used for access logs.
-#   type        = string
-#   description = "S3 bucket to store the logs in."
-# }
+variable "enable_access_logging" {
+  type        = bool
+  description = "Boolean to specify whether to store access logs for the ALB."
+}
+
+variable "s3_bucket" {
+  type        = string
+  description = "S3 bucket to store the logs in. If none is passed in by user, a new S3 bucket will be created."
+  default     = ""
+}
 
 ## Health Check
 

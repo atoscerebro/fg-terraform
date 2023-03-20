@@ -31,13 +31,20 @@ resource "aws_lb" "application" {
   security_groups    = concat([aws_security_group.default_fg_alb.id], var.alb_security_group_ids)
   subnets            = var.alb_type_internal ? data.aws_subnets.private.ids : data.aws_subnets.public.ids
 
-  # access_logs {
-  #   bucket  = var.s3_bucket.id
-  #   prefix  = "fg-lb"
-  #   enabled = true
-  # }
+  access_logs {
+    bucket  = var.s3_bucket != "" ? var.s3_bucket.id : var.enable_access_logging ? aws_s3_bucket.fg_alb_access_logs[0].id : ""
+    prefix  = "fg-alb"
+    enabled = var.enable_access_logging
+  }
 
   tags = var.tags
+}
+
+## Optional S3 Bucket Resources for Access Logs
+
+resource "aws_s3_bucket" "fg_alb_access_logs" {
+  count  = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
+  bucket = "fg-alb-access-logs"
 }
 
 ## Default Security Group
