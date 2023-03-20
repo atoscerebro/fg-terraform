@@ -17,6 +17,12 @@ variable "nlb_security_group_ids" {
   default     = []
 }
 
+variable "enable_cross_zone_load_balancing" {
+  type        = bool
+  description = "Boolean to enable cross zone load balancing. Defaults to true."
+  default     = true
+}
+
 # variable "s3_bucket" {
 #   // Is this needed? Used for access logs.
 #   type        = string

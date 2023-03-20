@@ -25,11 +25,12 @@ data "aws_subnets" "public" {
 # Network Load Balancer 
 
 resource "aws_lb" "network" {
-  name               = var.nlb_name
-  internal           = var.nlb_type_internal
-  load_balancer_type = "network"
-  security_groups    = concat([aws_security_group.default_fg_nlb.id], var.nlb_security_group_ids)
-  subnets            = var.nlb_type_internal ? data.aws_subnets.private.ids : data.aws_subnets.public.ids
+  name                             = var.nlb_name
+  internal                         = var.nlb_type_internal
+  load_balancer_type               = "network"
+  security_groups                  = concat([aws_security_group.default_fg_nlb.id], var.nlb_security_group_ids)
+  subnets                          = var.nlb_type_internal ? data.aws_subnets.private.ids : data.aws_subnets.public.ids
+  enable_cross_zone_load_balancing = var.enable_cross_zone_load_balancing
 
   # access_logs {
   #   bucket  = var.s3_bucket.id
