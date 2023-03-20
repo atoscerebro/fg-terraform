@@ -14,7 +14,7 @@ variable "alb_name" {
 variable "alb_security_group_ids" {
   type        = list(string)
   description = "List of additional Security Group IDs for ALB."
-  default     = [""]
+  default     = []
 }
 
 # variable "s3_bucket" {
