@@ -6,7 +6,7 @@ on:
     paths:
       - "azure/**"
       - "aws/**"
-      - github/workflows/tflint.yml
+      - .github/workflows/tflint.yml
 
 jobs:
   tflint:
