@@ -42,4 +42,4 @@ jobs:
 
       - name: Lint AWS
         run: tflint -f compact
-        working-directory: ./aws
+        working-directory: ./aws/ec2-instance
