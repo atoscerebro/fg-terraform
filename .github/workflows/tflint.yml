@@ -41,5 +41,5 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Lint AWS
-        run: tflint -f compact
-        working-directory: ./aws/ec2-instance
+        run: tflint -f compact --recursive
+        working-directory: ./aws
