@@ -34,7 +34,7 @@ resource "aws_lb" "application" {
   dynamic "access_logs" {
     for_each = var.enable_access_logging ? { enabled = true } : {}
     content {
-      bucket  = var.s3_bucket_id != "" ? var.s3_bucket_id : var.enable_access_logging ? aws_s3_bucket.fg_alb_access_logs[0].id : ""
+      bucket  = var.s3_bucket_id != "" ? var.s3_bucket_id : aws_s3_bucket.fg_alb_access_logs[0].id
       enabled = var.enable_access_logging
     }
 
