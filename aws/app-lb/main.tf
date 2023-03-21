@@ -31,9 +31,13 @@ resource "aws_lb" "application" {
   security_groups    = concat([aws_security_group.default_fg_alb.id], var.alb_security_group_ids)
   subnets            = var.alb_type_internal ? data.aws_subnets.private.ids : data.aws_subnets.public.ids
 
-  access_logs {
-    bucket  = var.s3_bucket != "" ? var.s3_bucket.id : var.enable_access_logging ? aws_s3_bucket.fg_alb_access_logs[0].id : ""
-    enabled = var.enable_access_logging
+  dynamic "access_logs" {
+    for_each = var.enable_access_logging ? { enabled = true } : {}
+    content {
+      bucket  = var.s3_bucket != "" ? var.s3_bucket.id : var.enable_access_logging ? aws_s3_bucket.fg_alb_access_logs[0].id : ""
+      enabled = var.enable_access_logging
+    }
+
   }
 
   tags = var.tags
@@ -79,7 +83,6 @@ data "aws_iam_policy_document" "allow_alb_write_to_bucket" {
     ]
   }
 }
-
 
 ## Default Security Group
 resource "aws_security_group" "default_fg_alb" {
