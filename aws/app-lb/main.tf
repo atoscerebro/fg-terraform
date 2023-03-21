@@ -60,7 +60,7 @@ resource "aws_s3_bucket_acl" "fg_alb_access_logs" {
 resource "aws_s3_bucket_policy" "fg_alb_access_logs" {
   count  = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
   bucket = aws_s3_bucket.fg_alb_access_logs[0].id
-  policy = data.aws_iam_policy_document.allow_alb_write_to_bucket.json
+  policy = data.aws_iam_policy_document.allow_alb_write_to_bucket[0].json
 }
 
 data "aws_elb_service_account" "main" {}
@@ -68,6 +68,8 @@ data "aws_elb_service_account" "main" {}
 data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "allow_alb_write_to_bucket" {
+  count = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
+
   version = "2012-10-17"
   statement {
     principals {
