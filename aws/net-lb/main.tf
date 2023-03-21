@@ -35,7 +35,7 @@ resource "aws_lb" "network" {
   dynamic "access_logs" {
     for_each = var.enable_access_logging ? { enabled = true } : {}
     content {
-      bucket  = var.s3_bucket != "" ? var.s3_bucket.id : var.enable_access_logging ? aws_s3_bucket.fg_nlb_access_logs[0].id : ""
+      bucket  = var.s3_bucket_id != "" ? var.s3_bucket_id : var.enable_access_logging ? aws_s3_bucket.fg_nlb_access_logs[0].id : ""
       enabled = var.enable_access_logging
     }
   }
@@ -46,19 +46,19 @@ resource "aws_lb" "network" {
 ## Optional S3 Bucket Resources for Access Logs
 
 resource "aws_s3_bucket" "fg_nlb_access_logs" {
-  count         = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
+  count         = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
   bucket        = "${var.nlb_name}-access-logs"
   force_destroy = var.force_destroy_nlb_access_logs
 }
 
 resource "aws_s3_bucket_acl" "fg_nlb_access_logs" {
-  count  = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
+  count  = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
   bucket = aws_s3_bucket.fg_nlb_access_logs[0].id
   acl    = "private"
 }
 
 resource "aws_s3_bucket_policy" "fg_nlb_access_logs" {
-  count  = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
+  count  = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
   bucket = aws_s3_bucket.fg_nlb_access_logs[0].id
   policy = data.aws_iam_policy_document.allow_nlb_write_to_bucket[0].json
 }
@@ -68,7 +68,7 @@ data "aws_elb_service_account" "main" {}
 data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "allow_nlb_write_to_bucket" {
-  count = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
+  count = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
 
   version = "2012-10-17"
   statement {

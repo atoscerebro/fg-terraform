@@ -28,9 +28,9 @@ variable "enable_access_logging" {
   description = "Boolean to specify whether to store access logs for the NLB."
 }
 
-variable "s3_bucket" {
+variable "s3_bucket_id" {
   type        = string
-  description = "S3 bucket to store the logs in. If none is passed in by user, a new S3 bucket will be created."
+  description = "Name/ID of the S3 bucket to store the logs in. If none is passed in by user, a new S3 bucket will be created."
   default     = ""
 }
 
