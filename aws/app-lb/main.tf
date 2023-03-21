@@ -42,8 +42,9 @@ resource "aws_lb" "application" {
 ## Optional S3 Bucket Resources for Access Logs
 
 resource "aws_s3_bucket" "fg_alb_access_logs" {
-  count  = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
-  bucket = "fg-alb-access-logs"
+  count         = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
+  bucket        = "fg-alb-access-logs"
+  force_destroy = var.force_destroy_alb_access_logs
 }
 
 resource "aws_s3_bucket_acl" "fg_alb_access_logs" {
