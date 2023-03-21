@@ -33,7 +33,6 @@ resource "aws_lb" "application" {
 
   access_logs {
     bucket  = var.s3_bucket != "" ? var.s3_bucket.id : var.enable_access_logging ? aws_s3_bucket.fg_alb_access_logs[0].id : ""
-    prefix  = "fg-alb"
     enabled = var.enable_access_logging
   }
 
@@ -75,7 +74,7 @@ data "aws_iam_policy_document" "allow_alb_write_to_bucket" {
       "s3:PutObject",
     ]
     resources = [
-      "arn:aws:s3:::fg-alb-access-logs/fg-alb/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      "${aws_s3_bucket.fg_alb_access_logs.arn}/*"
     ]
   }
 }
