@@ -65,8 +65,6 @@ resource "aws_s3_bucket_policy" "fg_alb_access_logs" {
 
 data "aws_elb_service_account" "main" {}
 
-data "aws_caller_identity" "current" {}
-
 data "aws_iam_policy_document" "allow_alb_write_to_bucket" {
   count = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
 
