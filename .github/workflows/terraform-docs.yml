@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - .github/workflows/terraform-docs.yml
+      - 'aws/**'
       - 'azure/**'
       - docs
 
@@ -21,6 +22,6 @@ jobs:
       - name: Test docs
         uses: terraform-docs/gh-actions@v1.0.0
         with:
-          find-dir: ./azure
+          find-dir: ./
           output-file: README.md
           fail-on-diff: true
