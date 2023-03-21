@@ -17,7 +17,7 @@ output "alb_dns_name" {
 
 output "alb_outpost_id" {
   description = "D of the Outpost containing the load balancer."
-  value       = try(aws_lb.application.subnet_mapping.*.outpost_id, "")
+  value       = try(aws_lb.application.subnet_mapping[*].outpost_id, "")
 }
 
 output "alb_tags" {
