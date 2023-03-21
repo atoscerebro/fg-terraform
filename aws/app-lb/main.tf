@@ -48,66 +48,34 @@ resource "aws_s3_bucket" "fg_alb_access_logs" {
 }
 
 resource "aws_s3_bucket_acl" "fg_alb_access_logs" {
-  count = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
-
+  count  = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
   bucket = aws_s3_bucket.fg_alb_access_logs[0].id
   acl    = "private"
 }
 
-data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}
+resource "aws_s3_bucket_policy" "fg_alb_access_logs" {
+  count  = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
+  bucket = aws_s3_bucket.fg_alb_access_logs[0].id
+  policy = data.aws_iam_policy_document.allow_alb_write_to_bucket.json
+}
+
 data "aws_elb_service_account" "main" {}
 
-resource "aws_s3_bucket_policy" "lb-bucket-policy" {
-  count = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
-
-  bucket = aws_s3_bucket.fg_alb_access_logs[0].id
-
-  policy = <<POLICY
-{
-    "Id": "Policy",
-    "Version": "2012-10-17",
-    "Statement": [{
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": [
-                    "${data.aws_elb_service_account.main.arn}"
-                ]
-            },
-            "Action": [
-                "s3:PutObject"
-            ],
-            "Resource": "${aws_s3_bucket.fg_alb_access_logs[0].arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
-        },
-        {
-            "Effect": "Allow",
-            "Principal": {
-                "Service": "delivery.logs.amazonaws.com"
-            },
-            "Action": [
-                "s3:PutObject"
-            ],
-            "Resource": "${aws_s3_bucket.fg_alb_access_logs[0].arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
-            "Condition": {
-                "StringEquals": {
-                    "s3:x-amz-acl": "bucket-owner-full-control"
-                }
-            }
-        },
-        {
-            "Effect": "Allow",
-            "Principal": {
-                "Service": "delivery.logs.amazonaws.com"
-            },
-            "Action": [
-                "s3:GetBucketAcl"
-            ],
-            "Resource": "${aws_s3_bucket.fg_alb_access_logs[0].arn}"
-        }
+data "aws_iam_policy_document" "allow_alb_write_to_bucket" {
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_elb_service_account.main.arn]
+    }
+    actions = [
+      "s3:PutObject",
     ]
+    resources = [
+      aws_s3_bucket.fg_alb_access_logs.arn
+    ]
+  }
 }
-POLICY
-}
+
 
 ## Default Security Group
 resource "aws_security_group" "default_fg_alb" {
