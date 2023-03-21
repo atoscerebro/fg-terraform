@@ -71,7 +71,7 @@ data "aws_iam_policy_document" "allow_alb_write_to_bucket" {
       "s3:PutObject",
     ]
     resources = [
-      aws_s3_bucket.fg_alb_access_logs[0].arn
+      aws_alb.application.arn
     ]
   }
 }
