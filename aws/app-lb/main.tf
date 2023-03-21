@@ -47,7 +47,7 @@ resource "aws_lb" "application" {
 
 resource "aws_s3_bucket" "fg_alb_access_logs" {
   count         = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
-  bucket        = "fg-alb-access-logs"
+  bucket        = "${var.alb_name}-access-logs"
   force_destroy = var.force_destroy_alb_access_logs
 }
 
