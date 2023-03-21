@@ -28,6 +28,12 @@ variable "s3_bucket" {
   default     = ""
 }
 
+variable "force_destroy_alb_access_logs" {
+  type        = bool
+  description = "Boolean to specify whether to force destroy access_logs when s3 bucket is destroyed - when false, s3 bucket cannot be destroyed without error."
+  default     = true
+}
+
 ## Health Check
 
 variable "health_check" {
