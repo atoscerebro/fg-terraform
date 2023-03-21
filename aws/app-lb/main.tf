@@ -61,17 +61,21 @@ resource "aws_s3_bucket_policy" "fg_alb_access_logs" {
 
 data "aws_elb_service_account" "main" {}
 
+data "aws_caller_identity" "current" {}
+
 data "aws_iam_policy_document" "allow_alb_write_to_bucket" {
+  version = "2012-10-17"
   statement {
     principals {
       type        = "AWS"
       identifiers = [data.aws_elb_service_account.main.arn]
     }
+    effect = "Allow"
     actions = [
       "s3:PutObject",
     ]
     resources = [
-      aws_lb.application.arn
+      "arn:aws:s3:::fg-alb-access-logs/fg-alb/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
   }
 }
