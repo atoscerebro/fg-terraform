@@ -22,10 +22,16 @@ variable "enable_access_logging" {
   description = "Boolean to specify whether to store access logs for the ALB."
 }
 
-variable "s3_bucket" {
+variable "s3_bucket_id" {
   type        = string
-  description = "S3 bucket to store the logs in. If none is passed in by user, a new S3 bucket will be created."
+  description = "Name/ID of the S3 bucket to store the logs in. If none is passed in by user, a new S3 bucket will be created."
   default     = ""
+}
+
+variable "force_destroy_alb_access_logs" {
+  type        = bool
+  description = "Boolean to specify whether to force destroy access_logs when s3 bucket is destroyed - when false, s3 bucket cannot be destroyed without error."
+  default     = true
 }
 
 ## Health Check

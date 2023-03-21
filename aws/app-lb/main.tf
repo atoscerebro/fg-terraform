@@ -31,10 +31,13 @@ resource "aws_lb" "application" {
   security_groups    = concat([aws_security_group.default_fg_alb.id], var.alb_security_group_ids)
   subnets            = var.alb_type_internal ? data.aws_subnets.private.ids : data.aws_subnets.public.ids
 
-  access_logs {
-    bucket  = var.s3_bucket != "" ? var.s3_bucket.id : var.enable_access_logging ? aws_s3_bucket.fg_alb_access_logs[0].id : ""
-    prefix  = "fg-alb"
-    enabled = var.enable_access_logging
+  dynamic "access_logs" {
+    for_each = var.enable_access_logging ? { enabled = true } : {}
+    content {
+      bucket  = var.s3_bucket_id != "" ? var.s3_bucket_id : aws_s3_bucket.fg_alb_access_logs[0].id
+      enabled = var.enable_access_logging
+    }
+
   }
 
   tags = var.tags
@@ -43,8 +46,44 @@ resource "aws_lb" "application" {
 ## Optional S3 Bucket Resources for Access Logs
 
 resource "aws_s3_bucket" "fg_alb_access_logs" {
-  count  = (var.enable_access_logging && (var.s3_bucket == "")) ? 1 : 0
-  bucket = "fg-alb-access-logs"
+  count         = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  bucket        = "${var.alb_name}-access-logs"
+  force_destroy = var.force_destroy_alb_access_logs
+}
+
+resource "aws_s3_bucket_acl" "fg_alb_access_logs" {
+  count  = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  bucket = aws_s3_bucket.fg_alb_access_logs[0].id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_policy" "fg_alb_access_logs" {
+  count  = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  bucket = aws_s3_bucket.fg_alb_access_logs[0].id
+  policy = data.aws_iam_policy_document.allow_alb_write_to_bucket[0].json
+}
+
+data "aws_elb_service_account" "main" {}
+
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy_document" "allow_alb_write_to_bucket" {
+  count = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+
+  version = "2012-10-17"
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_elb_service_account.main.arn]
+    }
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+    ]
+    resources = [
+      "${aws_s3_bucket.fg_alb_access_logs[0].arn}/*"
+    ]
+  }
 }
 
 ## Default Security Group
