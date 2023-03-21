@@ -17,7 +17,7 @@ output "nlb_dns_name" {
 
 output "nlb_outpost_id" {
   description = "Description of the Outpost containing the load balancer."
-  value       = try(aws_lb.network.subnet_mapping.*.outpost_id, "")
+  value       = try(aws_lb.network.subnet_mapping[*].outpost_id, "")
 }
 
 output "nlb_tags" {
