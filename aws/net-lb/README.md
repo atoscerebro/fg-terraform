@@ -47,6 +47,7 @@ No modules.
 | <a name="input_cert_domain_name"></a> [cert\_domain\_name](#input\_cert\_domain\_name) | Domain name for which the certificate should be issued. | `string` | `"test.com"` | no |
 | <a name="input_cert_key_algorithm"></a> [cert\_key\_algorithm](#input\_cert\_key\_algorithm) | The algorithm of the public and private key pair that the Amazon-issued certificate uses to encrypt data. | `string` | `"RSA_2048"` | no |
 | <a name="input_cert_validation_method"></a> [cert\_validation\_method](#input\_cert\_validation\_method) | The validation method used to approve ACM certificate used in NLB - DNS, EMAIL, or NONE are valid values. | `string` | `"EMAIL"` | no |
+| <a name="input_default_target_group_protocol"></a> [default\_target\_group\_protocol](#input\_default\_target\_group\_protocol) | Protocol for default target group. | `string` | `"TCP"` | no |
 | <a name="input_default_target_type"></a> [default\_target\_type](#input\_default\_target\_type) | Type of NLB's default target group's targets. | `string` | `"instance"` | no |
 | <a name="input_egress_ip_address"></a> [egress\_ip\_address](#input\_egress\_ip\_address) | IP address to allow HTTP access to. | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_enable_access_logging"></a> [enable\_access\_logging](#input\_enable\_access\_logging) | Boolean to specify whether to store access logs for the NLB. | `bool` | n/a | yes |
