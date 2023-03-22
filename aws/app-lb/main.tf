@@ -115,7 +115,7 @@ resource "aws_lb_target_group" "default" {
   port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
-  target_type = var.target_type
+  target_type = var.default_target_type
 
   health_check {
     timeout             = var.health_check.timeout
