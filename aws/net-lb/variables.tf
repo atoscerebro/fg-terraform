@@ -48,6 +48,12 @@ variable "default_target_type" {
   default     = "instance"
 }
 
+variable "default_target_group_protocol" {
+  type        = string
+  description = "Protocol for default target group."
+  default     = "TCP"
+}
+
 ## Health Check
 
 variable "health_check" {

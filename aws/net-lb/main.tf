@@ -113,7 +113,7 @@ resource "aws_vpc_security_group_egress_rule" "http" {
 resource "aws_lb_target_group" "default" {
   name        = "${var.nlb_name}-tg"
   port        = 80
-  protocol    = "TCP"
+  protocol    = var.default_target_group_protocol
   vpc_id      = var.vpc_id
   target_type = var.default_target_type
 
