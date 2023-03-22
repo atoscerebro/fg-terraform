@@ -14,4 +14,7 @@ docs: $(TERRAFORM_SOURCES)
 release:
 	gh workflow run release.yml
 
+lint:
+	tflint -f compact --recursive
+
 .PHONY: find-modules build-docs release

@@ -31,6 +31,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 
   os_disk {
+    name                 = var.storage_os_disk_name
     storage_account_type = var.storage_os_disk_managed_disk_type
     caching              = "ReadOnly"
   }

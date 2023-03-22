@@ -8,6 +8,7 @@ variable "cluster_name" {
 }
 
 variable "dns_prefix" {
+  type    = string
   default = "k8stest"
 }
 
