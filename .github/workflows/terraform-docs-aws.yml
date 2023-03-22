@@ -1,4 +1,4 @@
-name: Generate Terraform Documentation
+name: Generate Terraform Documentation for AWS
 
 on:
   pull_request:
