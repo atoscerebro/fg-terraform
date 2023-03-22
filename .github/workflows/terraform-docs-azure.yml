@@ -23,4 +23,5 @@ jobs:
         with:
           find-dir: ./azure
           output-file: README.md
-          fail-on-diff: true
+          output-method: inject
+          git-push: "true"

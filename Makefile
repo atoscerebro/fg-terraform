@@ -6,7 +6,7 @@ find-modules:
 	find -E ${CLOUD_PROVIDER} -type f -regex '.*($(MODULE_ROOTS))\.tf$$' -exec dirname "{}" \; | uniq
 
 build-docs:
-	$(MAKE) -s find-modules | xargs -n 1 terraform-docs markdown table --output-file README.md --indent 2
+	$(MAKE) -s find-modules | xargs -n 1 terraform-docs markdown table --output-file README.md
 
 $(CLOUD_PROVIDER)-docs: $(TERRAFORM_SOURCES)
 	$(MAKE) -s build-docs; openssl sha256 $(TERRAFORM_SOURCES) > $(CLOUD_PROVIDER)-docs
