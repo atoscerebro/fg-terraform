@@ -130,16 +130,14 @@ resource "aws_security_group" "default" {
 resource "aws_vpc_security_group_ingress_rule" "ingress_local" {
   from_port         = "0"
   to_port           = "0"
-  protocol          = "-1"
-  self              = true
+  ip_protocol       = "-1"
   security_group_id = aws_security_group.default.id
 }
 
 resource "aws_vpc_security_group_egress_rule" "egress_local" {
   from_port         = "0"
   to_port           = "0"
-  protocol          = "-1"
-  self              = true
+  ip_protocol       = "-1"
   security_group_id = aws_security_group.default.id
 }
 
@@ -155,23 +153,23 @@ resource "aws_security_group" "public" {
 resource "aws_vpc_security_group_ingress_rule" "public_http" {
   from_port         = 80
   to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
   security_group_id = aws_security_group.public.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "public_https" {
   from_port         = 443
   to_port           = 443
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
   security_group_id = aws_security_group.public.id
 }
 
 resource "aws_vpc_security_group_egress_rule" "public_egress" {
   from_port         = 0
   to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
   security_group_id = aws_security_group.public.id
 }
