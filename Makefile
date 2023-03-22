@@ -17,4 +17,4 @@ release:
 lint:
 	tflint -f compact --recursive
 
-.PHONY: find-modules build-docs release
+.PHONY: find-modules build-docs release lint
