@@ -34,6 +34,14 @@ variable "force_destroy_alb_access_logs" {
   default     = true
 }
 
+## Target Group
+
+variable "target_type" {
+  type        = string
+  description = "Type of ALB's default target group's targets."
+  default     = "instance"
+}
+
 ## Health Check
 
 variable "health_check" {
