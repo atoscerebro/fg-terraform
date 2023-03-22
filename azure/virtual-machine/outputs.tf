@@ -1,5 +1,5 @@
 output "id" {
-  value       = azurerm_virtual_machine.vm.id
+  value       = azurerm_linux_virtual_machine.vm.id
   description = "The resource id of the VM."
 }
 
