@@ -1,4 +1,4 @@
-name: Terraform Documentation
+name: Generate Terraform Documentation
 
 on:
   pull_request:
@@ -17,10 +17,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Test docs
+      - name: Render docs and push changes back to the PR
         uses: terraform-docs/gh-actions@v1.0.0
         with:
           find-dir: ./aws
           output-file: README.md
-          fail-on-diff: true
+          output-method: inject
+          git-push: "true"
