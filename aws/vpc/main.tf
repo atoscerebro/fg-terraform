@@ -127,21 +127,15 @@ resource "aws_security_group" "default" {
   tags = var.tags
 }
 
-resource "aws_security_group_rule" "ingress_local" {
-  type              = "ingress"
-  from_port         = "0"
-  to_port           = "0"
-  protocol          = "-1"
-  self              = true
+resource "aws_vpc_security_group_ingress_rule" "ingress_local" {
+  ip_protocol       = "-1"
+  cidr_ipv4         = var.vpc_cidr
   security_group_id = aws_security_group.default.id
 }
 
-resource "aws_security_group_rule" "egress_local" {
-  type              = "egress"
-  from_port         = "0"
-  to_port           = "0"
-  protocol          = "-1"
-  self              = true
+resource "aws_vpc_security_group_egress_rule" "egress_local" {
+  ip_protocol       = "-1"
+  cidr_ipv4         = var.vpc_cidr
   security_group_id = aws_security_group.default.id
 }
 
@@ -154,29 +148,24 @@ resource "aws_security_group" "public" {
   tags = var.tags
 }
 
-resource "aws_security_group_rule" "public_http" {
-  type              = "ingress"
+resource "aws_vpc_security_group_ingress_rule" "public_http" {
   from_port         = 80
   to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
   security_group_id = aws_security_group.public.id
 }
 
-resource "aws_security_group_rule" "public_https" {
-  type              = "ingress"
+resource "aws_vpc_security_group_ingress_rule" "public_https" {
   from_port         = 443
   to_port           = 443
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  ip_protocol       = "tcp"
+  cidr_ipv4         = "0.0.0.0/0"
   security_group_id = aws_security_group.public.id
 }
 
-resource "aws_security_group_rule" "public_egress" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
+resource "aws_vpc_security_group_egress_rule" "public_egress" {
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
   security_group_id = aws_security_group.public.id
 }
