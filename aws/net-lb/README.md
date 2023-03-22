@@ -28,13 +28,6 @@ No modules.
 | [aws_s3_bucket.fg_nlb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_acl.fg_nlb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_policy.fg_nlb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket_policy) | resource |
-| [aws_security_group.default_fg_nlb](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group) | resource |
-| [aws_vpc_security_group_egress_rule.http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_egress_rule) | resource |
-| [aws_vpc_security_group_egress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_egress_rule) | resource |
-| [aws_vpc_security_group_ingress_rule.http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
-| [aws_vpc_security_group_ingress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
-| [aws_vpc_security_group_ingress_rule.internet_http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
-| [aws_vpc_security_group_ingress_rule.internet_https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_elb_service_account.main](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/elb_service_account) | data source |
 | [aws_iam_policy_document.allow_nlb_write_to_bucket](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/iam_policy_document) | data source |
 | [aws_subnets.private](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/subnets) | data source |
@@ -49,23 +42,18 @@ No modules.
 | <a name="input_cert_validation_method"></a> [cert\_validation\_method](#input\_cert\_validation\_method) | The validation method used to approve ACM certificate used in NLB - DNS, EMAIL, or NONE are valid values. | `string` | `"EMAIL"` | no |
 | <a name="input_default_target_group_protocol"></a> [default\_target\_group\_protocol](#input\_default\_target\_group\_protocol) | Protocol for default target group. | `string` | `"TCP"` | no |
 | <a name="input_default_target_type"></a> [default\_target\_type](#input\_default\_target\_type) | Type of NLB's default target group's targets. | `string` | `"instance"` | no |
-| <a name="input_egress_ip_address"></a> [egress\_ip\_address](#input\_egress\_ip\_address) | IP address to allow HTTP access to. | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_enable_access_logging"></a> [enable\_access\_logging](#input\_enable\_access\_logging) | Boolean to specify whether to store access logs for the NLB. | `bool` | n/a | yes |
 | <a name="input_enable_cross_zone_load_balancing"></a> [enable\_cross\_zone\_load\_balancing](#input\_enable\_cross\_zone\_load\_balancing) | Boolean to enable cross zone load balancing. Defaults to true. | `bool` | `true` | no |
 | <a name="input_enable_internal_nlb_tls"></a> [enable\_internal\_nlb\_tls](#input\_enable\_internal\_nlb\_tls) | Boolean to specify whether to enable TLS for the Internal Network Load Balancer. (External NLB has TLS enabled by default.) | `bool` | `false` | no |
-| <a name="input_external_internet_ingress_ip_address"></a> [external\_internet\_ingress\_ip\_address](#input\_external\_internet\_ingress\_ip\_address) | IP address to allow external NLB HTTPS access from. | `string` | `"0.0.0.0/0"` | no |
 | <a name="input_force_destroy_nlb_access_logs"></a> [force\_destroy\_nlb\_access\_logs](#input\_force\_destroy\_nlb\_access\_logs) | Boolean to specify whether to force destroy access\_logs when s3 bucket is destroyed - when false, s3 bucket cannot be destroyed without error. | `bool` | `true` | no |
 | <a name="input_health_check"></a> [health\_check](#input\_health\_check) | Map describing Health Check settings - including endpoint (default /) and port (default 80). | `map(string)` | <pre>{<br>  "healthy_threshold": "3",<br>  "interval": "20",<br>  "port": "80",<br>  "protocol": "TCP",<br>  "timeout": "10",<br>  "unhealthy_threshold": "2"<br>}</pre> | no |
-| <a name="input_internal_ingress_ip_address"></a> [internal\_ingress\_ip\_address](#input\_internal\_ingress\_ip\_address) | IP address to allow internal NLB access from. | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_nlb_name"></a> [nlb\_name](#input\_nlb\_name) | Name of the Network Load Balancer. | `string` | n/a | yes |
-| <a name="input_nlb_security_group_ids"></a> [nlb\_security\_group\_ids](#input\_nlb\_security\_group\_ids) | List of additional Security Group IDs for NLB. | `list(string)` | `[]` | no |
 | <a name="input_nlb_type_internal"></a> [nlb\_type\_internal](#input\_nlb\_type\_internal) | Boolean to specify whether type of NLB is internal. True == internal; false == external. | `bool` | `true` | no |
 | <a name="input_s3_bucket_id"></a> [s3\_bucket\_id](#input\_s3\_bucket\_id) | Name/ID of the S3 bucket to store the logs in. If none is passed in by user, a new S3 bucket will be created. | `string` | `""` | no |
-| <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of aws security group. | `string` | n/a | yes |
 | <a name="input_ssl_cert"></a> [ssl\_cert](#input\_ssl\_cert) | Optional ARN of custom SSL server certificate. If this field is not specified module will create an Amazon-issued ACM certificate. | `string` | `null` | no |
 | <a name="input_ssl_security_policy"></a> [ssl\_security\_policy](#input\_ssl\_security\_policy) | Name of SSL Policy for internal HTTPS listener. | `string` | `"ELBSecurityPolicy-2016-08"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | `{}` | no |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC id for use in target group, security group and to retrieve subnets. | `string` | n/a | yes |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC id for use in target group and to retrieve subnets. | `string` | n/a | yes |
 
 ## Outputs
 
@@ -85,22 +73,6 @@ No modules.
 | <a name="output_certificate_status"></a> [certificate\_status](#output\_certificate\_status) | Status of ACM certificate. |
 | <a name="output_certificate_tags"></a> [certificate\_tags](#output\_certificate\_tags) | Map with all tags for ACM certificate. |
 | <a name="output_certificate_type"></a> [certificate\_type](#output\_certificate\_type) | Source of ACM certificate. |
-| <a name="output_default_nlb_security_group_arn"></a> [default\_nlb\_security\_group\_arn](#output\_default\_nlb\_security\_group\_arn) | The ARN of the security group created by default with the Network Load Balancer. |
-| <a name="output_default_nlb_security_group_egress_http_arn"></a> [default\_nlb\_security\_group\_egress\_http\_arn](#output\_default\_nlb\_security\_group\_egress\_http\_arn) | The default security group HTTP egress rule ARN. |
-| <a name="output_default_nlb_security_group_egress_http_tags"></a> [default\_nlb\_security\_group\_egress\_http\_tags](#output\_default\_nlb\_security\_group\_egress\_http\_tags) | Map of all tags for the HTTP egress rule. |
-| <a name="output_default_nlb_security_group_egress_https_arn"></a> [default\_nlb\_security\_group\_egress\_https\_arn](#output\_default\_nlb\_security\_group\_egress\_https\_arn) | The default security group HTTPS egress rule ARN. |
-| <a name="output_default_nlb_security_group_egress_https_tags"></a> [default\_nlb\_security\_group\_egress\_https\_tags](#output\_default\_nlb\_security\_group\_egress\_https\_tags) | Map of all tags for the HTTPS egress rule. |
-| <a name="output_default_nlb_security_group_id"></a> [default\_nlb\_security\_group\_id](#output\_default\_nlb\_security\_group\_id) | The ID of the security group created by default with the Network Load Balancer. |
-| <a name="output_default_nlb_security_group_ingress_http_arn"></a> [default\_nlb\_security\_group\_ingress\_http\_arn](#output\_default\_nlb\_security\_group\_ingress\_http\_arn) | The default security group http ingress rule ARN. |
-| <a name="output_default_nlb_security_group_ingress_http_tags"></a> [default\_nlb\_security\_group\_ingress\_http\_tags](#output\_default\_nlb\_security\_group\_ingress\_http\_tags) | Map of all tags for the HTTP ingress rule. |
-| <a name="output_default_nlb_security_group_ingress_https_arn"></a> [default\_nlb\_security\_group\_ingress\_https\_arn](#output\_default\_nlb\_security\_group\_ingress\_https\_arn) | The default security group https ingress rule ARN. |
-| <a name="output_default_nlb_security_group_ingress_https_tags"></a> [default\_nlb\_security\_group\_ingress\_https\_tags](#output\_default\_nlb\_security\_group\_ingress\_https\_tags) | Map of all tags for the HTTPS ingress rule. |
-| <a name="output_default_nlb_security_group_ingress_internet_http_arn"></a> [default\_nlb\_security\_group\_ingress\_internet\_http\_arn](#output\_default\_nlb\_security\_group\_ingress\_internet\_http\_arn) | The default security group internet http ingress rule ARN. |
-| <a name="output_default_nlb_security_group_ingress_internet_http_tags"></a> [default\_nlb\_security\_group\_ingress\_internet\_http\_tags](#output\_default\_nlb\_security\_group\_ingress\_internet\_http\_tags) | Map of all tags for the internet http ingress rule. |
-| <a name="output_default_nlb_security_group_ingress_internet_https_arn"></a> [default\_nlb\_security\_group\_ingress\_internet\_https\_arn](#output\_default\_nlb\_security\_group\_ingress\_internet\_https\_arn) | The default security group internet https ingress rule ARN. |
-| <a name="output_default_nlb_security_group_ingress_internet_https_tags"></a> [default\_nlb\_security\_group\_ingress\_internet\_https\_tags](#output\_default\_nlb\_security\_group\_ingress\_internet\_https\_tags) | Map of all tags for the internet https ingress rule. |
-| <a name="output_default_nlb_security_group_owner_id"></a> [default\_nlb\_security\_group\_owner\_id](#output\_default\_nlb\_security\_group\_owner\_id) | The owner ID of the security group created by default with the Network Load Balancer. |
-| <a name="output_default_nlb_security_group_tags"></a> [default\_nlb\_security\_group\_tags](#output\_default\_nlb\_security\_group\_tags) | Map with all tags for the default security group. |
 | <a name="output_default_nlb_target_group_arn"></a> [default\_nlb\_target\_group\_arn](#output\_default\_nlb\_target\_group\_arn) | The Amazon Resource Name (ARN) or ID of the default Target Group for the Network Load Balancer. |
 | <a name="output_default_nlb_target_group_arn_suffix"></a> [default\_nlb\_target\_group\_arn\_suffix](#output\_default\_nlb\_target\_group\_arn\_suffix) | The ARN suffix of the default Target Group for the Network Load Balancer. |
 | <a name="output_default_nlb_target_group_name"></a> [default\_nlb\_target\_group\_name](#output\_default\_nlb\_target\_group\_name) | The name of the default Target Group for the Network Load Balancer. |
