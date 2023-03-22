@@ -36,7 +36,7 @@ variable "force_destroy_alb_access_logs" {
 
 ## Target Group
 
-variable "target_type" {
+variable "default_target_type" {
   type        = string
   description = "Type of ALB's default target group's targets."
   default     = "instance"
