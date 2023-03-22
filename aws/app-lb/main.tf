@@ -111,10 +111,11 @@ resource "aws_vpc_security_group_egress_rule" "http" {
 
 ## Default Target Group
 resource "aws_lb_target_group" "default" {
-  name     = "${var.alb_name}-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  name        = "${var.alb_name}-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = var.target_type
 
   health_check {
     timeout             = var.health_check.timeout
