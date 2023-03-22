@@ -127,8 +127,7 @@ resource "aws_security_group" "default" {
   tags = var.tags
 }
 
-resource "aws_security_group_rule" "ingress_local" {
-  type              = "ingress"
+resource "aws_vpc_security_group_ingress_rule" "ingress_local" {
   from_port         = "0"
   to_port           = "0"
   protocol          = "-1"
@@ -136,8 +135,7 @@ resource "aws_security_group_rule" "ingress_local" {
   security_group_id = aws_security_group.default.id
 }
 
-resource "aws_security_group_rule" "egress_local" {
-  type              = "egress"
+resource "aws_vpc_security_group_egress_rule" "egress_local" {
   from_port         = "0"
   to_port           = "0"
   protocol          = "-1"
@@ -154,8 +152,7 @@ resource "aws_security_group" "public" {
   tags = var.tags
 }
 
-resource "aws_security_group_rule" "public_http" {
-  type              = "ingress"
+resource "aws_vpc_security_group_ingress_rule" "public_http" {
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
@@ -163,8 +160,7 @@ resource "aws_security_group_rule" "public_http" {
   security_group_id = aws_security_group.public.id
 }
 
-resource "aws_security_group_rule" "public_https" {
-  type              = "ingress"
+resource "aws_vpc_security_group_ingress_rule" "public_https" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
@@ -172,8 +168,7 @@ resource "aws_security_group_rule" "public_https" {
   security_group_id = aws_security_group.public.id
 }
 
-resource "aws_security_group_rule" "public_egress" {
-  type              = "egress"
+resource "aws_vpc_security_group_egress_rule" "public_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
