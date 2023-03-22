@@ -28,7 +28,6 @@ resource "aws_lb" "network" {
   name                             = var.nlb_name
   internal                         = var.nlb_type_internal
   load_balancer_type               = "network"
-  security_groups                  = concat([aws_security_group.default_fg_nlb.id], var.nlb_security_group_ids)
   subnets                          = var.nlb_type_internal ? data.aws_subnets.private.ids : data.aws_subnets.public.ids
   enable_cross_zone_load_balancing = var.enable_cross_zone_load_balancing
 
@@ -84,31 +83,6 @@ data "aws_iam_policy_document" "allow_nlb_write_to_bucket" {
   }
 }
 
-## Default Security Group
-resource "aws_security_group" "default_fg_nlb" {
-  name        = var.security_group_name
-  description = "Default Network Load Balancer Security Group: ${var.security_group_name}"
-  vpc_id      = var.vpc_id
-
-  tags = var.tags
-}
-
-## Egress Rule:
-resource "aws_vpc_security_group_egress_rule" "http" {
-  security_group_id = aws_security_group.default_fg_nlb.id
-
-  description = "Security group http egress"
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.egress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-egress-http" },
-    var.tags
-  )
-}
-
 ## Default Target Group
 resource "aws_lb_target_group" "default" {
   name        = "${var.nlb_name}-tg"
@@ -146,83 +120,7 @@ resource "aws_lb_listener" "http" {
   )
 }
 
-# nlb is external:
-
-## Ingress Rule - HTTP
-resource "aws_vpc_security_group_ingress_rule" "internet_http" {
-  count = !var.nlb_type_internal ? 1 : 0
-
-  security_group_id = aws_security_group.default_fg_nlb.id
-
-  description = "Internet ingress http"
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.external_internet_ingress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-internet-http" },
-    var.tags
-  )
-}
-
-## Ingress Rule - HTTPS
-resource "aws_vpc_security_group_ingress_rule" "internet_https" {
-  count = !var.nlb_type_internal ? 1 : 0
-
-  security_group_id = aws_security_group.default_fg_nlb.id
-
-  description = "Internet ingress https"
-  from_port   = 443
-  to_port     = 443
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.external_internet_ingress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-internet-https" },
-    var.tags
-  )
-}
-
-# nlb is internal:
-
-## Ingress Rule
-resource "aws_vpc_security_group_ingress_rule" "http" {
-  count = var.nlb_type_internal ? 1 : 0
-
-  security_group_id = aws_security_group.default_fg_nlb.id
-
-  description = "HTTP ingress"
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.internal_ingress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-http" },
-    var.tags
-  )
-}
-
 # nlb is internal, and TLS enabled, OR nlb is external:
-
-## Egress Rule:
-resource "aws_vpc_security_group_egress_rule" "https" {
-  count = ((var.nlb_type_internal && var.enable_internal_nlb_tls) || (!var.nlb_type_internal)) ? 1 : 0
-
-  security_group_id = aws_security_group.default_fg_nlb.id
-
-  description = "Security group https egress"
-  from_port   = 443
-  to_port     = 443
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.egress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-egress-https" },
-    var.tags
-  )
-}
 
 ## Additional Listeners
 resource "aws_lb_listener" "https" {
@@ -241,26 +139,6 @@ resource "aws_lb_listener" "https" {
 
   tags = merge(
     { "Name" = "${var.nlb_name}-listener-https" },
-    var.tags
-  )
-}
-
-# nlb is internal, and TLS enabled:
-
-## Additional Ingress Rules
-resource "aws_vpc_security_group_ingress_rule" "https" {
-  count = (var.nlb_type_internal && var.enable_internal_nlb_tls) ? 1 : 0
-
-  security_group_id = aws_security_group.default_fg_nlb.id
-
-  description = "HTTPS ingress"
-  from_port   = 443
-  to_port     = 443
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.internal_ingress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-https" },
     var.tags
   )
 }

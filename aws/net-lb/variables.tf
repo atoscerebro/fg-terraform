@@ -11,12 +11,6 @@ variable "nlb_name" {
   description = "Name of the Network Load Balancer."
 }
 
-variable "nlb_security_group_ids" {
-  type        = list(string)
-  description = "List of additional Security Group IDs for NLB."
-  default     = []
-}
-
 variable "enable_cross_zone_load_balancing" {
   type        = bool
   description = "Boolean to enable cross zone load balancing. Defaults to true."
@@ -71,42 +65,13 @@ variable "health_check" {
 
 variable "vpc_id" {
   type        = string
-  description = "VPC id for use in target group, security group and to retrieve subnets."
+  description = "VPC id for use in target group and to retrieve subnets."
 }
 
 variable "tags" {
   type        = map(any)
   description = ""
   default     = {}
-}
-
-# Security Group
-
-variable "security_group_name" {
-  type        = string
-  description = "Name of aws security group."
-}
-
-## Ingress rule
-
-variable "internal_ingress_ip_address" {
-  type        = string
-  description = "IP address to allow internal NLB access from."
-  default     = "10.0.0.0/16"
-}
-
-variable "external_internet_ingress_ip_address" {
-  type        = string
-  description = "IP address to allow external NLB HTTPS access from."
-  default     = "0.0.0.0/0"
-}
-
-## Egress rules
-
-variable "egress_ip_address" {
-  type        = string
-  description = "IP address to allow HTTP access to."
-  default     = "10.0.0.0/16"
 }
 
 # Internal TLS enabled:
