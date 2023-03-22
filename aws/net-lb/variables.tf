@@ -42,7 +42,7 @@ variable "force_destroy_nlb_access_logs" {
 
 ## Target Group
 
-variable "target_type" {
+variable "default_target_type" {
   type        = string
   description = "Type of NLB's default target group's targets."
   default     = "instance"
