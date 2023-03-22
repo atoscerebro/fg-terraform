@@ -3,14 +3,16 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.41.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >=3.41.0 |
+| <a name="requirement_tls"></a> [tls](#requirement\_tls) | >=4.0.4 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.41.0 |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | n/a |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >=3.41.0 |
+| <a name="provider_tls"></a> [tls](#provider\_tls) | >=4.0.4 |
 
 ## Modules
 
