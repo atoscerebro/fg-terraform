@@ -40,6 +40,14 @@ variable "force_destroy_nlb_access_logs" {
   default     = true
 }
 
+## Target Group
+
+variable "target_type" {
+  type        = string
+  description = "Type of NLB's default target group's targets."
+  default     = "instance"
+}
+
 ## Health Check
 
 variable "health_check" {
