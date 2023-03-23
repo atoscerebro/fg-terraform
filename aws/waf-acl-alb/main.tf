@@ -211,17 +211,17 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
 #              name = excluded_rule.value
 #            }
 #          }
-
-          dynamic "rule_action_override" {
-            for_each = rule.value.st_override_actions
-            content {
-              name = rule.value.name
-              dynamic "action_to_use" {
-                for_each = rule.value.st_override_actions
-                content {}
-              }
-            }
-          }
+#
+#          dynamic "rule_action_override" {
+#            for_each = rule.value.st_override_actions
+#            content {
+#              name = rule.value.name
+#              dynamic "action_to_use" {
+#                for_each = rule.value.st_override_actions
+#                content {}
+#              }
+#            }
+#          }
         }
       }
 
