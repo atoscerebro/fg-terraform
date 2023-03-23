@@ -27,7 +27,6 @@ No modules.
 | [aws_lb_listener.https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_listener) | resource |
 | [aws_lb_target_group.default](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_target_group) | resource |
 | [aws_route53_record.fg_alb](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route53_record) | resource |
-| [aws_route53_zone.fg_alb](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route53_zone) | resource |
 | [aws_s3_bucket.fg_alb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_acl.fg_alb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_policy.fg_alb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket_policy) | resource |
@@ -54,6 +53,7 @@ No modules.
 | <a name="input_cert_key_algorithm"></a> [cert\_key\_algorithm](#input\_cert\_key\_algorithm) | The algorithm of the public and private key pair that the Amazon-issued certificate uses to encrypt data. | `string` | `"RSA_2048"` | no |
 | <a name="input_cert_validation_method"></a> [cert\_validation\_method](#input\_cert\_validation\_method) | The validation method used to approve ACM certificate used in ALB - DNS, EMAIL, or NONE are valid values. | `string` | `"DNS"` | no |
 | <a name="input_default_target_type"></a> [default\_target\_type](#input\_default\_target\_type) | Type of ALB's default target group's targets. | `string` | `"instance"` | no |
+| <a name="input_dns_zone_id"></a> [dns\_zone\_id](#input\_dns\_zone\_id) | The ID of the DNS zone for the Route 53 record. | `string` | n/a | yes |
 | <a name="input_egress_ip_address"></a> [egress\_ip\_address](#input\_egress\_ip\_address) | IP address to allow HTTP access to. | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_enable_access_logging"></a> [enable\_access\_logging](#input\_enable\_access\_logging) | Boolean to specify whether to store access logs for the ALB. | `bool` | n/a | yes |
 | <a name="input_enable_internal_alb_tls"></a> [enable\_internal\_alb\_tls](#input\_enable\_internal\_alb\_tls) | Boolean to specify whether to enable TLS for the Internal Application Load Balancer. (External ALB has TLS enabled by default.) | `bool` | `false` | no |
