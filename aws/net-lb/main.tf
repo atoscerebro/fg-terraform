@@ -145,6 +145,20 @@ resource "aws_lb_listener" "https" {
 
 # nlb is internal, and TLS enabled:
 
+
+## Route53
+
+resource "aws_route53_record" "fg_nlb" {
+  count = ((var.nlb_type_internal && var.enable_internal_nlb_tls) || (!var.nlb_type_internal && var.ssl_cert == null)) ? 1 : 0
+
+  allow_overwrite = true
+  name            = tolist(aws_acm_certificate.fg_nlb[0].domain_validation_options)[0].resource_record_name
+  records         = [tolist(aws_acm_certificate.fg_nlb[0].domain_validation_options)[0].resource_record_value]
+  type            = tolist(aws_acm_certificate.fg_nlb[0].domain_validation_options)[0].resource_record_type
+  zone_id         = var.dns_zone_id
+  ttl             = 60
+}
+
 ## ACM Certificate
 resource "aws_acm_certificate" "fg_nlb" {
   count = ((var.nlb_type_internal && var.enable_internal_nlb_tls) || (!var.nlb_type_internal && var.ssl_cert == null)) ? 1 : 0
@@ -163,5 +177,6 @@ resource "aws_acm_certificate" "fg_nlb" {
 resource "aws_acm_certificate_validation" "fg_nlb" {
   count = ((var.nlb_type_internal && var.enable_internal_nlb_tls) || (!var.nlb_type_internal && var.ssl_cert == null)) ? 1 : 0
 
-  certificate_arn = aws_acm_certificate.fg_nlb[count.index].arn
+  certificate_arn         = aws_acm_certificate.fg_nlb[0].arn
+  validation_record_fqdns = [aws_route53_record.fg_nlb[0].fqdn]
 }

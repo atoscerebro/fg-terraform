@@ -3,7 +3,7 @@
 variable "nlb_type_internal" {
   type        = bool
   description = "Boolean to specify whether type of NLB is internal. True == internal; false == external."
-  default     = true
+  default     = false
 }
 
 variable "nlb_name" {
@@ -101,17 +101,22 @@ variable "ssl_cert" {
 variable "cert_validation_method" {
   type        = string
   description = "The validation method used to approve ACM certificate used in NLB - DNS, EMAIL, or NONE are valid values."
-  default     = "EMAIL"
+  default     = "DNS"
 }
 
 variable "cert_domain_name" {
   type        = string
   description = "Domain name for which the certificate should be issued."
-  default     = "fg-aws.atos-cerebro.net"
+  default     = "*.fg-aws.atos-cerebro.net"
 }
 
 variable "cert_key_algorithm" {
   type        = string
   description = "The algorithm of the public and private key pair that the Amazon-issued certificate uses to encrypt data."
   default     = "RSA_2048"
+}
+
+variable "dns_zone_id" {
+  type        = string
+  description = "The ID of the DNS zone for the Route 53 record."
 }
