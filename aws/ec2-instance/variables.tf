@@ -27,13 +27,13 @@ variable "vpc_id" {
 variable "https_ingress_ip_address" {
   type        = string
   description = "IP address to allow HTTPS access from"
-  default     = "10.0.0.0/16"
+  default     = "10.10.0.0/16"
 }
 
 variable "http_ingress_ip_address" {
   type        = string
   description = "IP address to allow HTTP access from"
-  default     = "10.0.0.0/16"
+  default     = "10.10.0.0/16"
 }
 
 variable "ssh_ingress_ip_address" {
@@ -47,7 +47,7 @@ variable "ssh_ingress_ip_address" {
 variable "egress_ip_address" {
   type        = string
   description = "IP address to allow HTTPS access to"
-  default     = "10.0.0.0/16"
+  default     = "10.10.0.0/16"
 }
 
 # EC2 Instance
