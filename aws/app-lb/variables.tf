@@ -34,6 +34,14 @@ variable "force_destroy_alb_access_logs" {
   default     = true
 }
 
+## Target Group
+
+variable "default_target_type" {
+  type        = string
+  description = "Type of ALB's default target group's targets."
+  default     = "instance"
+}
+
 ## Health Check
 
 variable "health_check" {
@@ -118,17 +126,22 @@ variable "ssl_cert" {
 variable "cert_validation_method" {
   type        = string
   description = "The validation method used to approve ACM certificate used in ALB - DNS, EMAIL, or NONE are valid values."
-  default     = "EMAIL"
+  default     = "DNS"
 }
 
 variable "cert_domain_name" {
   type        = string
   description = "Domain name for which the certificate should be issued."
-  default     = "test.com"
+  default     = "*.fg-aws.atos-cerebro.net"
 }
 
 variable "cert_key_algorithm" {
   type        = string
   description = "The algorithm of the public and private key pair that the Amazon-issued certificate uses to encrypt data."
   default     = "RSA_2048"
+}
+
+variable "dns_zone_id" {
+  type        = string
+  description = "The ID of the DNS zone for the Route 53 record."
 }

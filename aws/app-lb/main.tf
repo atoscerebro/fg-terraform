@@ -111,10 +111,11 @@ resource "aws_vpc_security_group_egress_rule" "http" {
 
 ## Default Target Group
 resource "aws_lb_target_group" "default" {
-  name     = "${var.alb_name}-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  name        = "${var.alb_name}-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = var.default_target_type
 
   health_check {
     timeout             = var.health_check.timeout
@@ -268,6 +269,20 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
 
 # ALB is internal, and TLS enabled:
 
+
+## Route53
+
+resource "aws_route53_record" "fg_alb" {
+  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
+
+  allow_overwrite = true
+  name            = tolist(aws_acm_certificate.fg_alb[0].domain_validation_options)[0].resource_record_name
+  records         = [tolist(aws_acm_certificate.fg_alb[0].domain_validation_options)[0].resource_record_value]
+  type            = tolist(aws_acm_certificate.fg_alb[0].domain_validation_options)[0].resource_record_type
+  zone_id         = var.dns_zone_id
+  ttl             = 60
+}
+
 ## ACM Certificate
 resource "aws_acm_certificate" "fg_alb" {
   count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
@@ -286,5 +301,7 @@ resource "aws_acm_certificate" "fg_alb" {
 resource "aws_acm_certificate_validation" "fg_alb" {
   count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
 
-  certificate_arn = aws_acm_certificate.fg_alb[count.index].arn
+  certificate_arn         = aws_acm_certificate.fg_alb[0].arn
+  validation_record_fqdns = [aws_route53_record.fg_alb[0].fqdn]
+
 }
