@@ -269,6 +269,26 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
 
 # ALB is internal, and TLS enabled:
 
+
+## Route53
+
+resource "aws_route53_zone" "fg_alb" {
+  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
+
+  name = var.cert_domain_name
+}
+
+resource "aws_route53_record" "fg_alb" {
+  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
+
+  allow_overwrite = true
+  name            = tolist(aws_acm_certificate.fg_alb[0].domain_validation_options)[0].resource_record_name
+  records         = [tolist(aws_acm_certificate.fg_alb[0].domain_validation_options)[0].resource_record_value]
+  type            = tolist(aws_acm_certificate.fg_alb[0].domain_validation_options)[0].resource_record_type
+  zone_id         = aws_route53_zone.fg_alb[0].zone_id
+  ttl             = 60
+}
+
 ## ACM Certificate
 resource "aws_acm_certificate" "fg_alb" {
   count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
@@ -287,5 +307,7 @@ resource "aws_acm_certificate" "fg_alb" {
 resource "aws_acm_certificate_validation" "fg_alb" {
   count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
 
-  certificate_arn = aws_acm_certificate.fg_alb[count.index].arn
+  certificate_arn         = aws_acm_certificate.fg_alb[0].arn
+  validation_record_fqdns = [aws_route53_record.fg_alb.fqdn]
+
 }
