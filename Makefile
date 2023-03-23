@@ -10,11 +10,17 @@ build-docs:
 
 $(CLOUD_PROVIDER)-docs: $(TERRAFORM_SOURCES)
 	$(MAKE) -s build-docs; openssl sha256 $(TERRAFORM_SOURCES) > $(CLOUD_PROVIDER)-docs
-	
-release:
-	gh workflow run release.yml
 
+test-unit:
+	go test ./... -short -count 1
+
+test-integration:
+	go test ./... -count 1
+	
 lint:
 	tflint -f compact --recursive
 
-.PHONY: find-modules build-docs release lint
+release:
+	gh workflow run release.yml
+
+.PHONY: find-modules build-docs release lint test-unit test-integration
