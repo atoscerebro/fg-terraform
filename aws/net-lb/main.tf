@@ -86,18 +86,18 @@ data "aws_iam_policy_document" "allow_nlb_write_to_bucket" {
 ## Default Target Group
 resource "aws_lb_target_group" "default" {
   name        = "${var.nlb_name}-tg"
-  port        = 80
+  port        = var.nlb_type_internal ? 80 : 443
   protocol    = var.default_target_group_protocol
   vpc_id      = var.vpc_id
   target_type = var.default_target_type
 
   health_check {
-    timeout             = var.health_check.timeout
-    interval            = var.health_check.interval
-    port                = var.health_check.port
-    protocol            = var.health_check.protocol
-    unhealthy_threshold = var.health_check.unhealthy_threshold
-    healthy_threshold   = var.health_check.healthy_threshold
+    timeout             = var.nlb_type_internal ? var.health_check_80.timeout : var.health_check_443.timeout
+    interval            = var.nlb_type_internal ? var.health_check_80.interval : var.health_check_443.interval
+    port                = var.nlb_type_internal ? var.health_check_80.port : var.health_check_443.port
+    protocol            = var.nlb_type_internal ? var.health_check_80.protocol : var.health_check_443.protocol
+    unhealthy_threshold = var.nlb_type_internal ? var.health_check_80.unhealthy_threshold : var.health_check_443.unhealthy_threshold
+    healthy_threshold   = var.nlb_type_internal ? var.health_check_80.healthy_threshold : var.health_check_443.healthy_threshold
   }
 
   tags = var.tags
@@ -105,6 +105,8 @@ resource "aws_lb_target_group" "default" {
 
 ## Listeners
 resource "aws_lb_listener" "http" {
+  count = var.nlb_type_internal ? 1 : 0
+
   load_balancer_arn = aws_lb.network.arn
   port              = "80"
   protocol          = "TCP"
@@ -142,8 +144,6 @@ resource "aws_lb_listener" "https" {
     var.tags
   )
 }
-
-# nlb is internal, and TLS enabled:
 
 ## ACM Certificate
 resource "aws_acm_certificate" "fg_nlb" {

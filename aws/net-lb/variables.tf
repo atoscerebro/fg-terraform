@@ -50,13 +50,26 @@ variable "default_target_group_protocol" {
 
 ## Health Check
 
-variable "health_check" {
+variable "health_check_80" {
   type        = map(string)
-  description = "Map describing Health Check settings - including endpoint (default /) and port (default 80)."
+  description = "Map describing Health Check settings - including endpoint (default /) and port (default 80). Applied for internal NLBs."
   default = {
     timeout             = "10"
     interval            = "20"
     port                = "80"
+    protocol            = "TCP"
+    unhealthy_threshold = "2"
+    healthy_threshold   = "3"
+  }
+}
+
+variable "health_check_443" {
+  type        = map(string)
+  description = "Map describing Health Check settings - including endpoint (default /) and port (default 443). Applied for external NLBs."
+  default = {
+    timeout             = "10"
+    interval            = "20"
+    port                = "443"
     protocol            = "TCP"
     unhealthy_threshold = "2"
     healthy_threshold   = "3"
