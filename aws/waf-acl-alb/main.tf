@@ -52,7 +52,11 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
               name = rule.value.name
               dynamic "action_to_use" {
                 for_each = rule.value.override_action == "none" ? [1] : []
-                  rule.value.override_action {}
+                  content {}
+              }
+              dynamic "action_to_use" {
+                for_each = rule.value.override_action == "count" ? [1] : []
+                  content {}
               }
             }
           }
