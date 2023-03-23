@@ -133,6 +133,7 @@ resource "aws_instance" "fg" {
   monitoring              = true
   user_data               = var.user_data
   vpc_security_group_ids  = [aws_security_group.fg.id]
+  key_name                = aws_key_pair.deployer.key_name
 
   tags = merge(
     { "Name" = "${var.vpc_name}-ec2-instance-${count.index + 1}-${var.env}", },
