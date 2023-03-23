@@ -46,18 +46,16 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
           name        = rule.value.name
           vendor_name = rule.value.vendor_name
 
-          excluded_rule {}
-
-#          dynamic "rule_action_override" {
-#            for_each = rule.value.st_override_actions
-#            content {
-#              name = rule.value.name
-#              dynamic "action_to_use" {
-#                for_each = rule.value.st_override_actions
-#                content {}
-#              }
-#            }
-#          }
+          dynamic "rule_action_override" {
+            for_each = rule.value.st_override_actions
+            content {
+              name = rule.value.name
+              dynamic "action_to_use" {
+                for_each = rule.value.st_override_actions
+                content {}
+              }
+            }
+          }
         }
       }
 
@@ -207,16 +205,23 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
         rule_group_reference_statement {
           arn = rule.value.group_rule_arn
 
-          dynamic "rule_action_override" {
-            for_each = rule.value.st_override_actions
+          dynamic "excluded_rule" {
+            for_each = rule.value.excluded_rules
             content {
-              name = rule.value.name
-              dynamic "action_to_use" {
-                for_each = rule.value.st_override_actions
-                content {}
-              }
+              name = excluded_rule.value
             }
           }
+
+#          dynamic "rule_action_override" {
+#            for_each = rule.value.st_override_actions
+#            content {
+#              name = rule.value.name
+#              dynamic "action_to_use" {
+#                for_each = rule.value.st_override_actions
+#                content {}
+#              }
+#            }
+#          }
         }
       }
 
