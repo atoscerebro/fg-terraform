@@ -308,6 +308,6 @@ resource "aws_acm_certificate_validation" "fg_alb" {
   count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
 
   certificate_arn         = aws_acm_certificate.fg_alb[0].arn
-  validation_record_fqdns = [aws_route53_record.fg_alb.fqdn]
+  validation_record_fqdns = [aws_route53_record.fg_alb[0].fqdn]
 
 }
