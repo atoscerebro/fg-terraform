@@ -17,7 +17,7 @@ output "alb_dns_name" {
 
 output "alb_outpost_id" {
   description = "D of the Outpost containing the load balancer."
-  value       = try(aws_lb.application.subnet_mapping.*.outpost_id, "")
+  value       = try(aws_lb.application.subnet_mapping[*].outpost_id, "")
 }
 
 output "alb_tags" {
@@ -28,6 +28,38 @@ output "alb_tags" {
 output "alb_zone_id" {
   description = "The canonical hosted zone ID of the load balancer (to be used in a Route 53 Alias record)."
   value       = try(aws_lb.application.zone_id, {})
+}
+
+## ALB Access Logs
+
+output "access_logs_bucket_name" {
+  description = "Name of the s3 bucket used to store access logs."
+  value       = try(aws_s3_bucket.fg_alb_access_logs[0].id, "")
+}
+
+output "access_logs_bucket_arn" {
+  description = "ARN of the s3 bucket used to store access logs."
+  value       = try(aws_s3_bucket.fg_alb_access_logs[0].arn, "")
+}
+
+output "access_logs_bucket_domain_name" {
+  description = "Domain name of the s3 bucket used to store access logs."
+  value       = try(aws_s3_bucket.fg_alb_access_logs[0].bucket_domain_name, "")
+}
+
+output "access_logs_bucket_regional_domain_name" {
+  description = "Regional domain name of the s3 bucket used to store access logs."
+  value       = try(aws_s3_bucket.fg_alb_access_logs[0].bucket_regional_domain_name, "")
+}
+
+output "access_logs_bucket_region" {
+  description = "Region of the s3 bucket used to store access logs."
+  value       = try(aws_s3_bucket.fg_alb_access_logs[0].region, "")
+}
+
+output "access_logs_bucket_tags" {
+  description = "Map with all tags for S3 buckets used to store ALB logs."
+  value       = try(aws_s3_bucket.fg_alb_access_logs[0].tags_all, {})
 }
 
 ## Default Security Group

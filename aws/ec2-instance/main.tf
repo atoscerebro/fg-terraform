@@ -1,7 +1,3 @@
-locals {
-  az = ["a", "b", "c", "d"]
-}
-
 # Key Pair
 
 resource "aws_key_pair" "deployer" {

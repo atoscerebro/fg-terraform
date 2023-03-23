@@ -3,6 +3,7 @@
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.4.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | 4.58.0 |
 
 ## Providers
@@ -27,16 +28,16 @@ No modules.
 | [aws_route_table_association.public](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route_table_association) | resource |
 | [aws_security_group.default](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group) | resource |
 | [aws_security_group.public](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group) | resource |
-| [aws_security_group_rule.egress_local](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.ingress_local](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.public_egress](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.public_http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.public_https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group_rule) | resource |
 | [aws_subnet.private](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/subnet) | resource |
 | [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/subnet) | resource |
 | [aws_vpc.fg_vpc](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc) | resource |
 | [aws_vpc_dhcp_options.default](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_dhcp_options) | resource |
 | [aws_vpc_dhcp_options_association.default](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_dhcp_options_association) | resource |
+| [aws_vpc_security_group_egress_rule.egress_local](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_egress_rule) | resource |
+| [aws_vpc_security_group_egress_rule.public_egress](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_egress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.ingress_local](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.public_http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.public_https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
 
 ## Inputs
 

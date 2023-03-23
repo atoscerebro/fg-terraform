@@ -92,12 +92,16 @@ variable "az_count" {
   default     = 1
 }
 
+# Tags
+
 variable "vpc_name" {
+  type        = string
   description = "Name of the VPC"
   default     = "test"
 }
 
 variable "tags" {
+  type        = map(any)
   description = ""
   default     = {}
 }

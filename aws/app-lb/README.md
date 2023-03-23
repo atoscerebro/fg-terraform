@@ -1,7 +1,10 @@
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.4.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 4.58.0 |
 
 ## Providers
 
@@ -17,22 +20,26 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_acm_certificate.fg_alb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate) | resource |
-| [aws_acm_certificate_validation.fg_alb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate_validation) | resource |
-| [aws_lb.application](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb) | resource |
-| [aws_lb_listener.http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
-| [aws_lb_listener.https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) | resource |
-| [aws_lb_target_group.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group) | resource |
-| [aws_s3_bucket.fg_alb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
-| [aws_security_group.default_fg_alb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
-| [aws_vpc_security_group_egress_rule.http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
-| [aws_vpc_security_group_egress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_egress_rule) | resource |
-| [aws_vpc_security_group_ingress_rule.http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
-| [aws_vpc_security_group_ingress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
-| [aws_vpc_security_group_ingress_rule.internet_http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
-| [aws_vpc_security_group_ingress_rule.internet_https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_security_group_ingress_rule) | resource |
-| [aws_subnets.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
-| [aws_subnets.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
+| [aws_acm_certificate.fg_alb](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/acm_certificate) | resource |
+| [aws_acm_certificate_validation.fg_alb](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/acm_certificate_validation) | resource |
+| [aws_lb.application](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb) | resource |
+| [aws_lb_listener.http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_listener) | resource |
+| [aws_lb_listener.https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_listener) | resource |
+| [aws_lb_target_group.default](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_target_group) | resource |
+| [aws_s3_bucket.fg_alb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_acl.fg_alb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket_acl) | resource |
+| [aws_s3_bucket_policy.fg_alb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket_policy) | resource |
+| [aws_security_group.default_fg_alb](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/security_group) | resource |
+| [aws_vpc_security_group_egress_rule.http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_egress_rule) | resource |
+| [aws_vpc_security_group_egress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_egress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.internet_http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_vpc_security_group_ingress_rule.internet_https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [aws_elb_service_account.main](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/elb_service_account) | data source |
+| [aws_iam_policy_document.allow_alb_write_to_bucket](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/iam_policy_document) | data source |
+| [aws_subnets.private](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/subnets) | data source |
+| [aws_subnets.public](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/subnets) | data source |
 
 ## Inputs
 
@@ -48,19 +55,26 @@ No modules.
 | <a name="input_enable_access_logging"></a> [enable\_access\_logging](#input\_enable\_access\_logging) | Boolean to specify whether to store access logs for the ALB. | `bool` | n/a | yes |
 | <a name="input_enable_internal_alb_tls"></a> [enable\_internal\_alb\_tls](#input\_enable\_internal\_alb\_tls) | Boolean to specify whether to enable TLS for the Internal Application Load Balancer. (External ALB has TLS enabled by default.) | `bool` | `false` | no |
 | <a name="input_external_internet_ingress_ip_address"></a> [external\_internet\_ingress\_ip\_address](#input\_external\_internet\_ingress\_ip\_address) | IP address to allow external ALB HTTPS access from. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_force_destroy_alb_access_logs"></a> [force\_destroy\_alb\_access\_logs](#input\_force\_destroy\_alb\_access\_logs) | Boolean to specify whether to force destroy access\_logs when s3 bucket is destroyed - when false, s3 bucket cannot be destroyed without error. | `bool` | `true` | no |
 | <a name="input_health_check"></a> [health\_check](#input\_health\_check) | Map describing Health Check settings - including endpoint (default /) and port (default 80). | `map(string)` | <pre>{<br>  "healthy_threshold": "3",<br>  "interval": "20",<br>  "matcher": "200",<br>  "path": "/",<br>  "port": "80",<br>  "protocol": "HTTP",<br>  "timeout": "10",<br>  "unhealthy_threshold": "2"<br>}</pre> | no |
 | <a name="input_internal_ingress_ip_address"></a> [internal\_ingress\_ip\_address](#input\_internal\_ingress\_ip\_address) | IP address to allow internal ALB access from. | `string` | `"10.0.0.0/16"` | no |
-| <a name="input_s3_bucket"></a> [s3\_bucket](#input\_s3\_bucket) | S3 bucket to store the logs in. If none is passed in by user, a new S3 bucket will be created. | `string` | `""` | no |
+| <a name="input_s3_bucket_id"></a> [s3\_bucket\_id](#input\_s3\_bucket\_id) | Name/ID of the S3 bucket to store the logs in. If none is passed in by user, a new S3 bucket will be created. | `string` | `""` | no |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of aws security group. | `string` | n/a | yes |
 | <a name="input_ssl_cert"></a> [ssl\_cert](#input\_ssl\_cert) | Optional ARN of custom SSL server certificate. If this field is not specified module will create an Amazon-issued ACM certificate. | `string` | `null` | no |
 | <a name="input_ssl_security_policy"></a> [ssl\_security\_policy](#input\_ssl\_security\_policy) | Name of SSL Policy for internal HTTPS listener. | `string` | `"ELBSecurityPolicy-2016-08"` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | `{}` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC id for use in target group, security group and to retrieve subnets. | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| <a name="output_access_logs_bucket_arn"></a> [access\_logs\_bucket\_arn](#output\_access\_logs\_bucket\_arn) | ARN of the s3 bucket used to store access logs. |
+| <a name="output_access_logs_bucket_domain_name"></a> [access\_logs\_bucket\_domain\_name](#output\_access\_logs\_bucket\_domain\_name) | Domain name of the s3 bucket used to store access logs. |
+| <a name="output_access_logs_bucket_name"></a> [access\_logs\_bucket\_name](#output\_access\_logs\_bucket\_name) | Name of the s3 bucket used to store access logs. |
+| <a name="output_access_logs_bucket_region"></a> [access\_logs\_bucket\_region](#output\_access\_logs\_bucket\_region) | Region of the s3 bucket used to store access logs. |
+| <a name="output_access_logs_bucket_regional_domain_name"></a> [access\_logs\_bucket\_regional\_domain\_name](#output\_access\_logs\_bucket\_regional\_domain\_name) | Regional domain name of the s3 bucket used to store access logs. |
+| <a name="output_access_logs_bucket_tags"></a> [access\_logs\_bucket\_tags](#output\_access\_logs\_bucket\_tags) | Map with all tags for S3 buckets used to store ALB logs. |
 | <a name="output_alb_arn"></a> [alb\_arn](#output\_alb\_arn) | The Amazon Resource Name (ARN) or ID of the Application Load Balancer. |
 | <a name="output_alb_arn_suffix"></a> [alb\_arn\_suffix](#output\_alb\_arn\_suffix) | The ALB's ARN suffix for use with CloudWatch Metrics. |
 | <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | The ALB's DNS name. |

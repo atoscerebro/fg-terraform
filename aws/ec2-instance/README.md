@@ -3,6 +3,7 @@
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.4.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | 4.58.0 |
 
 ## Providers
@@ -47,7 +48,7 @@ No modules.
 | <a name="input_security_group_description"></a> [security\_group\_description](#input\_security\_group\_description) | Description of aws security group. | `string` | n/a | yes |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of aws security group. | `string` | n/a | yes |
 | <a name="input_ssh_ingress_ip_address"></a> [ssh\_ingress\_ip\_address](#input\_ssh\_ingress\_ip\_address) | IP address to allow SSH access from | `string` | `"0.0.0.0/0"` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map` | `{}` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | `{}` | no |
 | <a name="input_user_data"></a> [user\_data](#input\_user\_data) | User data to provide as a bash script when launching the instance. Default value null. | `string` | `null` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | VPC id for use in security group. | `string` | n/a | yes |
 | <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | Name of the VPC | `string` | `"test"` | no |
