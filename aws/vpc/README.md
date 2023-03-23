@@ -20,8 +20,6 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_internet_gateway.default](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/internet_gateway) | resource |
-| [aws_network_acl.private_subnets](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/network_acl) | resource |
-| [aws_network_acl.public_subnets](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/network_acl) | resource |
 | [aws_route.public](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route) | resource |
 | [aws_route_table.private](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route_table) | resource |
 | [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route_table) | resource |
@@ -46,18 +44,18 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | The number of Availability Zones to create | `number` | `1` | no |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The AWS Geographycal Region in which to create the VPC | `string` | `"eu-west-1"` | no |
-| <a name="input_dhcp_dns_servers"></a> [dhcp\_dns\_servers](#input\_dhcp\_dns\_servers) | DNS servers for the instances within the VPC | `list` | <pre>[<br>  "AmazonProvidedDNS"<br>]</pre> | no |
+| <a name="input_dhcp_dns_servers"></a> [dhcp\_dns\_servers](#input\_dhcp\_dns\_servers) | DNS servers for the instances within the VPC | `list(any)` | <pre>[<br>  "AmazonProvidedDNS"<br>]</pre> | no |
 | <a name="input_dhcp_domain_name"></a> [dhcp\_domain\_name](#input\_dhcp\_domain\_name) | Suffix domain name by default | `string` | `""` | no |
-| <a name="input_dhcp_netbios_name_servers"></a> [dhcp\_netbios\_name\_servers](#input\_dhcp\_netbios\_name\_servers) | For Windows Instances: The friendly name assigned to an instance | `list` | `[]` | no |
+| <a name="input_dhcp_netbios_name_servers"></a> [dhcp\_netbios\_name\_servers](#input\_dhcp\_netbios\_name\_servers) | For Windows Instances: The friendly name assigned to an instance | `list(any)` | `[]` | no |
 | <a name="input_dhcp_netbios_node_type"></a> [dhcp\_netbios\_node\_type](#input\_dhcp\_netbios\_node\_type) | For Windows Instances: how the instance will resolve netbios names to IP addresses | `number` | `2` | no |
-| <a name="input_dhcp_ntp_servers"></a> [dhcp\_ntp\_servers](#input\_dhcp\_ntp\_servers) | NTP servers for the instances within the VPC | `list` | `[]` | no |
+| <a name="input_dhcp_ntp_servers"></a> [dhcp\_ntp\_servers](#input\_dhcp\_ntp\_servers) | NTP servers for the instances within the VPC | `list(any)` | `[]` | no |
 | <a name="input_enable_dns_hostnames"></a> [enable\_dns\_hostnames](#input\_enable\_dns\_hostnames) | Enable assigning DNS hostnames to instances with public IP address | `bool` | `false` | no |
 | <a name="input_enable_dns_support"></a> [enable\_dns\_support](#input\_enable\_dns\_support) | Enable asigning internal DNS hostnames through AWS provided DNS server | `bool` | `true` | no |
 | <a name="input_enable_internet_gateway"></a> [enable\_internet\_gateway](#input\_enable\_internet\_gateway) | Allow the public subnets to have access to the internet | `bool` | `false` | no |
 | <a name="input_env"></a> [env](#input\_env) | Environment of the VPC: dev, test, stg, prod | `string` | `"dev"` | no |
 | <a name="input_instance_tenancy"></a> [instance\_tenancy](#input\_instance\_tenancy) | Ensures that EC2 instances use the tenancy specified with launching | `string` | `"default"` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `string` | `""` | no |
-| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | CIDR of the VPC, we are starting with a /16 | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Useful to diferentiate resources per env, team, function ... | `map(any)` | `{}` | no |
+| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | CIDR of the VPC, we are starting with a /16 | `string` | `"10.10.0.0/16"` | no |
 | <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | Name of the VPC | `string` | `"test"` | no |
 
 ## Outputs
@@ -83,4 +81,5 @@ No modules.
 | <a name="output_vpc_instance_tenancy"></a> [vpc\_instance\_tenancy](#output\_vpc\_instance\_tenancy) | Tenancy of instances spin up within VPC |
 | <a name="output_vpc_main_route_table_id"></a> [vpc\_main\_route\_table\_id](#output\_vpc\_main\_route\_table\_id) | The ID of the main route table associated with fg\_vpc VPC |
 | <a name="output_vpc_owner_id"></a> [vpc\_owner\_id](#output\_vpc\_owner\_id) | The ID of the AWS account that owns the VPC |
+| <a name="output_vpc_tags"></a> [vpc\_tags](#output\_vpc\_tags) | Map with all the tags for the VPC |
 <!-- END_TF_DOCS -->
