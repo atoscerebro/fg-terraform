@@ -126,7 +126,7 @@ variable "ssl_cert" {
 variable "cert_validation_method" {
   type        = string
   description = "The validation method used to approve ACM certificate used in ALB - DNS, EMAIL, or NONE are valid values."
-  default     = "EMAIL"
+  default     = "DNS"
 }
 
 variable "cert_domain_name" {
