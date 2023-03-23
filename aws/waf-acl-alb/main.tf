@@ -47,16 +47,12 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
           vendor_name = rule.value.vendor_name
 
           dynamic "rule_action_override" {
-            for_each = rule.value.override_action
+            for_each = rule.value.st_override_actions
             content {
               name = rule.value.name
               dynamic "action_to_use" {
-                for_each = rule.value.override_action == "none" ? [1] : []
-                  content {}
-              }
-              dynamic "action_to_use" {
-                for_each = rule.value.override_action == "count" ? [1] : []
-                  content {}
+                for_each = rule.value.st_override_actions
+                content {}
               }
             }
           }
@@ -71,7 +67,7 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
     }
   }
 
-dynamic "rule" {
+  dynamic "rule" {
     for_each = var.ip_sets_rules
     content {
       name     = rule.value.name
@@ -210,10 +206,13 @@ dynamic "rule" {
           arn = rule.value.group_rule_arn
 
           dynamic "rule_action_override" {
-            for_each = rule.value.override_action
+            for_each = rule.value.st_override_actions
             content {
               name = rule.value.name
-              action_to_use = rule.value.override_action
+              dynamic "action_to_use" {
+                for_each = rule.value.st_override_actions
+                content {}
+              }
             }
           }
         }
