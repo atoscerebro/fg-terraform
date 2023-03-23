@@ -46,10 +46,11 @@ resource "aws_wafv2_web_acl" "fg_web_acl_alb" {
           name        = rule.value.name
           vendor_name = rule.value.vendor_name
 
-          dynamic "excluded_rule" {
-            for_each = rule.value.excluded_rules
+          dynamic "rule_action_override" {
+            for_each = rule.value.override_action
             content {
-              name = excluded_rule.value
+              name = rule.value.name
+              action_to_use = rule.value.override_action
             }
           }
         }
@@ -201,10 +202,11 @@ dynamic "rule" {
         rule_group_reference_statement {
           arn = rule.value.group_rule_arn
 
-          dynamic "excluded_rule" {
-            for_each = rule.value.excluded_rules
+          dynamic "rule_action_override" {
+            for_each = rule.value.override_action
             content {
-              name = excluded_rule.value
+              name = rule.value.name
+              action_to_use = rule.value.override_action
             }
           }
         }
