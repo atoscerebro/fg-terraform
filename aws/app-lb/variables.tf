@@ -140,3 +140,8 @@ variable "cert_key_algorithm" {
   description = "The algorithm of the public and private key pair that the Amazon-issued certificate uses to encrypt data."
   default     = "RSA_2048"
 }
+
+variable "dns_zone_id" {
+  type        = string
+  description = "The ID of the DNS zone for the Route 53 record."
+}

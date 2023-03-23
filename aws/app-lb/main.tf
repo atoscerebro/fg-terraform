@@ -272,12 +272,6 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
 
 ## Route53
 
-resource "aws_route53_zone" "fg_alb" {
-  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
-
-  name = var.cert_domain_name
-}
-
 resource "aws_route53_record" "fg_alb" {
   count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
 
@@ -285,7 +279,7 @@ resource "aws_route53_record" "fg_alb" {
   name            = tolist(aws_acm_certificate.fg_alb[0].domain_validation_options)[0].resource_record_name
   records         = [tolist(aws_acm_certificate.fg_alb[0].domain_validation_options)[0].resource_record_value]
   type            = tolist(aws_acm_certificate.fg_alb[0].domain_validation_options)[0].resource_record_type
-  zone_id         = aws_route53_zone.fg_alb[0].zone_id
+  zone_id         = var.dns_zone_id
   ttl             = 60
 }
 
