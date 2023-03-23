@@ -49,7 +49,7 @@ No modules.
 | <a name="input_alb_name"></a> [alb\_name](#input\_alb\_name) | Name of the Application Load Balancer. | `string` | n/a | yes |
 | <a name="input_alb_security_group_ids"></a> [alb\_security\_group\_ids](#input\_alb\_security\_group\_ids) | List of additional Security Group IDs for ALB. | `list(string)` | `[]` | no |
 | <a name="input_alb_type_internal"></a> [alb\_type\_internal](#input\_alb\_type\_internal) | Boolean to specify whether type of ALB is internal. True == internal; false == external. | `bool` | `true` | no |
-| <a name="input_cert_domain_name"></a> [cert\_domain\_name](#input\_cert\_domain\_name) | Domain name for which the certificate should be issued. | `string` | `"fg-aws.atos-cerebro.net"` | no |
+| <a name="input_cert_domain_name"></a> [cert\_domain\_name](#input\_cert\_domain\_name) | Domain name for which the certificate should be issued. | `string` | `"*.fg-aws.atos-cerebro.net"` | no |
 | <a name="input_cert_key_algorithm"></a> [cert\_key\_algorithm](#input\_cert\_key\_algorithm) | The algorithm of the public and private key pair that the Amazon-issued certificate uses to encrypt data. | `string` | `"RSA_2048"` | no |
 | <a name="input_cert_validation_method"></a> [cert\_validation\_method](#input\_cert\_validation\_method) | The validation method used to approve ACM certificate used in ALB - DNS, EMAIL, or NONE are valid values. | `string` | `"DNS"` | no |
 | <a name="input_default_target_type"></a> [default\_target\_type](#input\_default\_target\_type) | Type of ALB's default target group's targets. | `string` | `"instance"` | no |
