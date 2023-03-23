@@ -3,7 +3,7 @@
 variable "alb_type_internal" {
   type        = bool
   description = "Boolean to specify whether type of ALB is internal. True == internal; false == external."
-  default     = true
+  default     = false
 }
 
 variable "alb_name" {
@@ -44,15 +44,30 @@ variable "default_target_type" {
 
 ## Health Check
 
-variable "health_check" {
+variable "http_health_check" {
   type        = map(string)
-  description = "Map describing Health Check settings - including endpoint (default /) and port (default 80)."
+  description = "Map describing HTTP Health Check settings - including endpoint (default /) and port (default 80). Applied for internal LBs."
   default = {
     timeout             = "10"
     interval            = "20"
     path                = "/"
     port                = "80"
     protocol            = "HTTP"
+    matcher             = "200"
+    unhealthy_threshold = "2"
+    healthy_threshold   = "3"
+  }
+}
+
+variable "https_health_check" {
+  type        = map(string)
+  description = "Map describing HTTPS Health Check settings - including endpoint (default /) and port (default 443). Applied for external LBs."
+  default = {
+    timeout             = "10"
+    interval            = "20"
+    path                = "/"
+    port                = "443"
+    protocol            = "HTTPS"
     matcher             = "200"
     unhealthy_threshold = "2"
     healthy_threshold   = "3"
