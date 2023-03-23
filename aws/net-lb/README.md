@@ -26,6 +26,7 @@ No modules.
 | [aws_lb_listener.http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_listener) | resource |
 | [aws_lb_listener.https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_listener) | resource |
 | [aws_lb_target_group.default](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_target_group) | resource |
+| [aws_route53_record.fg_nlb](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route53_record) | resource |
 | [aws_s3_bucket.fg_nlb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_acl.fg_nlb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_policy.fg_nlb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket_policy) | resource |
@@ -38,18 +39,19 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cert_domain_name"></a> [cert\_domain\_name](#input\_cert\_domain\_name) | Domain name for which the certificate should be issued. | `string` | `"fg-aws.atos-cerebro.net"` | no |
+| <a name="input_cert_domain_name"></a> [cert\_domain\_name](#input\_cert\_domain\_name) | Domain name for which the certificate should be issued. | `string` | `"*.fg-aws.atos-cerebro.net"` | no |
 | <a name="input_cert_key_algorithm"></a> [cert\_key\_algorithm](#input\_cert\_key\_algorithm) | The algorithm of the public and private key pair that the Amazon-issued certificate uses to encrypt data. | `string` | `"RSA_2048"` | no |
-| <a name="input_cert_validation_method"></a> [cert\_validation\_method](#input\_cert\_validation\_method) | The validation method used to approve ACM certificate used in NLB - DNS, EMAIL, or NONE are valid values. | `string` | `"EMAIL"` | no |
+| <a name="input_cert_validation_method"></a> [cert\_validation\_method](#input\_cert\_validation\_method) | The validation method used to approve ACM certificate used in NLB - DNS, EMAIL, or NONE are valid values. | `string` | `"DNS"` | no |
 | <a name="input_default_target_group_protocol"></a> [default\_target\_group\_protocol](#input\_default\_target\_group\_protocol) | Protocol for default target group. | `string` | `"TCP"` | no |
 | <a name="input_default_target_type"></a> [default\_target\_type](#input\_default\_target\_type) | Type of NLB's default target group's targets. | `string` | `"instance"` | no |
+| <a name="input_dns_zone_id"></a> [dns\_zone\_id](#input\_dns\_zone\_id) | The ID of the DNS zone for the Route 53 record. | `string` | n/a | yes |
 | <a name="input_enable_access_logging"></a> [enable\_access\_logging](#input\_enable\_access\_logging) | Boolean to specify whether to store access logs for the NLB. | `bool` | n/a | yes |
 | <a name="input_enable_cross_zone_load_balancing"></a> [enable\_cross\_zone\_load\_balancing](#input\_enable\_cross\_zone\_load\_balancing) | Boolean to enable cross zone load balancing. Defaults to true. | `bool` | `true` | no |
 | <a name="input_enable_internal_nlb_tls"></a> [enable\_internal\_nlb\_tls](#input\_enable\_internal\_nlb\_tls) | Boolean to specify whether to enable TLS for the Internal Network Load Balancer. (External NLB has TLS enabled by default.) | `bool` | `false` | no |
 | <a name="input_force_destroy_nlb_access_logs"></a> [force\_destroy\_nlb\_access\_logs](#input\_force\_destroy\_nlb\_access\_logs) | Boolean to specify whether to force destroy access\_logs when s3 bucket is destroyed - when false, s3 bucket cannot be destroyed without error. | `bool` | `true` | no |
 | <a name="input_health_check"></a> [health\_check](#input\_health\_check) | Map describing Health Check settings - including endpoint (default /) and port (default 80). | `map(string)` | <pre>{<br>  "healthy_threshold": "3",<br>  "interval": "20",<br>  "port": "80",<br>  "protocol": "TCP",<br>  "timeout": "10",<br>  "unhealthy_threshold": "2"<br>}</pre> | no |
 | <a name="input_nlb_name"></a> [nlb\_name](#input\_nlb\_name) | Name of the Network Load Balancer. | `string` | n/a | yes |
-| <a name="input_nlb_type_internal"></a> [nlb\_type\_internal](#input\_nlb\_type\_internal) | Boolean to specify whether type of NLB is internal. True == internal; false == external. | `bool` | `true` | no |
+| <a name="input_nlb_type_internal"></a> [nlb\_type\_internal](#input\_nlb\_type\_internal) | Boolean to specify whether type of NLB is internal. True == internal; false == external. | `bool` | `false` | no |
 | <a name="input_s3_bucket_id"></a> [s3\_bucket\_id](#input\_s3\_bucket\_id) | Name/ID of the S3 bucket to store the logs in. If none is passed in by user, a new S3 bucket will be created. | `string` | `""` | no |
 | <a name="input_ssl_cert"></a> [ssl\_cert](#input\_ssl\_cert) | Optional ARN of custom SSL server certificate. If this field is not specified module will create an Amazon-issued ACM certificate. | `string` | `null` | no |
 | <a name="input_ssl_security_policy"></a> [ssl\_security\_policy](#input\_ssl\_security\_policy) | Name of SSL Policy for internal HTTPS listener. | `string` | `"ELBSecurityPolicy-2016-08"` | no |
