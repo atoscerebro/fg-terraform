@@ -86,14 +86,14 @@ output "default_alb_security_group_tags" {
 
 ### Default Security Group Rules
 
-output "default_alb_security_group_egress_http_arn" {
-  value       = try(aws_vpc_security_group_egress_rule.http.arn, "")
-  description = "The default security group HTTP egress rule ARN."
+output "default_alb_security_group_egress_arn" {
+  value       = try(aws_vpc_security_group_egress_rule.default.arn, "")
+  description = "The default security group egress rule ARN."
 }
 
-output "default_alb_security_group_egress_http_tags" {
-  value       = try(aws_vpc_security_group_egress_rule.http.tags_all, "")
-  description = "Map of all tags for the HTTP egress rule."
+output "default_alb_security_group_egress_tags" {
+  value       = try(aws_vpc_security_group_egress_rule.default.tags_all, "")
+  description = "Map of all tags for the default egress rule."
 }
 
 output "default_alb_security_group_egress_https_arn" {
@@ -104,16 +104,6 @@ output "default_alb_security_group_egress_https_arn" {
 output "default_alb_security_group_egress_https_tags" {
   value       = try(aws_vpc_security_group_egress_rule.https[0].tags_all, "")
   description = "Map of all tags for the HTTPS egress rule."
-}
-
-output "default_alb_security_group_ingress_internet_http_arn" {
-  value       = try(aws_vpc_security_group_ingress_rule.internet_http[0].arn, "")
-  description = "The default security group internet http ingress rule ARN."
-}
-
-output "default_alb_security_group_ingress_internet_http_tags" {
-  value       = try(aws_vpc_security_group_ingress_rule.internet_http[0].tags_all, "")
-  description = "Map of all tags for the internet http ingress rule."
 }
 
 output "default_alb_security_group_ingress_internet_https_arn" {
@@ -172,12 +162,12 @@ output "default_alb_target_group_tags" {
 
 output "alb_listener_http_arn" {
   description = "ARN or ID of the Application Load Balancer's HTTP listener."
-  value       = try(aws_lb_listener.http.arn, "")
+  value       = try(aws_lb_listener.http[0].arn, "")
 }
 
 output "alb_listener_http_tags" {
   description = "Map with all tags for the HTTP listener."
-  value       = try(aws_lb_listener.http.tags_all, "")
+  value       = try(aws_lb_listener.http[0].tags_all, "")
 }
 
 output "alb_listener_https_arn" {
