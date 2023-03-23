@@ -37,7 +37,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cert_domain_name"></a> [cert\_domain\_name](#input\_cert\_domain\_name) | Domain name for which the certificate should be issued. | `string` | `"test.com"` | no |
+| <a name="input_cert_domain_name"></a> [cert\_domain\_name](#input\_cert\_domain\_name) | Domain name for which the certificate should be issued. | `string` | `"fg-aws.atos-cerebro.net"` | no |
 | <a name="input_cert_key_algorithm"></a> [cert\_key\_algorithm](#input\_cert\_key\_algorithm) | The algorithm of the public and private key pair that the Amazon-issued certificate uses to encrypt data. | `string` | `"RSA_2048"` | no |
 | <a name="input_cert_validation_method"></a> [cert\_validation\_method](#input\_cert\_validation\_method) | The validation method used to approve ACM certificate used in NLB - DNS, EMAIL, or NONE are valid values. | `string` | `"EMAIL"` | no |
 | <a name="input_default_target_group_protocol"></a> [default\_target\_group\_protocol](#input\_default\_target\_group\_protocol) | Protocol for default target group. | `string` | `"TCP"` | no |
