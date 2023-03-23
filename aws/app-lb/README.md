@@ -26,6 +26,8 @@ No modules.
 | [aws_lb_listener.http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_listener) | resource |
 | [aws_lb_listener.https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_listener) | resource |
 | [aws_lb_target_group.default](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/lb_target_group) | resource |
+| [aws_route53_record.fg_alb](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route53_record) | resource |
+| [aws_route53_zone.fg_alb](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route53_zone) | resource |
 | [aws_s3_bucket.fg_alb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_acl.fg_alb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_policy.fg_alb_access_logs](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/s3_bucket_policy) | resource |
