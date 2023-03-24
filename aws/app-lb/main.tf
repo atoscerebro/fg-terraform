@@ -1,3 +1,24 @@
+## Conditions for different use-cases
+locals {
+  ### Access logging is enabled, but no S3 Bucket is provided to store the logs:
+  access_logs_new_bucket = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+
+  ### Application Load Balancer is internal:
+  alb_internal = var.alb_type_internal ? 1 : 0
+
+  ### Application Load Balancer is external:
+  alb_external = !var.alb_type_internal ? 1 : 0
+
+  ### ALB is internal and TLS is enabled:
+  alb_internal_tls = (var.alb_type_internal && var.enable_internal_alb_tls) ? 1 : 0
+
+  ### ALB is internal and TLS is enabled, OR ALB is external:
+  alb_internal_tls_or_external = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal)) ? 1 : 0
+
+  ### ALB is internal, TLS is enabled, and no SSL certificate is provided, OR ALB is external and no SSL cert provided:
+  alb_internal_tls_no_cert_or_external_no_cert = ((var.alb_type_internal && var.enable_internal_alb_tls && var.ssl_cert == null) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
+}
+
 ## Get Private subnets from VPC
 data "aws_subnets" "private" {
   filter {
@@ -46,19 +67,19 @@ resource "aws_lb" "application" {
 ## Optional S3 Bucket Resources for Access Logs
 
 resource "aws_s3_bucket" "fg_alb_access_logs" {
-  count         = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  count         = local.access_logs_new_bucket
   bucket        = "${var.alb_name}-access-logs"
   force_destroy = var.force_destroy_alb_access_logs
 }
 
 resource "aws_s3_bucket_acl" "fg_alb_access_logs" {
-  count  = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  count  = local.access_logs_new_bucket
   bucket = aws_s3_bucket.fg_alb_access_logs[0].id
   acl    = "private"
 }
 
 resource "aws_s3_bucket_policy" "fg_alb_access_logs" {
-  count  = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  count  = local.access_logs_new_bucket
   bucket = aws_s3_bucket.fg_alb_access_logs[0].id
   policy = data.aws_iam_policy_document.allow_alb_write_to_bucket[0].json
 }
@@ -66,7 +87,7 @@ resource "aws_s3_bucket_policy" "fg_alb_access_logs" {
 data "aws_elb_service_account" "main" {}
 
 data "aws_iam_policy_document" "allow_alb_write_to_bucket" {
-  count = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  count = local.access_logs_new_bucket
 
   version = "2012-10-17"
   statement {
@@ -154,7 +175,7 @@ resource "aws_lb_listener" "http" {
 
 ## Ingress Rule - HTTPS
 resource "aws_vpc_security_group_ingress_rule" "internet_https" {
-  count = !var.alb_type_internal ? 1 : 0
+  count = local.alb_external
 
   security_group_id = aws_security_group.default_fg_alb.id
 
@@ -174,7 +195,7 @@ resource "aws_vpc_security_group_ingress_rule" "internet_https" {
 
 ## Ingress Rule
 resource "aws_vpc_security_group_ingress_rule" "http" {
-  count = var.alb_type_internal ? 1 : 0
+  count = local.alb_internal
 
   security_group_id = aws_security_group.default_fg_alb.id
 
@@ -194,7 +215,7 @@ resource "aws_vpc_security_group_ingress_rule" "http" {
 
 ## Egress Rule:
 resource "aws_vpc_security_group_egress_rule" "https" {
-  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal)) ? 1 : 0
+  count = local.alb_internal_tls_or_external
 
   security_group_id = aws_security_group.default_fg_alb.id
 
@@ -212,7 +233,7 @@ resource "aws_vpc_security_group_egress_rule" "https" {
 
 ## Additional Listeners
 resource "aws_lb_listener" "https" {
-  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal)) ? 1 : 0
+  count = local.alb_internal_tls_or_external
 
   load_balancer_arn = aws_lb.application.arn
   port              = "443"
@@ -235,7 +256,7 @@ resource "aws_lb_listener" "https" {
 
 ## Additional Ingress Rules
 resource "aws_vpc_security_group_ingress_rule" "https" {
-  count = (var.alb_type_internal && var.enable_internal_alb_tls) ? 1 : 0
+  count = local.alb_internal_tls
 
   security_group_id = aws_security_group.default_fg_alb.id
 
@@ -251,13 +272,12 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   )
 }
 
-# ALB is internal, and TLS enabled:
-
+# ALB is internal and TLS enabled and no SSL Cert provided, OR ALB is external and no Cert.
 
 ## Route53
 
 resource "aws_route53_record" "fg_alb" {
-  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
+  count = local.alb_internal_tls_no_cert_or_external_no_cert
 
   allow_overwrite = true
   name            = tolist(aws_acm_certificate.fg_alb[0].domain_validation_options)[0].resource_record_name
@@ -269,7 +289,7 @@ resource "aws_route53_record" "fg_alb" {
 
 ## ACM Certificate
 resource "aws_acm_certificate" "fg_alb" {
-  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
+  count = local.alb_internal_tls_no_cert_or_external_no_cert
 
   domain_name       = var.cert_domain_name
   validation_method = var.cert_validation_method
@@ -283,7 +303,7 @@ resource "aws_acm_certificate" "fg_alb" {
 }
 
 resource "aws_acm_certificate_validation" "fg_alb" {
-  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal && var.ssl_cert == null)) ? 1 : 0
+  count = local.alb_internal_tls_no_cert_or_external_no_cert
 
   certificate_arn         = aws_acm_certificate.fg_alb[0].arn
   validation_record_fqdns = [aws_route53_record.fg_alb[0].fqdn]
