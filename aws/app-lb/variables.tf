@@ -3,7 +3,7 @@
 variable "alb_type_internal" {
   type        = bool
   description = "Boolean to specify whether type of ALB is internal. True == internal; false == external."
-  default     = false
+  default     = true
 }
 
 variable "alb_name" {
