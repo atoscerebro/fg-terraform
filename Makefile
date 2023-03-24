@@ -1,3 +1,4 @@
+CLOUD_PROVIDER := azure
 TERRAFORM_SOURCES := $(shell find ${CLOUD_PROVIDER} -name "*.tf" -a -not -path "*/test/*")
 MODULE_DIRECTORIES := $(shell find ${CLOUD_PROVIDER} -mindepth 1 -maxdepth 1 -type d)
 

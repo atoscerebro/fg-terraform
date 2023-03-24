@@ -21,7 +21,6 @@ func TestVirtualMachine_Validate(t *testing.T) {
 
 type VirtualMachineIntegrationSuite struct {
 	suite.Suite
-	id          string
 	options     *terraform.Options
 	rg_name     string
 	vnet_name   string
@@ -29,11 +28,10 @@ type VirtualMachineIntegrationSuite struct {
 }
 
 func (suite *VirtualMachineIntegrationSuite) SetupSuite() {
-	suite.id = random.UniqueId()
 	suite.options = terraform.WithDefaultRetryableErrors(suite.T(), &terraform.Options{
 		TerraformDir: "./env",
 		Vars: map[string]interface{}{
-			"id": suite.id,
+			"id": random.UniqueId(),
 		},
 	})
 
