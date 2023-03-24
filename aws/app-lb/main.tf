@@ -154,7 +154,7 @@ resource "aws_lb_target_group" "default" {
 
 ## Listeners
 resource "aws_lb_listener" "http" {
-  count = var.alb_type_internal ? 1 : 0
+  count = local.alb_internal
 
   load_balancer_arn = aws_lb.application.arn
   port              = "80"
