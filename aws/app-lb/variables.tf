@@ -3,7 +3,7 @@
 variable "alb_type_internal" {
   type        = bool
   description = "Boolean to specify whether type of ALB is internal. True == internal; false == external."
-  default     = true
+  default     = false
 }
 
 variable "alb_name" {
@@ -34,6 +34,15 @@ variable "force_destroy_alb_access_logs" {
   default     = true
 }
 
+
+# Internal TLS enabled:
+
+variable "enable_internal_alb_tls" {
+  type        = bool
+  description = "Boolean to specify whether to enable TLS for the Internal Application Load Balancer. (External ALB has TLS enabled by default.)"
+  default     = false
+}
+
 ## Target Group
 
 variable "default_target_type" {
@@ -53,21 +62,6 @@ variable "http_health_check" {
     path                = "/"
     port                = "80"
     protocol            = "HTTP"
-    matcher             = "200"
-    unhealthy_threshold = "2"
-    healthy_threshold   = "3"
-  }
-}
-
-variable "https_health_check" {
-  type        = map(string)
-  description = "Map describing HTTPS Health Check settings - including endpoint (default /) and port (default 443). Applied for external LBs."
-  default = {
-    timeout             = "10"
-    interval            = "20"
-    path                = "/"
-    port                = "443"
-    protocol            = "HTTPS"
     matcher             = "200"
     unhealthy_threshold = "2"
     healthy_threshold   = "3"
@@ -112,14 +106,6 @@ variable "egress_ip_address" {
   type        = string
   description = "IP address to allow HTTP access to."
   default     = "10.10.0.0/16"
-}
-
-# Internal TLS enabled:
-
-variable "enable_internal_alb_tls" {
-  type        = bool
-  description = "Boolean to specify whether to enable TLS for the Internal Application Load Balancer. (External ALB has TLS enabled by default.)"
-  default     = false
 }
 
 ## SSL parameters

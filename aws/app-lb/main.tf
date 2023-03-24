@@ -98,8 +98,8 @@ resource "aws_vpc_security_group_egress_rule" "default" {
   security_group_id = aws_security_group.default_fg_alb.id
 
   description = "Security group default egress"
-  from_port   = var.alb_type_internal ? 80 : 443
-  to_port     = var.alb_type_internal ? 80 : 443
+  from_port   = 80
+  to_port     = 80
   ip_protocol = "tcp"
   cidr_ipv4   = var.egress_ip_address
 
@@ -112,24 +112,26 @@ resource "aws_vpc_security_group_egress_rule" "default" {
 ## Default Target Group
 resource "aws_lb_target_group" "default" {
   name        = "${var.alb_name}-tg"
-  port        = var.alb_type_internal ? 80 : 443
-  protocol    = var.alb_type_internal ? "HTTP" : "HTTPS"
+  port        = 80
+  protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = var.default_target_type
 
   health_check {
-    timeout             = var.alb_type_internal ? var.http_health_check.timeout : var.https_health_check.timeout
-    interval            = var.alb_type_internal ? var.http_health_check.interval : var.https_health_check.interval
-    path                = var.alb_type_internal ? var.http_health_check.path : var.https_health_check.path
-    port                = var.alb_type_internal ? var.http_health_check.port : var.https_health_check.port
-    protocol            = var.alb_type_internal ? var.http_health_check.protocol : var.https_health_check.protocol
-    matcher             = var.alb_type_internal ? var.http_health_check.matcher : var.https_health_check.matcher
-    unhealthy_threshold = var.alb_type_internal ? var.http_health_check.unhealthy_threshold : var.https_health_check.unhealthy_threshold
-    healthy_threshold   = var.alb_type_internal ? var.http_health_check.healthy_threshold : var.https_health_check.healthy_threshold
+    timeout             = var.http_health_check.timeout
+    interval            = var.http_health_check.interval
+    path                = var.http_health_check.path
+    port                = var.http_health_check.port
+    protocol            = var.http_health_check.protocol
+    matcher             = var.http_health_check.matcher
+    unhealthy_threshold = var.http_health_check.unhealthy_threshold
+    healthy_threshold   = var.http_health_check.healthy_threshold
   }
 
   tags = var.tags
 }
+
+# ALB is internal:
 
 ## Listeners
 resource "aws_lb_listener" "http" {
@@ -146,6 +148,24 @@ resource "aws_lb_listener" "http" {
 
   tags = merge(
     { "Name" = "${var.alb_name}-listener-http" },
+    var.tags
+  )
+}
+
+## Ingress Rule
+resource "aws_vpc_security_group_ingress_rule" "http" {
+  count = var.alb_type_internal ? 1 : 0
+
+  security_group_id = aws_security_group.default_fg_alb.id
+
+  description = "HTTP ingress"
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.internal_ingress_ip_address
+
+  tags = merge(
+    { "Name" = "${var.security_group_name}-ingress-http" },
     var.tags
   )
 }
@@ -170,45 +190,7 @@ resource "aws_vpc_security_group_ingress_rule" "internet_https" {
   )
 }
 
-# ALB is internal:
-
-## Ingress Rule
-resource "aws_vpc_security_group_ingress_rule" "http" {
-  count = var.alb_type_internal ? 1 : 0
-
-  security_group_id = aws_security_group.default_fg_alb.id
-
-  description = "HTTP ingress"
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.internal_ingress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-http" },
-    var.tags
-  )
-}
-
 # ALB is internal, and TLS enabled, OR ALB is external:
-
-## Egress Rule:
-resource "aws_vpc_security_group_egress_rule" "https" {
-  count = ((var.alb_type_internal && var.enable_internal_alb_tls) || (!var.alb_type_internal)) ? 1 : 0
-
-  security_group_id = aws_security_group.default_fg_alb.id
-
-  description = "Security group https egress"
-  from_port   = 443
-  to_port     = 443
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.egress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-egress-https" },
-    var.tags
-  )
-}
 
 ## Additional Listeners
 resource "aws_lb_listener" "https" {
@@ -233,6 +215,24 @@ resource "aws_lb_listener" "https" {
 
 # ALB is internal, and TLS enabled:
 
+## Egress Rule:
+resource "aws_vpc_security_group_egress_rule" "https" {
+  count = (var.alb_type_internal && var.enable_internal_alb_tls) ? 1 : 0
+
+  security_group_id = aws_security_group.default_fg_alb.id
+
+  description = "Security group https egress"
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.egress_ip_address
+
+  tags = merge(
+    { "Name" = "${var.security_group_name}-egress-https" },
+    var.tags
+  )
+}
+
 ## Additional Ingress Rules
 resource "aws_vpc_security_group_ingress_rule" "https" {
   count = (var.alb_type_internal && var.enable_internal_alb_tls) ? 1 : 0
@@ -251,8 +251,7 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   )
 }
 
-# ALB is internal, and TLS enabled:
-
+# ALB is internal, and TLS enabled, OR ALB is external:
 
 ## Route53
 
