@@ -86,22 +86,24 @@ data "aws_iam_policy_document" "allow_nlb_write_to_bucket" {
 ## Default Target Group
 resource "aws_lb_target_group" "default" {
   name        = "${var.nlb_name}-tg"
-  port        = var.nlb_type_internal ? 80 : 443
+  port        = 80
   protocol    = var.default_target_group_protocol
   vpc_id      = var.vpc_id
   target_type = var.default_target_type
 
   health_check {
-    timeout             = var.nlb_type_internal ? var.health_check_80.timeout : var.health_check_443.timeout
-    interval            = var.nlb_type_internal ? var.health_check_80.interval : var.health_check_443.interval
-    port                = var.nlb_type_internal ? var.health_check_80.port : var.health_check_443.port
-    protocol            = var.nlb_type_internal ? var.health_check_80.protocol : var.health_check_443.protocol
-    unhealthy_threshold = var.nlb_type_internal ? var.health_check_80.unhealthy_threshold : var.health_check_443.unhealthy_threshold
-    healthy_threshold   = var.nlb_type_internal ? var.health_check_80.healthy_threshold : var.health_check_443.healthy_threshold
+    interval            = var.health_check.interval
+    port                = var.health_check.port
+    timeout             = var.health_check.timeout
+    protocol            = var.health_check.protocol
+    unhealthy_threshold = var.health_check.unhealthy_threshold
+    healthy_threshold   = var.health_check.healthy_threshold
   }
 
   tags = var.tags
 }
+
+# NLB is internal:
 
 ## Listeners
 resource "aws_lb_listener" "http" {
@@ -122,9 +124,9 @@ resource "aws_lb_listener" "http" {
   )
 }
 
-# nlb is internal, and TLS enabled, OR nlb is external:
+# NLB is internal, and TLS enabled, OR NLB is external:
 
-## Additional Listeners
+## Listeners
 resource "aws_lb_listener" "https" {
   count = ((var.nlb_type_internal && var.enable_internal_nlb_tls) || (!var.nlb_type_internal)) ? 1 : 0
 

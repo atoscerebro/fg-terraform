@@ -34,6 +34,14 @@ variable "force_destroy_nlb_access_logs" {
   default     = true
 }
 
+# Internal TLS enabled:
+
+variable "enable_internal_nlb_tls" {
+  type        = bool
+  description = "Boolean to specify whether to enable TLS for the Internal Network Load Balancer. (External NLB has TLS enabled by default.)"
+  default     = false
+}
+
 ## Target Group
 
 variable "default_target_type" {
@@ -50,26 +58,13 @@ variable "default_target_group_protocol" {
 
 ## Health Check
 
-variable "health_check_80" {
+variable "health_check" {
   type        = map(string)
   description = "Map describing Health Check settings - including endpoint (default /) and port (default 80). Applied for internal NLBs."
   default = {
     timeout             = "10"
     interval            = "20"
     port                = "80"
-    protocol            = "TCP"
-    unhealthy_threshold = "2"
-    healthy_threshold   = "3"
-  }
-}
-
-variable "health_check_443" {
-  type        = map(string)
-  description = "Map describing Health Check settings - including endpoint (default /) and port (default 443). Applied for external NLBs."
-  default = {
-    timeout             = "10"
-    interval            = "20"
-    port                = "443"
     protocol            = "TCP"
     unhealthy_threshold = "2"
     healthy_threshold   = "3"
@@ -85,14 +80,6 @@ variable "tags" {
   type        = map(any)
   description = ""
   default     = {}
-}
-
-# Internal TLS enabled:
-
-variable "enable_internal_nlb_tls" {
-  type        = bool
-  description = "Boolean to specify whether to enable TLS for the Internal Network Load Balancer. (External NLB has TLS enabled by default.)"
-  default     = false
 }
 
 ## SSL parameters
