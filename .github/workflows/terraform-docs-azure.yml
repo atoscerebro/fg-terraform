@@ -5,9 +5,8 @@ on:
     branches:
       - master
     paths:
-      - .github/workflows/terraform-docs.yml
+      - .github/workflows/terraform-docs-azure.yml
       - 'azure/**'
-      - docs
 
 jobs:
   generate:
@@ -19,11 +18,18 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+      
+      - name: List Modules
+        id: list
+        run: |
+          modules=$(make list-modules CLOUD_PROVIDER=azure)
+          echo modules=$modules >> $GITHUB_OUTPUT
 
-      - name: Test docs
+      - name: Check Module Docs
         uses: terraform-docs/gh-actions@v1.0.0
         with:
-          find-dir: ./azure
+          working-dir: ${{ steps.list.outputs.modules }}
+          config-file: .terraform-docs.yml
           output-file: README.md
           output-method: inject
           git-push: "true"

@@ -1,8 +1,9 @@
 TERRAFORM_SOURCES := $(shell find ${CLOUD_PROVIDER} -name "*.tf" -a -not -path "*/test/*")
 MODULE_DIRECTORIES := $(shell find ${CLOUD_PROVIDER} -mindepth 1 -maxdepth 1 -type d)
 
-thing:
-	echo $(TERRAFORM_SOURCES)
+# Usage: make list-modules CLOUD_PROVIDER=(aws|azure)
+list-modules:
+	@echo $(MODULE_DIRECTORIES) | sed s/[[:space:]]/,/g
 
 # Usage: make (aws|azure)-docs CLOUD_PROVIDER=(aws|azure)
 $(CLOUD_PROVIDER)-docs: $(TERRAFORM_SOURCES)
