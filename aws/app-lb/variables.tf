@@ -82,7 +82,7 @@ variable "security_group_name" {
 variable "internal_ingress_ip_address" {
   type        = string
   description = "IP address to allow internal ALB access from."
-  default     = "10.0.0.0/16"
+  default     = "10.10.0.0/16"
 }
 
 variable "external_internet_ingress_ip_address" {
@@ -96,7 +96,7 @@ variable "external_internet_ingress_ip_address" {
 variable "egress_ip_address" {
   type        = string
   description = "IP address to allow HTTP access to."
-  default     = "10.0.0.0/16"
+  default     = "10.10.0.0/16"
 }
 
 # Internal TLS enabled:
