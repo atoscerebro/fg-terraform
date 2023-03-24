@@ -15,7 +15,7 @@ test-unit:
 	go test ./... -short -count 1
 
 test-integration:
-	go test ./... -count 1
+	export ARM_SUBSCRIPTION_ID=$$(az account show --query id | sed s/\"//g) && go test ./... -count 1
 	
 lint:
 	tflint -f compact --recursive

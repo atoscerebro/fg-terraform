@@ -1,4 +1,4 @@
-name: Terraform Documentation
+name: Terraform Docs Azure
 
 on:
   pull_request:

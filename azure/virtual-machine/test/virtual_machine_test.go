@@ -3,6 +3,8 @@ package test
 import (
 	"testing"
 
+	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2019-07-01/compute"
+	"github.com/gruntwork-io/terratest/modules/azure"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
@@ -44,11 +46,12 @@ func (suite *VirtualMachineIntegrationSuite) SetupSuite() {
 	suite.subnet_name = terraform.Output(suite.T(), suite.options, "subnet_name")
 }
 
-func (suite *VirtualMachineIntegrationSuite) TestVirtualMachine_Deploy() {
+func (suite *VirtualMachineIntegrationSuite) Test_Deploy() {
+	name := "vm-name"
 	options := terraform.WithDefaultRetryableErrors(suite.T(), &terraform.Options{
 		TerraformDir: "./module",
 		Vars: map[string]interface{}{
-			"name":                 "vm-name",
+			"name":                 name,
 			"resource_group_name":  suite.rg_name,
 			"virtual_network_name": suite.vnet_name,
 			"subnet_name":          suite.subnet_name,
@@ -61,6 +64,18 @@ func (suite *VirtualMachineIntegrationSuite) TestVirtualMachine_Deploy() {
 	defer terraform.Destroy(suite.T(), options)
 
 	assert.NoError(suite.T(), err)
+
+	suite.T().Run("Test_Default_Location", func(t *testing.T) {
+		actualLocation := azure.GetVirtualMachine(t, name, suite.rg_name, "")
+		expectedLocation := "westeurope"
+		assert.Equal(t, expectedLocation, *actualLocation.Location)
+	})
+
+	suite.T().Run("Test_Default_Size", func(t *testing.T) {
+		actualVMSize := azure.GetSizeOfVirtualMachine(t, name, suite.rg_name, "")
+		expectedVMSize := compute.VirtualMachineSizeTypes("Standard_DS1_v2")
+		assert.Equal(t, expectedVMSize, actualVMSize)
+	})
 }
 
 func (suite *VirtualMachineIntegrationSuite) TearDownSuite() {

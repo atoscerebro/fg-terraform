@@ -13,6 +13,7 @@ variable "resource_group_name" {
 variable "location" {
   type        = string
   description = "The location of the VM."
+  default     = "westeurope"
 
   validation {
     condition = contains([
@@ -43,6 +44,7 @@ variable "subnet_name" {
 variable "storage_os_disk_name" {
   type        = string
   description = "The name of the internal OS disk."
+  default     = "os-disk"
 }
 
 variable "storage_os_disk_managed_disk_type" {
