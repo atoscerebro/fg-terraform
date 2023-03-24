@@ -152,7 +152,9 @@ resource "aws_lb_target_group" "default" {
   tags = var.tags
 }
 
-## Listeners
+# ALB is internal:
+
+## Listener
 resource "aws_lb_listener" "http" {
   count = local.alb_internal
 
@@ -167,6 +169,24 @@ resource "aws_lb_listener" "http" {
 
   tags = merge(
     { "Name" = "${var.alb_name}-listener-http" },
+    var.tags
+  )
+}
+
+## Ingress Rule
+resource "aws_vpc_security_group_ingress_rule" "http" {
+  count = local.alb_internal
+
+  security_group_id = aws_security_group.default_fg_alb.id
+
+  description = "HTTP ingress"
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.internal_ingress_ip_address
+
+  tags = merge(
+    { "Name" = "${var.security_group_name}-ingress-http" },
     var.tags
   )
 }
@@ -191,26 +211,6 @@ resource "aws_vpc_security_group_ingress_rule" "internet_https" {
   )
 }
 
-# ALB is internal:
-
-## Ingress Rule
-resource "aws_vpc_security_group_ingress_rule" "http" {
-  count = local.alb_internal
-
-  security_group_id = aws_security_group.default_fg_alb.id
-
-  description = "HTTP ingress"
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "tcp"
-  cidr_ipv4   = var.internal_ingress_ip_address
-
-  tags = merge(
-    { "Name" = "${var.security_group_name}-ingress-http" },
-    var.tags
-  )
-}
-
 # ALB is internal, and TLS enabled, OR ALB is external:
 
 ## Egress Rule:
@@ -231,7 +231,7 @@ resource "aws_vpc_security_group_egress_rule" "https" {
   )
 }
 
-## Additional Listeners
+## Listener
 resource "aws_lb_listener" "https" {
   count = local.alb_internal_tls_or_external
 
@@ -254,7 +254,7 @@ resource "aws_lb_listener" "https" {
 
 # ALB is internal, and TLS enabled:
 
-## Additional Ingress Rules
+## Ingress Rule
 resource "aws_vpc_security_group_ingress_rule" "https" {
   count = local.alb_internal_tls
 
