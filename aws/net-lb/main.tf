@@ -1,3 +1,18 @@
+## Conditions for different use-cases
+locals {
+  ### Access logging is enabled, but no S3 Bucket is provided to store the logs:
+  access_logs_new_bucket = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+
+  ### Network Load Balancer is internal:
+  nlb_internal = var.nlb_type_internal ? 1 : 0
+
+  ### NLB is internal and TLS is enabled, OR NLB is external:
+  nlb_internal_tls_or_external = ((var.nlb_type_internal && var.enable_internal_nlb_tls) || (!var.nlb_type_internal)) ? 1 : 0
+
+  ### NLB is internal, TLS is enabled, and no SSL certificate is provided, OR NLB is external and no SSL cert provided:
+  nlb_internal_tls_no_cert_or_external_no_cert = ((var.nlb_type_internal && var.enable_internal_nlb_tls && var.ssl_cert == null) || (!var.nlb_type_internal && var.ssl_cert == null)) ? 1 : 0
+}
+
 ## Get Private subnets from VPC
 data "aws_subnets" "private" {
   filter {
@@ -45,19 +60,19 @@ resource "aws_lb" "network" {
 ## Optional S3 Bucket Resources for Access Logs
 
 resource "aws_s3_bucket" "fg_nlb_access_logs" {
-  count         = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  count         = local.access_logs_new_bucket
   bucket        = "${var.nlb_name}-access-logs"
   force_destroy = var.force_destroy_nlb_access_logs
 }
 
 resource "aws_s3_bucket_acl" "fg_nlb_access_logs" {
-  count  = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  count  = local.access_logs_new_bucket
   bucket = aws_s3_bucket.fg_nlb_access_logs[0].id
   acl    = "private"
 }
 
 resource "aws_s3_bucket_policy" "fg_nlb_access_logs" {
-  count  = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  count  = local.access_logs_new_bucket
   bucket = aws_s3_bucket.fg_nlb_access_logs[0].id
   policy = data.aws_iam_policy_document.allow_nlb_write_to_bucket[0].json
 }
@@ -65,7 +80,7 @@ resource "aws_s3_bucket_policy" "fg_nlb_access_logs" {
 data "aws_elb_service_account" "main" {}
 
 data "aws_iam_policy_document" "allow_nlb_write_to_bucket" {
-  count = (var.enable_access_logging && (var.s3_bucket_id == "")) ? 1 : 0
+  count = local.access_logs_new_bucket
 
   version = "2012-10-17"
   statement {
@@ -103,9 +118,12 @@ resource "aws_lb_target_group" "default" {
   tags = var.tags
 }
 
-## Listeners
+
+# NLB is internal:
+
+## Listener
 resource "aws_lb_listener" "http" {
-  count = var.nlb_type_internal ? 1 : 0
+  count = local.nlb_internal
 
   load_balancer_arn = aws_lb.network.arn
   port              = "80"
@@ -122,11 +140,11 @@ resource "aws_lb_listener" "http" {
   )
 }
 
-# nlb is internal, and TLS enabled, OR nlb is external:
+# NLB is internal, and TLS enabled, OR NLB is external:
 
-## Additional Listeners
+## Listener
 resource "aws_lb_listener" "https" {
-  count = ((var.nlb_type_internal && var.enable_internal_nlb_tls) || (!var.nlb_type_internal)) ? 1 : 0
+  count = local.nlb_internal_tls_or_external
 
   load_balancer_arn = aws_lb.network.arn
   port              = "443"
@@ -145,9 +163,11 @@ resource "aws_lb_listener" "https" {
   )
 }
 
+# NLB is internal and TLS enabled and no SSL Cert provided, OR NLB is external and no Cert.
+
 ## ACM Certificate
 resource "aws_acm_certificate" "fg_nlb" {
-  count = ((var.nlb_type_internal && var.enable_internal_nlb_tls) || (!var.nlb_type_internal && var.ssl_cert == null)) ? 1 : 0
+  count = local.nlb_internal_tls_no_cert_or_external_no_cert
 
   domain_name       = var.cert_domain_name
   validation_method = var.cert_validation_method
@@ -161,7 +181,6 @@ resource "aws_acm_certificate" "fg_nlb" {
 }
 
 resource "aws_acm_certificate_validation" "fg_nlb" {
-  count = ((var.nlb_type_internal && var.enable_internal_nlb_tls) || (!var.nlb_type_internal && var.ssl_cert == null)) ? 1 : 0
-
+  count           = local.nlb_internal_tls_no_cert_or_external_no_cert
   certificate_arn = aws_acm_certificate.fg_nlb[count.index].arn
 }
