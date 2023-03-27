@@ -83,10 +83,15 @@ resource "aws_subnet" "private" {
   )
 }
 
+resource "aws_eip" "nat_eip" {
+  vpc = true
+}
+
 /* NAT gateway for the private subnets */
 resource "aws_nat_gateway" "default" {
   count = var.enable_nat_gateway ? 1 : 0
 
+  allocation_id = aws_eip.nat_eip.id
   subnet_id = aws_subnet.public[0].id
 
   tags = merge(
