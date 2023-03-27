@@ -168,7 +168,7 @@ resource "aws_lb_listener" "https" {
 ## Route53
 
 resource "aws_route53_record" "fg_nlb" {
-  count = local.nlb_internal_tls_no_cert_or_external_no_cert ? 1 : 0
+  count = local.nlb_internal_tls_no_cert_or_external_no_cert
 
   allow_overwrite = true
   name            = tolist(aws_acm_certificate.fg_nlb[0].domain_validation_options)[0].resource_record_name
@@ -180,7 +180,7 @@ resource "aws_route53_record" "fg_nlb" {
 
 ## ACM Certificate
 resource "aws_acm_certificate" "fg_nlb" {
-  count = local.nlb_internal_tls_no_cert_or_external_no_cert ? 1 : 0
+  count = local.nlb_internal_tls_no_cert_or_external_no_cert
 
   domain_name       = var.cert_domain_name
   validation_method = var.cert_validation_method
@@ -193,7 +193,7 @@ resource "aws_acm_certificate" "fg_nlb" {
 }
 
 resource "aws_acm_certificate_validation" "fg_nlb" {
-  count = local.nlb_internal_tls_no_cert_or_external_no_cert ? 1 : 0
+  count = local.nlb_internal_tls_no_cert_or_external_no_cert
 
   certificate_arn         = aws_acm_certificate.fg_nlb[0].arn
   validation_record_fqdns = [aws_route53_record.fg_nlb[0].fqdn]
