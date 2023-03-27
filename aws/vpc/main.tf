@@ -92,7 +92,7 @@ resource "aws_nat_gateway" "default" {
   count = var.enable_nat_gateway ? 1 : 0
 
   allocation_id = aws_eip.nat_eip.id
-  subnet_id = aws_subnet.public[0].id
+  subnet_id     = aws_subnet.public[0].id
 
   tags = merge(
     { "Name" = "${var.vpc_name}-natgw" },
@@ -120,7 +120,7 @@ resource "aws_route" "private_to_internet" {
 
   route_table_id         = aws_route_table.private[0].id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_nat_gateway.default[0].id
+  nat_gateway_id         = aws_nat_gateway.default[0].id
 }
 
 /* Associate the routing table to private subnets */
