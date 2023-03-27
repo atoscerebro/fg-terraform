@@ -88,12 +88,12 @@ output "default_nlb_target_group_tags" {
 
 output "nlb_listener_http_arn" {
   description = "ARN or ID of the Network Load Balancer's HTTP listener."
-  value       = try(aws_lb_listener.http.arn, "")
+  value       = try(aws_lb_listener.http[0].arn, "")
 }
 
 output "nlb_listener_http_tags" {
   description = "Map with all tags for the HTTP listener."
-  value       = try(aws_lb_listener.http.tags_all, "")
+  value       = try(aws_lb_listener.http[0].tags_all, "")
 }
 
 output "nlb_listener_https_arn" {
