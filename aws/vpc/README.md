@@ -20,7 +20,10 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [aws_eip.nat_eip](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/eip) | resource |
 | [aws_internet_gateway.default](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/internet_gateway) | resource |
+| [aws_nat_gateway.default](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/nat_gateway) | resource |
+| [aws_route.private_to_internet](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route) | resource |
 | [aws_route.public](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route) | resource |
 | [aws_route_table.private](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route_table) | resource |
 | [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/route_table) | resource |
@@ -53,6 +56,7 @@ No modules.
 | <a name="input_enable_dns_hostnames"></a> [enable\_dns\_hostnames](#input\_enable\_dns\_hostnames) | Enable assigning DNS hostnames to instances with public IP address | `bool` | `false` | no |
 | <a name="input_enable_dns_support"></a> [enable\_dns\_support](#input\_enable\_dns\_support) | Enable asigning internal DNS hostnames through AWS provided DNS server | `bool` | `true` | no |
 | <a name="input_enable_internet_gateway"></a> [enable\_internet\_gateway](#input\_enable\_internet\_gateway) | Allow the public subnets to have access to the internet | `bool` | `false` | no |
+| <a name="input_enable_nat_gateway"></a> [enable\_nat\_gateway](#input\_enable\_nat\_gateway) | Allow the public subnets to have access to the internet | `bool` | `false` | no |
 | <a name="input_env"></a> [env](#input\_env) | Environment of the VPC: dev, test, stg, prod | `string` | `"dev"` | no |
 | <a name="input_instance_tenancy"></a> [instance\_tenancy](#input\_instance\_tenancy) | Ensures that EC2 instances use the tenancy specified with launching | `string` | `"default"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Useful to diferentiate resources per env, team, function ... | `map(any)` | `{}` | no |
