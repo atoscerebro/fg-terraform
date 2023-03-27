@@ -38,6 +38,11 @@ variable "enable_internet_gateway" {
   type        = bool
   default     = false
 }
+variable "enable_nat_gateway" {
+  description = "Allow the public subnets to have access to the internet"
+  type        = bool
+  default     = false
+}
 variable "instance_tenancy" {
   description = "Ensures that EC2 instances use the tenancy specified with launching"
   type        = string

@@ -83,6 +83,25 @@ resource "aws_subnet" "private" {
   )
 }
 
+resource "aws_eip" "nat_eip" {
+  vpc = true
+}
+
+/* NAT gateway for the private subnets */
+resource "aws_nat_gateway" "default" {
+  count = var.enable_nat_gateway ? 1 : 0
+
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.public[0].id
+
+  tags = merge(
+    { "Name" = "${var.vpc_name}-natgw" },
+    var.tags
+  )
+
+  depends_on = [aws_internet_gateway.default[0]]
+}
+
 /* Routing table for private subnet */
 resource "aws_route_table" "private" {
   count = var.availability_zones
@@ -95,14 +114,24 @@ resource "aws_route_table" "private" {
   )
 }
 
+/* Add a route to the internet via the NATgw, if requested */
+resource "aws_route" "private_to_internet" {
+  count = var.enable_nat_gateway ? 1 : 0
+
+  route_table_id         = aws_route_table.private[0].id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.default[0].id
+}
+
 /* Associate the routing table to private subnets */
 resource "aws_route_table_association" "private" {
   count = var.availability_zones
 
   subnet_id      = element(aws_subnet.private[*].id, count.index)
-  route_table_id = element(aws_route_table.private[*].id, count.index)
+  route_table_id = var.enable_nat_gateway ? aws_route_table.private[0].id : element(aws_route_table.private[*].id, count.index)
 }
 
+/* DHCP configuration */
 resource "aws_vpc_dhcp_options" "default" {
   domain_name          = var.dhcp_domain_name
   domain_name_servers  = var.dhcp_dns_servers
@@ -113,6 +142,7 @@ resource "aws_vpc_dhcp_options" "default" {
   tags = var.tags
 }
 
+/* Associate the DHCP configuration to the VPC */
 resource "aws_vpc_dhcp_options_association" "default" {
   vpc_id          = aws_vpc.fg_vpc.id
   dhcp_options_id = aws_vpc_dhcp_options.default.id
