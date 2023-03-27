@@ -92,7 +92,7 @@ resource "aws_nat_gateway" "default" {
     var.tags
   )
 
-  depends_on = [aws_internet_gateway.public[0]]
+  depends_on = [aws_internet_gateway.default[0]]
 }
 
 /* Routing table for private subnet */
