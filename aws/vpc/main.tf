@@ -125,7 +125,7 @@ resource "aws_route" "private_to_internet" {
 
 /* Associate the routing table to private subnets */
 resource "aws_route_table_association" "private" {
-  count = var.enable_nat_gateway ? 1 : var.availability_zones
+  count = var.availability_zones
 
   subnet_id      = element(aws_subnet.private[*].id, count.index)
   route_table_id = var.enable_nat_gateway ? aws_route_table.private[0].id : element(aws_route_table.private[*].id, count.index)
