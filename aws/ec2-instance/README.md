@@ -11,6 +11,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 4.58.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | n/a |
 
 ## Modules
 
@@ -27,6 +28,7 @@ No modules.
 | [aws_vpc_security_group_ingress_rule.http](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.https](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_vpc_security_group_ingress_rule.ssh](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
+| [null_resource.test](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [aws_ami.amazon-linux-2](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/ami) | data source |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/availability_zones) | data source |
 | [aws_iam_instance_profile.ssm_managed](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/iam_instance_profile) | data source |
