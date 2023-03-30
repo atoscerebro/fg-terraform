@@ -103,6 +103,10 @@ data "aws_ami" "amazon-linux-2" {
   }
 }
 
+data "aws_iam_instance_profile" "ssm_managed" {
+  name = var.iam_instance_profile
+}
+
 ## Get available availability zones using region configured in provider
 data "aws_availability_zones" "available" {
   state = "available"
@@ -127,6 +131,7 @@ resource "aws_instance" "fg" {
   ami                         = data.aws_ami.amazon-linux-2.id
   instance_type               = var.instance_type
   associate_public_ip_address = false
+  iam_instance_profile        = data.aws_iam_instance_profile.ssm_managed.id
   // Uses modulo operator to spread ec2 instances through configured number of AZs.
   availability_zone       = data.aws_subnet.private[count.index % var.az_count].availability_zone
   disable_api_termination = false

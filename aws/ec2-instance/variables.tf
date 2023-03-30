@@ -71,6 +71,12 @@ variable "instance_ami_image_id" {
   default     = "ami-0779c326801d5a843"
 }
 
+variable "iam_instance_profile" {
+  type        = string
+  description = "AMI Instance profile for SSM managed"
+  default     = "FG_SystemsManagerEC2InstanceManagementRole"
+}
+
 variable "instance_type" {
   type        = string
   description = "Instance type to use for the instance."

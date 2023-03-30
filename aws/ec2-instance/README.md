@@ -29,6 +29,7 @@ No modules.
 | [aws_vpc_security_group_ingress_rule.ssh](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/resources/vpc_security_group_ingress_rule) | resource |
 | [aws_ami.amazon-linux-2](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/ami) | data source |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/availability_zones) | data source |
+| [aws_iam_instance_profile.ssm_managed](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/iam_instance_profile) | data source |
 | [aws_subnet.private](https://registry.terraform.io/providers/hashicorp/aws/4.58.0/docs/data-sources/subnet) | data source |
 
 ## Inputs
@@ -41,6 +42,7 @@ No modules.
 | <a name="input_env"></a> [env](#input\_env) | Environment: dev, test, stg, prod | `string` | `"dev"` | no |
 | <a name="input_http_ingress_ip_address"></a> [http\_ingress\_ip\_address](#input\_http\_ingress\_ip\_address) | IP address to allow HTTP access from | `string` | `"10.10.0.0/16"` | no |
 | <a name="input_https_ingress_ip_address"></a> [https\_ingress\_ip\_address](#input\_https\_ingress\_ip\_address) | IP address to allow HTTPS access from | `string` | `"10.10.0.0/16"` | no |
+| <a name="input_iam_instance_profile"></a> [iam\_instance\_profile](#input\_iam\_instance\_profile) | AMI Instance profile for SSM managed | `string` | `"FG_SystemsManagerEC2InstanceManagementRole"` | no |
 | <a name="input_instance_ami_image_id"></a> [instance\_ami\_image\_id](#input\_instance\_ami\_image\_id) | AMI image id to use for the instance. | `string` | `"ami-0779c326801d5a843"` | no |
 | <a name="input_instance_ami_name"></a> [instance\_ami\_name](#input\_instance\_ami\_name) | AMI name to use for the instance. | `string` | `"al2023-ami-2023.0.20230315.0-kernel-6.1-x86_64"` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Instance type to use for the instance. | `string` | `"t2.micro"` | no |
