@@ -128,7 +128,7 @@ resource "aws_instance" "fg" {
   count = var.ec2_count
   // Uses modulo operator to spread ec2 instances through configured number of subnets.
   subnet_id                   = data.aws_subnet.private[count.index % var.az_count].id
-  ami                         = data.aws_ami.amazon-linux-2.id
+  ami                         = data.aws_ami.amazon-linux-2.name
   instance_type               = var.instance_type
   associate_public_ip_address = false
   iam_instance_profile        = data.aws_iam_instance_profile.ssm_managed.id
