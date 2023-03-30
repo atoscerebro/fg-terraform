@@ -128,10 +128,10 @@ resource "aws_instance" "fg" {
   count = var.ec2_count
   // Uses modulo operator to spread ec2 instances through configured number of subnets.
   subnet_id                   = data.aws_subnet.private[count.index % var.az_count].id
-  ami                         = data.aws_ami.amazon-linux-2.name
+  ami                         = data.aws_ami.amazon-linux-2.id
   instance_type               = var.instance_type
   associate_public_ip_address = false
-  iam_instance_profile        = data.aws_iam_instance_profile.ssm_managed.id
+  iam_instance_profile        = data.aws_iam_instance_profile.ssm_managed.name
   // Uses modulo operator to spread ec2 instances through configured number of AZs.
   availability_zone       = data.aws_subnet.private[count.index % var.az_count].availability_zone
   disable_api_termination = false
