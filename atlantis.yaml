@@ -1,0 +1,12 @@
+version: 3
+projects:
+  - dir: ./aws/app-lb
+    workflow: default
+  - dir: ./aws/ec2-instance
+    workflow: default
+  - dir: ./aws/net-lb
+    workflow: default
+  - dir: ./aws/vpc-instance
+    workflow: default
+  - dir: ./aws/waf-acl-alb
+    workflow: default
