@@ -7,6 +7,8 @@ resource "aws_key_pair" "deployer" {
   tags = var.tags
 }
 
+resource "null_resource" "test" {}
+
 # Security Group
 
 resource "aws_security_group" "fg" {
