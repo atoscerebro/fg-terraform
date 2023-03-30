@@ -46,8 +46,8 @@ variable "ssh_ingress_ip_address" {
 
 variable "egress_ip_address" {
   type        = string
-  description = "IP address to allow HTTPS access to"
-  default     = "10.10.0.0/16"
+  description = "Allow outgoing traffic from the ec2 to anywhere"
+  default     = "0.0.0.0/0"
 }
 
 # EC2 Instance

@@ -37,7 +37,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_az_count"></a> [az\_count](#input\_az\_count) | The number of requested Availability Zones | `number` | `1` | no |
 | <a name="input_ec2_count"></a> [ec2\_count](#input\_ec2\_count) | The number of requested EC2 instances. | `number` | `1` | no |
-| <a name="input_egress_ip_address"></a> [egress\_ip\_address](#input\_egress\_ip\_address) | IP address to allow HTTPS access to | `string` | `"10.10.0.0/16"` | no |
+| <a name="input_egress_ip_address"></a> [egress\_ip\_address](#input\_egress\_ip\_address) | Allow outgoing traffic from the ec2 to anywhere | `string` | `"0.0.0.0/0"` | no |
 | <a name="input_env"></a> [env](#input\_env) | Environment: dev, test, stg, prod | `string` | `"dev"` | no |
 | <a name="input_http_ingress_ip_address"></a> [http\_ingress\_ip\_address](#input\_http\_ingress\_ip\_address) | IP address to allow HTTP access from | `string` | `"10.10.0.0/16"` | no |
 | <a name="input_https_ingress_ip_address"></a> [https\_ingress\_ip\_address](#input\_https\_ingress\_ip\_address) | IP address to allow HTTPS access from | `string` | `"10.10.0.0/16"` | no |
