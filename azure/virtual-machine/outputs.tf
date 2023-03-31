@@ -10,5 +10,5 @@ output "admin_private_key" {
     null
   )
   sensitive   = true
-  description = "The private SSH key assigned to the VM (optional)."
+  description = "The (optional) private SSH key assigned to the VM."
 }

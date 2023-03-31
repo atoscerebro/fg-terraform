@@ -1,0 +1,3 @@
+# https://github.com/terraform-docs/gh-actions/issues/98
+settings:
+  lockfile: false

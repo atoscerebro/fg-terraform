@@ -1,20 +1,26 @@
+CLOUD_PROVIDER := azure
+TERRAFORM_SOURCES := $(shell find ${CLOUD_PROVIDER} -name "*.tf" -a -not -path "*/test/*")
+MODULE_DIRECTORIES := $(shell find ${CLOUD_PROVIDER} -mindepth 1 -maxdepth 1 -type d)
+
+# Usage: make list-modules CLOUD_PROVIDER=(aws|azure)
+list-modules:
+	@echo $(MODULE_DIRECTORIES) | sed s/[[:space:]]/,/g
+
 # Usage: make (aws|azure)-docs CLOUD_PROVIDER=(aws|azure)
-MODULE_ROOTS := main
-TERRAFORM_SOURCES := $(shell find ./${CLOUD_PROVIDER} -name "*.tf")
-
-find-modules:
-	find -E ${CLOUD_PROVIDER} -type f -regex '.*($(MODULE_ROOTS))\.tf$$' -exec dirname "{}" \; | uniq
-
-build-docs:
-	$(MAKE) -s find-modules | xargs -n 1 terraform-docs markdown table --output-file README.md
-
 $(CLOUD_PROVIDER)-docs: $(TERRAFORM_SOURCES)
-	$(MAKE) -s build-docs; openssl sha256 $(TERRAFORM_SOURCES) > $(CLOUD_PROVIDER)-docs
-	
-release:
-	gh workflow run release.yml
+	echo $(MODULE_DIRECTORIES) | xargs -n 1 terraform-docs markdown table --output-file README.md
+	openssl sha256 $(TERRAFORM_SOURCES) > $(CLOUD_PROVIDER)-docs
 
+test-unit:
+	go test ./... -short -count 1
+
+test-integration:
+	export ARM_SUBSCRIPTION_ID=$$(az account show --query id | sed s/\"//g) && go test ./... -count 1
+	
 lint:
 	tflint -f compact --recursive
 
-.PHONY: find-modules build-docs release lint
+release:
+	gh workflow run release.yml
+
+.PHONY: build-docs release lint test-unit test-integration
